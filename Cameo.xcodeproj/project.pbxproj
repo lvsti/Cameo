@@ -10,6 +10,8 @@
 		BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4021D2453B00453456 /* AppDelegate.swift */; };
 		BEC91F4321D2453B00453456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4221D2453B00453456 /* Assets.xcassets */; };
 		BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4421D2453B00453456 /* MainMenu.xib */; };
+		BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC91F5321D2484400453456 /* CoreMediaIO.framework */; };
+		BEC91F5621D2581500453456 /* CMIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F5521D2581500453456 /* CMIO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +20,8 @@
 		BEC91F4221D2453B00453456 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BEC91F4521D2453B00453456 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		BEC91F4721D2453B00453456 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BEC91F5321D2484400453456 /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
+		BEC91F5521D2581500453456 /* CMIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,6 +41,7 @@
 			children = (
 				BEC91F3F21D2453B00453456 /* Cameo */,
 				BEC91F3E21D2453B00453456 /* Products */,
+				BEC91F5221D2484400453456 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -51,11 +57,20 @@
 			isa = PBXGroup;
 			children = (
 				BEC91F4021D2453B00453456 /* AppDelegate.swift */,
+				BEC91F5521D2581500453456 /* CMIO.swift */,
 				BEC91F4221D2453B00453456 /* Assets.xcassets */,
 				BEC91F4421D2453B00453456 /* MainMenu.xib */,
 				BEC91F4721D2453B00453456 /* Info.plist */,
 			);
 			path = Cameo;
+			sourceTree = "<group>";
+		};
+		BEC91F5221D2484400453456 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BEC91F5321D2484400453456 /* CoreMediaIO.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,6 +143,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEC91F5621D2581500453456 /* CMIO.swift in Sources */,
 				BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
