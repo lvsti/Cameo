@@ -44,17 +44,7 @@ enum PropertyType {
     }
     
     static func podTypeValue<T>(for selector: CMIOObjectPropertySelector, in objectID: CMIOObjectID) -> T? {
-        var address = CMIOObjectPropertyAddress(selector)
-        var dataUsed: UInt32 = 0
-        var data: T?
-        
-        let status = CMIOObjectGetPropertyData(objectID, &address, 0, nil, UInt32(MemoryLayout<T>.size), &dataUsed, &data)
-        guard status == 0 else {
-//            throw CMIOError.osStatus(status)
-            return nil
-        }
-        
-        return data
+        return podArrayTypeValue(for: selector, in: objectID)?.first
     }
 
     static func podArrayTypeValue<T>(for selector: CMIOObjectPropertySelector, in objectID: CMIOObjectID) -> [T]? {
@@ -82,19 +72,7 @@ enum PropertyType {
     }
 
     static func cfTypeValue<T>(for selector: CMIOObjectPropertySelector, in objectID: CMIOObjectID) -> T? {
-        var address = CMIOObjectPropertyAddress(selector)
-        var dataUsed: UInt32 = 0
-        var data = UnsafeMutablePointer<CFTypeRef>.allocate(capacity: 1)
-        defer { data.deallocate() }
-
-        let status = CMIOObjectGetPropertyData(objectID, &address, 0, nil, UInt32(MemoryLayout<CFTypeRef>.size), &dataUsed, data)
-
-        guard status == 0 else {
-            return nil
-//            throw CMIOError.osStatus(status)
-        }
-        
-        return data.pointee as? T
+        return cfArrayTypeValue(for: selector, in: objectID)?.first
     }
 
     static func cfArrayTypeValue<T>(for selector: CMIOObjectPropertySelector, in objectID: CMIOObjectID) -> [T]? {
