@@ -99,9 +99,11 @@ extension ListViewController: NSOutlineViewDataSource {
         var image: NSImage?
         switch Int(node.classID) {
         case kCMIOSystemObjectClassID: image = NSImage(named: NSImage.networkName)
+        case kCMIOPlugInClassID: image = NSImage(named: NSImage.shareTemplateName)
         case kCMIODeviceClassID: image = NSImage(named: NSImage.computerName)
         case kCMIOStreamClassID: image = NSImage(named: NSImage.slideshowTemplateName)
-        case kCMIOControlClassID: image = NSImage(named: NSImage.preferencesGeneralName)
+        case _ where node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID)):
+            image = NSImage(named: NSImage.preferencesGeneralName)
         default: image = NSImage(named: NSImage.touchBarIconViewTemplateName)
         }
         
