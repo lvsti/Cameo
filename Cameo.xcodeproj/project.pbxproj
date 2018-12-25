@@ -10,6 +10,8 @@
 		BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4021D2453B00453456 /* AppDelegate.swift */; };
 		BEC91F4321D2453B00453456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4221D2453B00453456 /* Assets.xcassets */; };
 		BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4421D2453B00453456 /* MainMenu.xib */; };
+		BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4E21D246C200453456 /* ListViewController.swift */; };
+		BEC91F5121D246CD00453456 /* ListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F5021D246CD00453456 /* ListView.xib */; };
 		BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC91F5321D2484400453456 /* CoreMediaIO.framework */; };
 		BEC91F5621D2581500453456 /* CMIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F5521D2581500453456 /* CMIO.swift */; };
 /* End PBXBuildFile section */
@@ -20,6 +22,8 @@
 		BEC91F4221D2453B00453456 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BEC91F4521D2453B00453456 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		BEC91F4721D2453B00453456 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BEC91F4E21D246C200453456 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		BEC91F5021D246CD00453456 /* ListView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListView.xib; sourceTree = "<group>"; };
 		BEC91F5321D2484400453456 /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
 		BEC91F5521D2581500453456 /* CMIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +62,8 @@
 			children = (
 				BEC91F4021D2453B00453456 /* AppDelegate.swift */,
 				BEC91F5521D2581500453456 /* CMIO.swift */,
+				BEC91F5021D246CD00453456 /* ListView.xib */,
+				BEC91F4E21D246C200453456 /* ListViewController.swift */,
 				BEC91F4221D2453B00453456 /* Assets.xcassets */,
 				BEC91F4421D2453B00453456 /* MainMenu.xib */,
 				BEC91F4721D2453B00453456 /* Info.plist */,
@@ -133,6 +139,7 @@
 			files = (
 				BEC91F4321D2453B00453456 /* Assets.xcassets in Resources */,
 				BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */,
+				BEC91F5121D246CD00453456 /* ListView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */,
 				BEC91F5621D2581500453456 /* CMIO.swift in Sources */,
 				BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */,
 			);
