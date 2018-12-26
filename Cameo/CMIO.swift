@@ -15,7 +15,7 @@ enum PropertyType {
         case pod, podArray, cf, cfArray
     }
     
-    case boolean, int32, uint32, uint64, float64,
+    case boolean, boolean32, int32, uint32, uint64, float64, fourCC,
         classID, objectID, deviceID,
         audioValueTranslation, propertyAddress, streamConfiguration, streamDeck,
         pid,
@@ -27,7 +27,7 @@ enum PropertyType {
 
     var kind: Kind {
         switch self {
-        case .boolean, .int32, .uint32, .uint64, .float64,
+        case .boolean, .boolean32, .int32, .uint32, .uint64, .float64, .fourCC,
              .classID, .objectID, .deviceID,
              .audioValueTranslation, .propertyAddress, .streamConfiguration, .streamDeck,
              .pid,
@@ -154,7 +154,12 @@ enum Property {
         default: return nil
         }
     }
-    
+
+    static func description<S>(of property: S, in objectID: CMIOObjectID) -> String? where S: PropertySet {
+        let desc = S.descriptors[property]!
+        return propertyDescription(for: desc.selector, ofType: desc.type, in: objectID)
+    }
+
     static func isSettable<S>(_ property: S, in objectID: CMIOObjectID) -> Bool where S: PropertySet {
         let desc = S.descriptors[property]!
         
@@ -201,7 +206,7 @@ enum SystemProperty: PropertySet {
         allowWirelessScreenCaptureDevices
     
     static let descriptors: [SystemProperty: PropertyDescriptor] = [
-        .processIsMaster: PropertyDescriptor(kCMIOHardwarePropertyProcessIsMaster, .boolean),
+        .processIsMaster: PropertyDescriptor(kCMIOHardwarePropertyProcessIsMaster, .boolean32),
         .isInitingOrExiting: PropertyDescriptor(kCMIOHardwarePropertyIsInitingOrExiting, .boolean),
         .devices: PropertyDescriptor(kCMIOHardwarePropertyDevices, .arrayOfDeviceIDs),
         .defaultInputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultInputDevice, .deviceID),
@@ -229,19 +234,19 @@ enum DeviceProperty: PropertySet {
         .plugIn: PropertyDescriptor(kCMIODevicePropertyPlugIn, .objectID),
         .deviceUID: PropertyDescriptor(kCMIODevicePropertyDeviceUID, .string),
         .modelUID: PropertyDescriptor(kCMIODevicePropertyModelUID, .string),
-        .transportType: PropertyDescriptor(kCMIODevicePropertyTransportType, .uint32),
-        .deviceIsAlive: PropertyDescriptor(kCMIODevicePropertyDeviceIsAlive, .boolean),
-        .deviceHasChanged: PropertyDescriptor(kCMIODevicePropertyDeviceHasChanged, .boolean),
-        .deviceIsRunning: PropertyDescriptor(kCMIODevicePropertyDeviceIsRunning, .boolean),
-        .deviceIsRunningSomewhere: PropertyDescriptor(kCMIODevicePropertyDeviceIsRunningSomewhere, .boolean),
-        .deviceCanBeDefaultDevice: PropertyDescriptor(kCMIODevicePropertyDeviceCanBeDefaultDevice, .boolean),
-        .hogMode: PropertyDescriptor(kCMIODevicePropertyHogMode, .boolean),
+        .transportType: PropertyDescriptor(kCMIODevicePropertyTransportType, .fourCC),
+        .deviceIsAlive: PropertyDescriptor(kCMIODevicePropertyDeviceIsAlive, .boolean32),
+        .deviceHasChanged: PropertyDescriptor(kCMIODevicePropertyDeviceHasChanged, .boolean32),
+        .deviceIsRunning: PropertyDescriptor(kCMIODevicePropertyDeviceIsRunning, .boolean32),
+        .deviceIsRunningSomewhere: PropertyDescriptor(kCMIODevicePropertyDeviceIsRunningSomewhere, .boolean32),
+        .deviceCanBeDefaultDevice: PropertyDescriptor(kCMIODevicePropertyDeviceCanBeDefaultDevice, .boolean32),
+        .hogMode: PropertyDescriptor(kCMIODevicePropertyHogMode, .pid),
         .latency: PropertyDescriptor(kCMIODevicePropertyLatency, .uint32),
         .streams: PropertyDescriptor(kCMIODevicePropertyStreams, .arrayOfStreamIDs),
         .streamConfiguration: PropertyDescriptor(kCMIODevicePropertyStreamConfiguration, .streamConfiguration),
         .deviceMaster: PropertyDescriptor(kCMIODevicePropertyDeviceMaster, .pid),
-        .excludeNonDALAccess: PropertyDescriptor(kCMIODevicePropertyExcludeNonDALAccess, .boolean),
-        .clientSyncDiscontinuity: PropertyDescriptor(kCMIODevicePropertyClientSyncDiscontinuity, .boolean),
+        .excludeNonDALAccess: PropertyDescriptor(kCMIODevicePropertyExcludeNonDALAccess, .boolean32),
+        .clientSyncDiscontinuity: PropertyDescriptor(kCMIODevicePropertyClientSyncDiscontinuity, .boolean32),
         .smpteTimeCallback: PropertyDescriptor(kCMIODevicePropertySMPTETimeCallback, .smpteCallback),
         .canProcessAVCCommand: PropertyDescriptor(kCMIODevicePropertyCanProcessAVCCommand, .boolean),
         .avcDeviceType: PropertyDescriptor(kCMIODevicePropertyAVCDeviceType, .uint32),
@@ -249,7 +254,7 @@ enum DeviceProperty: PropertySet {
         .canProcessRS422Command: PropertyDescriptor(kCMIODevicePropertyCanProcessRS422Command, .boolean),
         .linkedCoreAudioDeviceUID: PropertyDescriptor(kCMIODevicePropertyLinkedCoreAudioDeviceUID, .string),
         .videoDigitizerComponents: PropertyDescriptor(kCMIODevicePropertyVideoDigitizerComponents, .componentDescription),
-        .suspendedByUser: PropertyDescriptor(kCMIODevicePropertySuspendedByUser, .boolean),
+        .suspendedByUser: PropertyDescriptor(kCMIODevicePropertySuspendedByUser, .boolean32),
         .linkedAndSyncedCoreAudioDeviceUID: PropertyDescriptor(kCMIODevicePropertyLinkedAndSyncedCoreAudioDeviceUID, .string),
         .iidcInitialUnitSpace: PropertyDescriptor(kCMIODevicePropertyIIDCInitialUnitSpace, .uint32),
         .iidcCSRData: PropertyDescriptor(kCMIODevicePropertyIIDCCSRData, .uint32),
@@ -291,14 +296,14 @@ enum StreamProperty: PropertySet {
         .outputBuffersRequiredForStartup: PropertyDescriptor(kCMIOStreamPropertyOutputBuffersRequiredForStartup, .uint32),
         .outputBuffersNeededForThrottledPlayback: PropertyDescriptor(kCMIOStreamPropertyOutputBuffersNeededForThrottledPlayback, .uint32),
         .firstOutputPresentationTimeStamp: PropertyDescriptor(kCMIOStreamPropertyFirstOutputPresentationTimeStamp, .time),
-        .endOfData: PropertyDescriptor(kCMIOStreamPropertyEndOfData, .boolean),
+        .endOfData: PropertyDescriptor(kCMIOStreamPropertyEndOfData, .boolean32),
         .clock: PropertyDescriptor(kCMIOStreamPropertyClock, .clock),
         .canProcessDeckCommand: PropertyDescriptor(kCMIOStreamPropertyCanProcessDeckCommand, .boolean),
         .deck: PropertyDescriptor(kCMIOStreamPropertyDeck, .streamDeck),
         .deckFrameNumber: PropertyDescriptor(kCMIOStreamPropertyDeckFrameNumber, .uint64),
-        .deckDropness: PropertyDescriptor(kCMIOStreamPropertyDeckDropness, .boolean),
-        .deckThreaded: PropertyDescriptor(kCMIOStreamPropertyDeckThreaded, .boolean),
-        .deckLocal: PropertyDescriptor(kCMIOStreamPropertyDeckLocal, .boolean),
+        .deckDropness: PropertyDescriptor(kCMIOStreamPropertyDeckDropness, .boolean32),
+        .deckThreaded: PropertyDescriptor(kCMIOStreamPropertyDeckThreaded, .boolean32),
+        .deckLocal: PropertyDescriptor(kCMIOStreamPropertyDeckLocal, .boolean32),
         .deckCueing: PropertyDescriptor(kCMIOStreamPropertyDeckCueing, .int32),
         .initialPresentationTimeStampForLinkedAndSyncedAudio: PropertyDescriptor(kCMIOStreamPropertyInitialPresentationTimeStampForLinkedAndSyncedAudio, .time),
         .scheduledOutputNotificationProc: PropertyDescriptor(kCMIOStreamPropertyScheduledOutputNotificationProc, .scheduledOutputCallback),
@@ -384,4 +389,105 @@ extension CMIOClassID {
     
 }
 
+func fourCC(from value: UInt32) -> String? {
+    let chars: [UInt8] = [
+        UInt8((value >> 24) & 0xff),
+        UInt8((value >> 16) & 0xff),
+        UInt8((value >> 8) & 0xff),
+        UInt8(value & 0xff)
+    ]
+    return String(bytes: chars, encoding: .ascii)
+}
 
+func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: PropertyType, in objectID: CMIOObjectID) -> String? {
+    switch type {
+    case .boolean:
+        if let value: DarwinBoolean = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .boolean32:
+        if let value: UInt32 = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return value != 0 ? "true (\(value))" : "false (0)"
+        }
+    case .int32, .uint32:
+        if let value: UInt32 = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .uint64:
+        if let value: UInt64 = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .float64:
+        if let value: Float64 = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .fourCC, .classID:
+        if let value: CMIOClassID = PropertyType.podTypeValue(for: selector, in: objectID) {
+            if let fcc = fourCC(from: value) {
+                return "'\(fcc)'"
+            }
+            return "\(value)"
+        }
+    case .objectID, .deviceID:
+        if let value: CMIOObjectID = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .audioValueTranslation:
+        let value: AudioValueTranslation? = PropertyType.podTypeValue(for: selector, in: objectID)
+        return "\(value)"
+    case .propertyAddress:
+        let value: CMIOObjectPropertyAddress? = PropertyType.podTypeValue(for: selector, in: objectID)
+        return "\(value)"
+    case .streamConfiguration:
+        let value: CMIODeviceStreamConfiguration? = PropertyType.podTypeValue(for: selector, in: objectID)
+        return "\(value)"
+    case .pid:
+        if let value: pid_t = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+//    case .componentDescription:
+//        let value: ComponentDescription? = PropertyType.podTypeValue(for: selector, in: objectID)
+//        return "\(value)"
+    case .time:
+        if let value: CMTime = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "CMTime {\(value.value) / \(value.timescale)}"
+        }
+    case .streamDeck:
+        if let value: CMIOStreamDeck = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .smpteCallback:
+        let value: CMIODeviceSMPTETimeCallback? = PropertyType.podTypeValue(for: selector, in: objectID)
+        return "\(value)"
+    case .scheduledOutputCallback:
+        let value: CMIOStreamScheduledOutputNotificationProcAndRefCon? = PropertyType.podTypeValue(for: selector, in: objectID)
+        return "\(value)"
+        
+    case .arrayOfFloat64s:
+        if let value: [Float64] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .arrayOfDeviceIDs, .arrayOfObjectIDs, .arrayOfStreamIDs:
+        if let value: [CMIOObjectID] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .arrayOfAudioValueRanges:
+        if let value: [AudioValueRange] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+        
+    case .string:
+        if let value: CFString = PropertyType.cfTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+        
+        //     string,
+        //        formatDescription,
+        //        arrayOfFormatDescriptions,
+        //        sampleBuffer,
+    //        clock,
+    default:
+        break
+    }
+    return nil
+}

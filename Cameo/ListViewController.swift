@@ -16,6 +16,13 @@ struct CMIONode {
     var children: [CMIONode]
 }
 
+struct CMIOPropertyItem {
+    var selector: CMIOObjectPropertySelector
+    var name: String
+    var isSettable: Bool
+    var value: String
+}
+
 func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
     var nodes: [CMIONode] = []
 
@@ -34,11 +41,13 @@ func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
 final class ListViewController: NSViewController {
     
     @IBOutlet private weak var outlineView: NSOutlineView!
+    @IBOutlet private weak var tableView: NSTableView!
     
     var tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
                         classID: CMIOClassID(kCMIOSystemObjectClassID),
                         name: "System",
                         children: [])
+    var propertyList: [CMIOPropertyItem] = []
 
     override var nibName: NSNib.Name? {
         return "ListView"
@@ -47,22 +56,63 @@ final class ListViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        reload()
+        reloadTree()
         outlineView.reloadData()
         outlineView.expandItem(nil, expandChildren: true)
+        
+        tableView.reloadData()
     }
     
-    private func reload() {
+    private func reloadTree() {
         tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
                         classID: CMIOClassID(kCMIOSystemObjectClassID),
                         name: "System",
                         children: cmioChildren(of: CMIOObjectID(kCMIOObjectSystemObject)))
         print(tree)
     }
+    
+    private func reloadPropertyList(for node: CMIONode) {
+        propertyList.removeAll()
+        
+        let props = ObjectProperty.allExisting(in: node.objectID)
+        for prop in props {
+            let item = CMIOPropertyItem(selector: ObjectProperty.descriptors[prop]!.selector,
+                                        name: "\(prop)",
+                                        isSettable: Property.isSettable(prop, in: node.objectID),
+                                        value: Property.description(of: prop, in: node.objectID) ?? "<undefined>")
+            propertyList.append(item)
+        }
+        
+        if node.classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)) {
+            let deviceProps = DeviceProperty.allExisting(in: node.objectID)
+            for prop in deviceProps {
+                let item = CMIOPropertyItem(selector: DeviceProperty.descriptors[prop]!.selector,
+                                            name: "\(prop)",
+                                            isSettable: Property.isSettable(prop, in: node.objectID),
+                                            value: Property.description(of: prop, in: node.objectID) ?? "<undefined>")
+                propertyList.append(item)
+            }
+        }
+        else if node.classID.isSubclass(of: CMIOClassID(kCMIOStreamClassID)) {
+            let streamProps = StreamProperty.allExisting(in: node.objectID)
+            for prop in streamProps {
+                let item = CMIOPropertyItem(selector: StreamProperty.descriptors[prop]!.selector,
+                                            name: "\(prop)",
+                                            isSettable: Property.isSettable(prop, in: node.objectID),
+                                            value: Property.description(of: prop, in: node.objectID) ?? "<undefined>")
+                propertyList.append(item)
+            }
+        }
+    }
 }
 
 extension ListViewController: NSOutlineViewDelegate {
-    
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+        
+        reloadPropertyList(for: node)
+        tableView.reloadData()
+    }
 }
 
 extension ListViewController: NSOutlineViewDataSource {
@@ -114,6 +164,38 @@ extension ListViewController: NSOutlineViewDataSource {
 }
 
 extension ListViewController: NSTableViewDataSource {
-    
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return propertyList.count
+    }
+}
+
+extension ListViewController: NSTableViewDelegate {
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        guard let column = tableColumn else {
+            return nil
+        }
+        
+        if column.identifier.rawValue == "propertyColumn" {
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PropertyCell"),
+                                          owner: nil) as! NSTableCellView
+            view.textField?.stringValue = propertyList[row].name
+            view.textField?.alignment = .left
+            return view
+        }
+        else if column.identifier.rawValue == "valueColumn" {
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ValueCell"),
+                                          owner: nil) as! NSTableCellView
+            view.textField?.stringValue = propertyList[row].value
+            return view
+        }
+        else if column.identifier.rawValue == "fourccColumn" {
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "FourCCCell"),
+                                          owner: nil) as! NSTableCellView
+            view.textField?.stringValue = "'\(fourCC(from: propertyList[row].selector)!)'"
+            return view
+        }
+        
+        return nil
+    }
 }
 
