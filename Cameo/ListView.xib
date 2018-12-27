@@ -217,7 +217,7 @@
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                         <prototypeCellViews>
-                                                            <tableCellView identifier="PropertyCell" id="bF7-Cb-Awf">
+                                                            <tableCellView identifier="SettableCell" id="bF7-Cb-Awf">
                                                                 <rect key="frame" x="176" y="1" width="40" height="17"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>

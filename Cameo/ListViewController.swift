@@ -188,7 +188,6 @@ extension ListViewController: NSTableViewDelegate {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PropertyCell"),
                                           owner: nil) as! NSTableCellView
             view.textField?.stringValue = propertyList[row].name
-            view.textField?.alignment = .left
             return view
         }
         else if column.identifier.rawValue == "valueColumn" {
