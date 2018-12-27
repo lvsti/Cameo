@@ -464,6 +464,23 @@ func fourCC(from value: UInt32) -> String? {
     return String(bytes: chars, encoding: .ascii)
 }
 
+func fourCCDescription(from value: UInt32) -> String? {
+    guard let fcc = fourCC(from: value) else {
+        return nil
+    }
+    
+    let url = Bundle.main.url(forResource: "fcc_mapping.json", withExtension: nil)!
+    let data = try! Data(contentsOf: url)
+    let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: [String: String]]
+    
+    if let fccName = json["dec"]?["\(value)"] {
+        return "'\(fcc)' (\(fccName))"
+    }
+    
+    return "'\(fcc)'"
+}
+
+
 func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: PropertyType, in objectID: CMIOObjectID) -> String? {
     switch type {
     case .boolean:
@@ -492,8 +509,8 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         }
     case .fourCC, .classID:
         if let value: CMIOClassID = PropertyType.podTypeValue(for: selector, in: objectID) {
-            if let fcc = fourCC(from: value) {
-                return "'\(fcc)'"
+            if let fcc = fourCCDescription(from: value) {
+                return "\(fcc)"
             }
             return "\(value)"
         }
@@ -510,7 +527,8 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         }
     case .propertyAddress:
         if let value: CMIOObjectPropertyAddress = PropertyType.podTypeValue(for: selector, in: objectID) {
-            return "CMIOObjectPropertyAddress {\(fourCC(from: value.mSelector)!), \(fourCC(from: value.mScope)!), \(fourCC(from: value.mElement)!)"
+            return "CMIOObjectPropertyAddress {\(fourCCDescription(from: value.mSelector)!), " +
+                "\(fourCCDescription(from: value.mScope)!), \(fourCCDescription(from: value.mElement)!)"
         }
     case .streamConfiguration:
         let value: CMIODeviceStreamConfiguration? = PropertyType.podTypeValue(for: selector, in: objectID)
