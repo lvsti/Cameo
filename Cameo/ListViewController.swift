@@ -218,7 +218,15 @@ extension ListViewController: NSTableViewDelegate {
             view.textField?.stringValue = "'\(fourCC(from: propertyList[row].selector)!)'"
             return view
         }
-        
+        else if column.identifier.rawValue == "settableColumn" {
+            let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "SettableCell"),
+                                          owner: nil) as! NSTableCellView
+            let checkbox = view.viewWithTag(1000) as! NSButton
+            checkbox.state = propertyList[row].isSettable ? .on : .off
+            
+            return view
+        }
+
         return nil
     }
 }
