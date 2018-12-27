@@ -519,8 +519,9 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
             return "@\(value)"
         }
     case .audioValueTranslation:
-        let value: AudioValueTranslation? = PropertyType.podTypeValue(for: selector, in: objectID)
-        return "\(value)"
+        if let value: AudioValueTranslation = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
     case .audioValueRange:
         if let value: AudioValueRange = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "AudioValueRange {\(value.mMinimum), \(value.mMaximum)}"
@@ -531,15 +532,17 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
                 "\(fourCCDescription(from: value.mScope)!), \(fourCCDescription(from: value.mElement)!)"
         }
     case .streamConfiguration:
-        let value: CMIODeviceStreamConfiguration? = PropertyType.podTypeValue(for: selector, in: objectID)
-        return "\(value)"
+        if let value: CMIODeviceStreamConfiguration = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
     case .pid:
         if let value: pid_t = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "\(value)"
         }
 //    case .componentDescription:
-//        let value: ComponentDescription? = PropertyType.podTypeValue(for: selector, in: objectID)
-//        return "\(value)"
+//        if let value: ComponentDescription = PropertyType.podTypeValue(for: selector, in: objectID) {
+//            return "\(value)"
+//        }
     case .time:
         if let value: CMTime = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "CMTime {\(value.value) / \(value.timescale)}"
@@ -560,6 +563,11 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         if let value: CMIOStreamScheduledOutputNotificationProcAndRefCon = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "\(value)"
         }
+        
+    case .arrayOfUInt32s:
+        if let value: [UInt32] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
     case .arrayOfFloat64s:
         if let value: [Float64] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
             return "\(value)"
@@ -570,19 +578,31 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         }
     case .arrayOfAudioValueRanges:
         if let value: [AudioValueRange] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
-            return "\(value)"
+            return "[" + value.map { "AudioValueRange {\($0.mMinimum), \($0.mMaximum)}" }.joined(separator: ", ") + "]"
         }
         
     case .string:
         if let value: CFString = PropertyType.cfTypeValue(for: selector, in: objectID) {
             return "\(value)"
         }
-        
-        //     string,
-        //        formatDescription,
-        //        arrayOfFormatDescriptions,
-        //        sampleBuffer,
-    //        clock,
+    case .formatDescription:
+        if let value: CMFormatDescription = PropertyType.cfTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .sampleBuffer:
+        if let value: CMSampleBuffer = PropertyType.cfTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+    case .clock:
+        if let value: CFTypeRef = PropertyType.cfTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
+
+    case .arrayOfFormatDescriptions:
+        if let value: [CMFormatDescription] = PropertyType.cfArrayTypeValue(for: selector, in: objectID) {
+            return "[" + value.map { "\($0)" }.joined(separator: ", ") + "]"
+        }
+
     default:
         break
     }
