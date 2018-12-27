@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="QuickLookViewController" customModule="Cameo" customModuleProvider="target">
+            <connections>
+                <outlet property="textView" destination="IYy-DR-htR" id="WBr-k5-o0I"/>
+                <outlet property="view" destination="c22-O7-iKe" id="z0U-v6-1ua"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="MdF-Wd-M8d">
+                    <rect key="frame" x="4" y="4" width="472" height="264"/>
+                    <clipView key="contentView" copiesOnScroll="NO" id="IvB-km-wMw">
+                        <rect key="frame" x="1" y="1" width="470" height="262"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView editable="NO" importsGraphics="NO" verticallyResizable="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="IYy-DR-htR">
+                                <rect key="frame" x="0.0" y="0.0" width="470" height="262"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <size key="minSize" width="470" height="262"/>
+                                <size key="maxSize" width="470" height="10000000"/>
+                                <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            </textView>
+                        </subviews>
+                    </clipView>
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="J1Y-ti-ifR">
+                        <rect key="frame" x="455" y="1" width="16" height="262"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="MdF-Wd-M8d" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="4" id="DCi-SU-kH1"/>
+                <constraint firstItem="MdF-Wd-M8d" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="4" id="IDg-Ap-PsD"/>
+                <constraint firstAttribute="bottom" secondItem="MdF-Wd-M8d" secondAttribute="bottom" constant="4" id="WwT-I7-kJA"/>
+                <constraint firstAttribute="trailing" secondItem="MdF-Wd-M8d" secondAttribute="trailing" constant="4" id="agw-3u-m6c"/>
+            </constraints>
+        </customView>
+    </objects>
+</document>

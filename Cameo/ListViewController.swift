@@ -8,6 +8,7 @@
 
 import Cocoa
 import CoreMediaIO
+import Carbon.HIToolbox
 
 struct CMIONode {
     var objectID: CMIOObjectID
@@ -112,6 +113,21 @@ final class ListViewController: NSViewController {
                 }
             }
         }
+    }
+    
+    override func keyDown(with event: NSEvent) {
+        guard event.keyCode == kVK_Space, tableView.selectedRow >= 0 else {
+            super.keyDown(with: event)
+            return
+        }
+
+        let rowRect = tableView.rect(ofRow: tableView.selectedRow)
+        let cellView = tableView.view(atColumn: 3, row: tableView.selectedRow, makeIfNecessary: false) as! NSTableCellView
+        let qlvc = QuickLookViewController()
+        qlvc.content = cellView.textField?.stringValue ?? ""
+        
+        present(qlvc, asPopoverRelativeTo: rowRect, of: tableView, preferredEdge: .maxY, behavior: .transient)
+        view.window?.makeFirstResponder(qlvc)
     }
 }
 
