@@ -15,26 +15,26 @@ enum PropertyType {
         case pod, podArray, cf, cfArray
     }
     
-    case boolean, boolean32, int32, uint32, uint64, float64, fourCC,
+    case boolean, boolean32, int32, uint32, uint64, float32, float64, fourCC,
         classID, objectID, deviceID,
-        audioValueTranslation, propertyAddress, streamConfiguration, streamDeck,
+        audioValueTranslation, audioValueRange, propertyAddress, streamConfiguration, streamDeck,
         pid,
         smpteCallback, scheduledOutputCallback,
-        componentDescription, time
-    case arrayOfDeviceIDs, arrayOfObjectIDs, arrayOfStreamIDs, arrayOfFloat64s, arrayOfAudioValueRanges
+        componentDescription, time, cgRect
+    case arrayOfDeviceIDs, arrayOfObjectIDs, arrayOfStreamIDs, arrayOfUInt32s, arrayOfFloat64s, arrayOfAudioValueRanges
     case string, formatDescription, sampleBuffer, clock
     case arrayOfFormatDescriptions
 
     var kind: Kind {
         switch self {
-        case .boolean, .boolean32, .int32, .uint32, .uint64, .float64, .fourCC,
+        case .boolean, .boolean32, .int32, .uint32, .uint64, .float32, .float64, .fourCC,
              .classID, .objectID, .deviceID,
-             .audioValueTranslation, .propertyAddress, .streamConfiguration, .streamDeck,
+             .audioValueTranslation, .audioValueRange, .propertyAddress, .streamConfiguration, .streamDeck,
              .pid,
              .smpteCallback, .scheduledOutputCallback,
-             .componentDescription, .time:
+             .componentDescription, .time, .cgRect:
             return .pod
-        case .arrayOfDeviceIDs, .arrayOfObjectIDs, .arrayOfStreamIDs, .arrayOfFloat64s, .arrayOfAudioValueRanges:
+        case .arrayOfDeviceIDs, .arrayOfObjectIDs, .arrayOfStreamIDs, .arrayOfUInt32s, .arrayOfFloat64s, .arrayOfAudioValueRanges:
             return .podArray
         case .string, .formatDescription, .sampleBuffer, .clock:
             return .cf
@@ -312,6 +312,71 @@ enum StreamProperty: PropertySet {
     ]
 }
 
+enum ControlProperty: PropertySet {
+    case scope, element, variant
+    
+    static let descriptors: [ControlProperty: PropertyDescriptor] = [
+        .scope: PropertyDescriptor(kCMIOControlPropertyScope, .fourCC),
+        .element: PropertyDescriptor(kCMIOControlPropertyScope, .fourCC),
+        .variant: PropertyDescriptor(kCMIOControlPropertyScope, .fourCC)
+    ]
+}
+
+enum BooleanControlProperty: PropertySet {
+    case value
+    
+    static let descriptors: [BooleanControlProperty: PropertyDescriptor] = [
+        .value: PropertyDescriptor(kCMIOBooleanControlPropertyValue, .boolean32)
+    ]
+}
+
+enum SelectorControlProperty: PropertySet {
+    case currentItem, availableItems, itemName
+    
+    static let descriptors: [SelectorControlProperty: PropertyDescriptor] = [
+        .currentItem: PropertyDescriptor(kCMIOSelectorControlPropertyCurrentItem, .uint32),
+        .availableItems: PropertyDescriptor(kCMIOSelectorControlPropertyAvailableItems, .arrayOfUInt32s),
+        .itemName: PropertyDescriptor(kCMIOSelectorControlPropertyItemName, .string),
+    ]
+}
+
+enum FeatureControlProperty: PropertySet {
+    case onOff, automaticManual, absoluteNative, tune, nativeValue, absoluteValue,
+        nativeRange, absoluteRange, convertNativeToAbsolute, convertAbsoluteToNative,
+        absoluteUnitName
+    
+    static let descriptors: [FeatureControlProperty: PropertyDescriptor] = [
+        .onOff: PropertyDescriptor(kCMIOFeatureControlPropertyOnOff, .boolean32),
+        .automaticManual: PropertyDescriptor(kCMIOFeatureControlPropertyAutomaticManual, .boolean32),
+        .absoluteNative: PropertyDescriptor(kCMIOFeatureControlPropertyAbsoluteNative, .boolean32),
+        .tune: PropertyDescriptor(kCMIOFeatureControlPropertyTune, .boolean32),
+        .nativeValue: PropertyDescriptor(kCMIOFeatureControlPropertyNativeValue, .float32),
+        .absoluteValue: PropertyDescriptor(kCMIOFeatureControlPropertyAbsoluteValue, .float32),
+        .nativeRange: PropertyDescriptor(kCMIOFeatureControlPropertyNativeRange, .audioValueRange),
+        .absoluteRange: PropertyDescriptor(kCMIOFeatureControlPropertyAbsoluteRange, .audioValueRange),
+        .convertNativeToAbsolute: PropertyDescriptor(kCMIOFeatureControlPropertyConvertNativeToAbsolute, .float32),
+        .convertAbsoluteToNative: PropertyDescriptor(kCMIOFeatureControlPropertyConvertAbsoluteToNative, .float32),
+        .absoluteUnitName: PropertyDescriptor(kCMIOFeatureControlPropertyAbsoluteUnitName, .string)
+    ]
+}
+
+enum ExposureControlProperty: PropertySet {
+    case regionOfInterest, lockThreshold, unlockThreshold, target, convergenceSpeed,
+        stability, stable, integrationTime, maximumGain
+    
+    static let descriptors: [ExposureControlProperty: PropertyDescriptor] = [
+        .regionOfInterest: PropertyDescriptor(kCMIOExposureControlPropertyRegionOfInterest, .cgRect),
+        .lockThreshold: PropertyDescriptor(kCMIOExposureControlPropertyLockThreshold, .float32),
+        .unlockThreshold: PropertyDescriptor(kCMIOExposureControlPropertyUnlockThreshold, .float32),
+        .target: PropertyDescriptor(kCMIOExposureControlPropertyTarget, .float32),
+        .convergenceSpeed: PropertyDescriptor(kCMIOExposureControlPropertyConvergenceSpeed, .float32),
+        .stability: PropertyDescriptor(kCMIOExposureControlPropertyStability, .float32),
+        .stable: PropertyDescriptor(kCMIOExposureControlPropertyStable, .boolean),
+        .integrationTime: PropertyDescriptor(kCMIOExposureControlPropertyIntegrationTime, .float32),
+        .maximumGain: PropertyDescriptor(kCMIOExposureControlPropertyMaximumGain, .float32)
+    ]
+}
+
 extension CMIOClassID {
     private static let booleanControlClassIDs: Set<Int> = [
         kCMIOJackControlClassID,
@@ -417,6 +482,10 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         if let value: UInt64 = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "\(value)"
         }
+    case .float32:
+        if let value: Float32 = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
     case .float64:
         if let value: Float64 = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "\(value)"
@@ -430,14 +499,19 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         }
     case .objectID, .deviceID:
         if let value: CMIOObjectID = PropertyType.podTypeValue(for: selector, in: objectID) {
-            return "\(value)"
+            return "@\(value)"
         }
     case .audioValueTranslation:
         let value: AudioValueTranslation? = PropertyType.podTypeValue(for: selector, in: objectID)
         return "\(value)"
+    case .audioValueRange:
+        if let value: AudioValueRange = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "AudioValueRange {\(value.mMinimum), \(value.mMaximum)}"
+        }
     case .propertyAddress:
-        let value: CMIOObjectPropertyAddress? = PropertyType.podTypeValue(for: selector, in: objectID)
-        return "\(value)"
+        if let value: CMIOObjectPropertyAddress = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "CMIOObjectPropertyAddress {\(fourCC(from: value.mSelector)!), \(fourCC(from: value.mScope)!), \(fourCC(from: value.mElement)!)"
+        }
     case .streamConfiguration:
         let value: CMIODeviceStreamConfiguration? = PropertyType.podTypeValue(for: selector, in: objectID)
         return "\(value)"
@@ -452,24 +526,29 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         if let value: CMTime = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "CMTime {\(value.value) / \(value.timescale)}"
         }
+    case .cgRect:
+        if let value: CGRect = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "CGRect {{\(value.origin.x), \(value.origin.y)}, {\(value.size.width), \(value.size.height)}}"
+        }
     case .streamDeck:
         if let value: CMIOStreamDeck = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "\(value)"
         }
     case .smpteCallback:
-        let value: CMIODeviceSMPTETimeCallback? = PropertyType.podTypeValue(for: selector, in: objectID)
-        return "\(value)"
+        if let value: CMIODeviceSMPTETimeCallback = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
     case .scheduledOutputCallback:
-        let value: CMIOStreamScheduledOutputNotificationProcAndRefCon? = PropertyType.podTypeValue(for: selector, in: objectID)
-        return "\(value)"
-        
+        if let value: CMIOStreamScheduledOutputNotificationProcAndRefCon = PropertyType.podTypeValue(for: selector, in: objectID) {
+            return "\(value)"
+        }
     case .arrayOfFloat64s:
         if let value: [Float64] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
             return "\(value)"
         }
     case .arrayOfDeviceIDs, .arrayOfObjectIDs, .arrayOfStreamIDs:
         if let value: [CMIOObjectID] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
-            return "\(value)"
+            return "[" + value.map { "@\($0)" }.joined(separator: ", ") + "]"
         }
     case .arrayOfAudioValueRanges:
         if let value: [AudioValueRange] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {

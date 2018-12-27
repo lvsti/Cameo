@@ -29,13 +29,26 @@ func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
     if let children: [CMIOObjectID] = Property.arrayValue(of: ObjectProperty.ownedObjects, in: objectID) {
         for child in children {
             let subtree = cmioChildren(of: child)
-            let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled #\(child)>"
+            let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
             let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? CMIOClassID(kCMIOObjectClassID)
             nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
         }
     }
     
     return nodes
+}
+
+func properties<S>(from type: S.Type, in objectID: CMIOObjectID) -> [CMIOPropertyItem] where S: PropertySet {
+    var propertyList: [CMIOPropertyItem] = []
+    let props = S.allExisting(in: objectID)
+    for prop in props {
+        let item = CMIOPropertyItem(selector: S.descriptors[prop]!.selector,
+                                    name: "\(prop)",
+            isSettable: Property.isSettable(prop, in: objectID),
+            value: Property.description(of: prop, in: objectID) ?? "<undefined>")
+        propertyList.append(item)
+    }
+    return propertyList
 }
 
 final class ListViewController: NSViewController {
@@ -74,33 +87,29 @@ final class ListViewController: NSViewController {
     private func reloadPropertyList(for node: CMIONode) {
         propertyList.removeAll()
         
-        let props = ObjectProperty.allExisting(in: node.objectID)
-        for prop in props {
-            let item = CMIOPropertyItem(selector: ObjectProperty.descriptors[prop]!.selector,
-                                        name: "\(prop)",
-                                        isSettable: Property.isSettable(prop, in: node.objectID),
-                                        value: Property.description(of: prop, in: node.objectID) ?? "<undefined>")
-            propertyList.append(item)
-        }
-        
+        propertyList.append(contentsOf: properties(from: ObjectProperty.self, in: node.objectID))
+
         if node.classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)) {
-            let deviceProps = DeviceProperty.allExisting(in: node.objectID)
-            for prop in deviceProps {
-                let item = CMIOPropertyItem(selector: DeviceProperty.descriptors[prop]!.selector,
-                                            name: "\(prop)",
-                                            isSettable: Property.isSettable(prop, in: node.objectID),
-                                            value: Property.description(of: prop, in: node.objectID) ?? "<undefined>")
-                propertyList.append(item)
-            }
+            propertyList.append(contentsOf: properties(from: DeviceProperty.self, in: node.objectID))
         }
         else if node.classID.isSubclass(of: CMIOClassID(kCMIOStreamClassID)) {
-            let streamProps = StreamProperty.allExisting(in: node.objectID)
-            for prop in streamProps {
-                let item = CMIOPropertyItem(selector: StreamProperty.descriptors[prop]!.selector,
-                                            name: "\(prop)",
-                                            isSettable: Property.isSettable(prop, in: node.objectID),
-                                            value: Property.description(of: prop, in: node.objectID) ?? "<undefined>")
-                propertyList.append(item)
+            propertyList.append(contentsOf: properties(from: StreamProperty.self, in: node.objectID))
+        }
+        else if node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID)) {
+            propertyList.append(contentsOf: properties(from: ControlProperty.self, in: node.objectID))
+            
+            if node.classID.isSubclass(of: CMIOClassID(kCMIOBooleanControlClassID)) {
+                propertyList.append(contentsOf: properties(from: BooleanControlProperty.self, in: node.objectID))
+            }
+            else if node.classID.isSubclass(of: CMIOClassID(kCMIOSelectorControlClassID)) {
+                propertyList.append(contentsOf: properties(from: SelectorControlProperty.self, in: node.objectID))
+            }
+            else if node.classID.isSubclass(of: CMIOClassID(kCMIOFeatureControlClassID)) {
+                propertyList.append(contentsOf: properties(from: FeatureControlProperty.self, in: node.objectID))
+                
+                if node.classID.isSubclass(of: CMIOClassID(kCMIOExposureControlClassID)) {
+                    propertyList.append(contentsOf: properties(from: ExposureControlProperty.self, in: node.objectID))
+                }
             }
         }
     }
