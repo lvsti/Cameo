@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="outlineView" destination="tmE-UJ-g6s" id="8vA-4d-Hlp"/>
                 <outlet property="tableView" destination="Qn2-PC-Wmp" id="3l3-Ju-Xo7"/>
+                <outlet property="toolbar" destination="jpi-pV-cdB" id="rlf-K2-ofC"/>
                 <outlet property="view" destination="c22-O7-iKe" id="Pbz-ZX-AkU"/>
             </connections>
         </customObject>
@@ -20,20 +21,20 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3lI-dB-Alc">
-                    <rect key="frame" x="0.0" y="20" width="735" height="455"/>
+                    <rect key="frame" x="0.0" y="20" width="735" height="516"/>
                     <subviews>
                         <customView id="eNA-ix-iuq">
-                            <rect key="frame" x="0.0" y="0.0" width="183" height="455"/>
+                            <rect key="frame" x="0.0" y="0.0" width="183" height="516"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="23O-d0-bla">
-                                    <rect key="frame" x="0.0" y="0.0" width="183" height="455"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="183" height="516"/>
                                     <clipView key="contentView" drawsBackground="NO" id="Mep-zi-td2">
-                                        <rect key="frame" x="1" y="1" width="181" height="453"/>
+                                        <rect key="frame" x="1" y="1" width="181" height="514"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="BKn-qF-LKY" id="tmE-UJ-g6s">
-                                                <rect key="frame" x="0.0" y="0.0" width="181" height="453"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="181" height="514"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -123,17 +124,17 @@
                             </constraints>
                         </customView>
                         <customView id="dwo-Gr-occ">
-                            <rect key="frame" x="184" y="0.0" width="551" height="455"/>
+                            <rect key="frame" x="184" y="0.0" width="551" height="516"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Fd-G1-ecH">
-                                    <rect key="frame" x="0.0" y="0.0" width="551" height="455"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="551" height="516"/>
                                     <clipView key="contentView" id="eNx-RF-Kcp">
-                                        <rect key="frame" x="1" y="0.0" width="549" height="454"/>
+                                        <rect key="frame" x="1" y="0.0" width="549" height="515"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="4wv-r7-05a" viewBased="YES" id="Qn2-PC-Wmp">
-                                                <rect key="frame" x="0.0" y="0.0" width="549" height="431"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="549" height="492"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -304,26 +305,33 @@
                         <real value="250"/>
                     </holdingPriorities>
                 </splitView>
-                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PJK-Jo-nLA">
-                    <rect key="frame" x="634" y="488" width="87" height="32"/>
-                    <buttonCell key="cell" type="push" title="Refresh" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QCo-Zp-Y6b">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                </button>
             </subviews>
             <constraints>
-                <constraint firstItem="3lI-dB-Alc" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="61" id="BRt-pt-ApS"/>
+                <constraint firstItem="3lI-dB-Alc" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="BRt-pt-ApS"/>
                 <constraint firstAttribute="bottom" secondItem="3lI-dB-Alc" secondAttribute="bottom" constant="20" id="FPY-9a-JVL"/>
                 <constraint firstAttribute="trailing" secondItem="3lI-dB-Alc" secondAttribute="trailing" id="UOx-5N-edJ"/>
                 <constraint firstItem="3lI-dB-Alc" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="cLo-bU-kyT"/>
-                <constraint firstItem="PJK-Jo-nLA" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="20" id="yMk-lS-SJK"/>
-                <constraint firstAttribute="trailing" secondItem="PJK-Jo-nLA" secondAttribute="trailing" constant="20" id="zT5-BJ-BYQ"/>
             </constraints>
             <point key="canvasLocation" x="266.5" y="286"/>
         </customView>
+        <toolbar implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" centeredItem="lRX-91-ETK" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="small" id="jpi-pV-cdB">
+            <allowedToolbarItems>
+                <toolbarItem implicitItemIdentifier="55994581-7281-4B4B-9983-2FA7247FB3A7" label="Reload Properties" paletteLabel="Reload Properties" tag="-1" image="reload" sizingBehavior="auto" autovalidates="NO" id="lRX-91-ETK">
+                    <connections>
+                        <action selector="reloadClicked:" target="-2" id="zxi-Rn-5AX"/>
+                    </connections>
+                </toolbarItem>
+                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="CS8-2s-q6a"/>
+            </allowedToolbarItems>
+            <defaultToolbarItems>
+                <toolbarItem reference="CS8-2s-q6a"/>
+                <toolbarItem reference="lRX-91-ETK"/>
+            </defaultToolbarItems>
+            <point key="canvasLocation" x="95" y="-175"/>
+        </toolbar>
     </objects>
     <resources>
         <image name="NSTouchBarIconViewTemplate" width="14" height="30"/>
+        <image name="reload" width="24" height="24"/>
     </resources>
 </document>

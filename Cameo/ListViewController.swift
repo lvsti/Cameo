@@ -56,6 +56,7 @@ final class ListViewController: NSViewController {
     
     @IBOutlet private weak var outlineView: NSOutlineView!
     @IBOutlet private weak var tableView: NSTableView!
+    @IBOutlet private var toolbar: NSToolbar!
     
     var tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
                         classID: CMIOClassID(kCMIOSystemObjectClassID),
@@ -69,6 +70,8 @@ final class ListViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        (NSApp.delegate as? AppDelegate)?.window.toolbar = toolbar
         
         reloadTree()
         outlineView.reloadData()
@@ -128,6 +131,16 @@ final class ListViewController: NSViewController {
         
         present(qlvc, asPopoverRelativeTo: rowRect, of: tableView, preferredEdge: .maxY, behavior: .transient)
         view.window?.makeFirstResponder(qlvc)
+    }
+    
+    @IBAction private func reloadClicked(_ sender: Any) {
+        guard outlineView.selectedRow >= 0 else {
+            return
+        }
+        
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+        reloadPropertyList(for: node)
+        tableView.reloadData()
     }
 }
 
