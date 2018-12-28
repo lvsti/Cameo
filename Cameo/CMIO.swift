@@ -44,7 +44,19 @@ enum PropertyType {
     }
     
     static func podTypeValue<T>(for selector: CMIOObjectPropertySelector, in objectID: CMIOObjectID) -> T? {
-        return podArrayTypeValue(for: selector, in: objectID)?.first
+        var address = CMIOObjectPropertyAddress(selector)
+        var dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
+        var dataUsed: UInt32 = 0
+        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<T>.alignment)
+        defer { data.deallocate() }
+        
+        let status = CMIOObjectGetPropertyData(objectID, &address, 0, nil, dataSize, &dataUsed, data)
+        guard status == 0 else {
+            return nil
+        }
+        
+        let typedData = data.bindMemory(to: T.self, capacity: 1)
+        return typedData.pointee
     }
 
     static func podArrayTypeValue<T>(for selector: CMIOObjectPropertySelector, in objectID: CMIOObjectID) -> [T]? {
@@ -53,7 +65,6 @@ enum PropertyType {
         
         var status = CMIOObjectGetPropertyDataSize(objectID, &address, 0, nil, &dataSize)
         guard status == 0 else {
-//            throw CMIOError.osStatus(status)
             return nil
         }
         
@@ -72,7 +83,19 @@ enum PropertyType {
     }
 
     static func cfTypeValue<T>(for selector: CMIOObjectPropertySelector, in objectID: CMIOObjectID) -> T? {
-        return cfArrayTypeValue(for: selector, in: objectID)?.first
+        var address = CMIOObjectPropertyAddress(selector)
+        var dataSize: UInt32 = UInt32(MemoryLayout<CFTypeRef>.size)
+        var dataUsed: UInt32 = 0
+        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<CFTypeRef>.alignment)
+        defer { data.deallocate() }
+        
+        let status = CMIOObjectGetPropertyData(objectID, &address, 0, nil, dataSize, &dataUsed, data)
+        guard status == 0 else {
+            return nil
+        }
+        
+        let typedData = data.bindMemory(to: CFTypeRef.self, capacity: 1)
+        return typedData.pointee as? T
     }
 
     static func cfArrayTypeValue<T>(for selector: CMIOObjectPropertySelector, in objectID: CMIOObjectID) -> [T]? {
@@ -81,7 +104,6 @@ enum PropertyType {
         
         var status = CMIOObjectGetPropertyDataSize(objectID, &address, 0, nil, &dataSize)
         guard status == 0 else {
-//            throw CMIOError.osStatus(status)
             return nil
         }
         
