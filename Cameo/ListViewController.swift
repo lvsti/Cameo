@@ -102,6 +102,11 @@ final class ListViewController: NSViewController {
     private func reloadPropertyList(for node: CMIONode) {
         propertyList.removeAll()
         
+        propertyList.append(CMIOPropertyItem(selector: CMIOObjectPropertySelector(kCMIOObjectPropertyScopeWildcard),
+                                             name: "objectID",
+                                             isSettable: false,
+                                             value: "@\(node.objectID)"))
+        
         propertyList.append(contentsOf: properties(from: ObjectProperty.self, in: node.objectID))
 
         if node.classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)) {
