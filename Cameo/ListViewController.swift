@@ -35,6 +35,17 @@ func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
             nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
         }
     }
+    else if let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: objectID),
+        classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)),
+        let streams: [CMIOStreamID] = Property.arrayValue(of: DeviceProperty.streams, in: objectID) {
+        
+        for child in streams {
+            let subtree = cmioChildren(of: child)
+            let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
+            let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? CMIOClassID(kCMIOObjectClassID)
+            nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
+        }
+    }
     
     return nodes
 }
