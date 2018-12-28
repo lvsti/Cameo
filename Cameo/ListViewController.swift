@@ -162,6 +162,10 @@ final class ListViewController: NSViewController {
 
 extension ListViewController: NSOutlineViewDelegate {
     func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard outlineView.selectedRow >= 0 else {
+            return
+        }
+        
         let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
         
         reloadPropertyList(for: node)
