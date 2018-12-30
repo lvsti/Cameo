@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BEACA42C21D4D92700D8DC45 /* fcc_mapping.json in Resources */ = {isa = PBXBuildFile; fileRef = BEACA42B21D4D92700D8DC45 /* fcc_mapping.json */; };
+		BEA6FBDC21D971CA00FFFB8C /* FourCCDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBDB21D971CA00FFFB8C /* FourCCDatabase.swift */; };
+		BEA6FBDE21D9737900FFFB8C /* fourcc.json in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBDD21D9737900FFFB8C /* fourcc.json */; };
 		BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */; };
 		BEACA43021D4DF8800D8DC45 /* QuickLookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */; };
 		BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4021D2453B00453456 /* AppDelegate.swift */; };
@@ -20,7 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BEACA42B21D4D92700D8DC45 /* fcc_mapping.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fcc_mapping.json; sourceTree = "<group>"; };
+		BEA6FBDB21D971CA00FFFB8C /* FourCCDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourCCDatabase.swift; sourceTree = "<group>"; };
+		BEA6FBDD21D9737900FFFB8C /* fourcc.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fourcc.json; sourceTree = "<group>"; };
 		BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookViewController.swift; sourceTree = "<group>"; };
 		BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QuickLookView.xib; sourceTree = "<group>"; };
 		BEC91F3D21D2453B00453456 /* Cameo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cameo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,13 +70,14 @@
 			children = (
 				BEC91F4021D2453B00453456 /* AppDelegate.swift */,
 				BEC91F5521D2581500453456 /* CMIO.swift */,
+				BEA6FBDB21D971CA00FFFB8C /* FourCCDatabase.swift */,
 				BEC91F5021D246CD00453456 /* ListView.xib */,
 				BEC91F4E21D246C200453456 /* ListViewController.swift */,
 				BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */,
 				BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */,
 				BEC91F4221D2453B00453456 /* Assets.xcassets */,
 				BEC91F4421D2453B00453456 /* MainMenu.xib */,
-				BEACA42B21D4D92700D8DC45 /* fcc_mapping.json */,
+				BEA6FBDD21D9737900FFFB8C /* fourcc.json */,
 				BEC91F4721D2453B00453456 /* Info.plist */,
 			);
 			path = Cameo;
@@ -150,7 +153,7 @@
 				BEACA43021D4DF8800D8DC45 /* QuickLookView.xib in Resources */,
 				BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */,
 				BEC91F5121D246CD00453456 /* ListView.xib in Resources */,
-				BEACA42C21D4D92700D8DC45 /* fcc_mapping.json in Resources */,
+				BEA6FBDE21D9737900FFFB8C /* fourcc.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEA6FBDC21D971CA00FFFB8C /* FourCCDatabase.swift in Sources */,
 				BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */,
 				BEC91F5621D2581500453456 /* CMIO.swift in Sources */,
 				BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */,

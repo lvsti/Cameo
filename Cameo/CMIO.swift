@@ -491,12 +491,8 @@ func fourCCDescription(from value: UInt32) -> String? {
         return nil
     }
     
-    let url = Bundle.main.url(forResource: "fcc_mapping.json", withExtension: nil)!
-    let data = try! Data(contentsOf: url)
-    let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: [String: String]]
-    
-    if let fccName = json["dec"]?["\(value)"] {
-        return "'\(fcc)' (\(fccName))"
+    if let entry = FourCCDatabase.shared.entry(forValue: Int(value)) {
+        return "'\(fcc)' (\(entry.constantName))"
     }
     
     return "'\(fcc)'"
