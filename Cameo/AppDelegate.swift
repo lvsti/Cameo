@@ -12,6 +12,8 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
+    
+    private var lookupWindowController: LookupWindowController!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         window.contentViewController = ListViewController()
@@ -23,6 +25,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
 
-
+    @IBAction func showLookupWindow(_ sender: Any) {
+        if lookupWindowController == nil {
+            lookupWindowController = LookupWindowController(window: nil)
+        }
+        lookupWindowController.window?.makeKeyAndOrderFront(nil)
+    }
+    
 }
 

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BEA6FBD621D964FC00FFFB8C /* LookupWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */; };
+		BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */; };
+		BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */; };
 		BEA6FBDC21D971CA00FFFB8C /* FourCCDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBDB21D971CA00FFFB8C /* FourCCDatabase.swift */; };
 		BEA6FBDE21D9737900FFFB8C /* fourcc.json in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBDD21D9737900FFFB8C /* fourcc.json */; };
 		BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */; };
@@ -21,6 +24,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LookupWindow.xib; sourceTree = "<group>"; };
+		BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindowController.swift; sourceTree = "<group>"; };
+		BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindow.swift; sourceTree = "<group>"; };
 		BEA6FBDB21D971CA00FFFB8C /* FourCCDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourCCDatabase.swift; sourceTree = "<group>"; };
 		BEA6FBDD21D9737900FFFB8C /* fourcc.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fourcc.json; sourceTree = "<group>"; };
 		BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookViewController.swift; sourceTree = "<group>"; };
@@ -69,16 +75,19 @@
 			isa = PBXGroup;
 			children = (
 				BEC91F4021D2453B00453456 /* AppDelegate.swift */,
+				BEC91F4221D2453B00453456 /* Assets.xcassets */,
 				BEC91F5521D2581500453456 /* CMIO.swift */,
+				BEA6FBDD21D9737900FFFB8C /* fourcc.json */,
 				BEA6FBDB21D971CA00FFFB8C /* FourCCDatabase.swift */,
+				BEC91F4721D2453B00453456 /* Info.plist */,
 				BEC91F5021D246CD00453456 /* ListView.xib */,
 				BEC91F4E21D246C200453456 /* ListViewController.swift */,
+				BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */,
+				BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */,
+				BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */,
+				BEC91F4421D2453B00453456 /* MainMenu.xib */,
 				BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */,
 				BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */,
-				BEC91F4221D2453B00453456 /* Assets.xcassets */,
-				BEC91F4421D2453B00453456 /* MainMenu.xib */,
-				BEA6FBDD21D9737900FFFB8C /* fourcc.json */,
-				BEC91F4721D2453B00453456 /* Info.plist */,
 			);
 			path = Cameo;
 			sourceTree = "<group>";
@@ -154,6 +163,7 @@
 				BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */,
 				BEC91F5121D246CD00453456 /* ListView.xib in Resources */,
 				BEA6FBDE21D9737900FFFB8C /* fourcc.json in Resources */,
+				BEA6FBD621D964FC00FFFB8C /* LookupWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +176,8 @@
 			files = (
 				BEA6FBDC21D971CA00FFFB8C /* FourCCDatabase.swift in Sources */,
 				BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */,
+				BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */,
+				BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */,
 				BEC91F5621D2581500453456 /* CMIO.swift in Sources */,
 				BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */,
 				BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */,
