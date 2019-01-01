@@ -29,7 +29,7 @@ final class QuickLookViewController: NSViewController {
         let desc = NSFontDescriptor(name: "Monaco", size: 11)
         textView.font = NSFont(descriptor: desc, size: 11)
         
-        preferredContentSize = NSSize(width: 400, height: 200)
+        preferredContentSize = NSSize(width: 500, height: 250)
         textView.string = content
     }
     
