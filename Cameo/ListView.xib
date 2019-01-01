@@ -250,21 +250,41 @@
                                                         </textFieldCell>
                                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         <prototypeCellViews>
-                                                            <tableCellView identifier="ValueCell" id="hnX-ZY-I7z">
+                                                            <tableCellView identifier="ValueCell" id="hnX-ZY-I7z" customClass="ValueCellView" customModule="Cameo" customModuleProvider="target">
                                                                 <rect key="frame" x="219" y="1" width="328" height="17"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
-                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kGm-l4-f17">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="328" height="17"/>
-                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="kGm-l4-f17">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="96" height="17"/>
                                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" id="MAo-1a-TQw">
                                                                             <font key="font" metaFont="system"/>
                                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                         </textFieldCell>
                                                                     </textField>
+                                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="itc-Xw-ShE">
+                                                                        <rect key="frame" x="98" y="0.0" width="17" height="18"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="17" id="W3H-kA-eaQ"/>
+                                                                        </constraints>
+                                                                        <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSFollowLinkFreestandingTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="g1N-Pb-K6f">
+                                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                            <font key="font" metaFont="smallSystemBold"/>
+                                                                        </buttonCell>
+                                                                        <connections>
+                                                                            <action selector="linkButtonClicked:" target="hnX-ZY-I7z" id="OtX-tB-7Uq"/>
+                                                                        </connections>
+                                                                    </button>
                                                                 </subviews>
+                                                                <constraints>
+                                                                    <constraint firstItem="itc-Xw-ShE" firstAttribute="centerY" secondItem="hnX-ZY-I7z" secondAttribute="centerY" id="5Ag-un-UXj"/>
+                                                                    <constraint firstItem="kGm-l4-f17" firstAttribute="top" secondItem="hnX-ZY-I7z" secondAttribute="top" id="8rG-O4-Xd5"/>
+                                                                    <constraint firstItem="kGm-l4-f17" firstAttribute="leading" secondItem="hnX-ZY-I7z" secondAttribute="leading" constant="2" id="UVb-zv-C3M"/>
+                                                                    <constraint firstItem="itc-Xw-ShE" firstAttribute="leading" secondItem="kGm-l4-f17" secondAttribute="trailing" constant="4" id="fUN-ms-pLP"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="kGm-l4-f17" secondAttribute="bottom" id="v1x-7l-nM5"/>
+                                                                </constraints>
                                                                 <connections>
+                                                                    <outlet property="linkButton" destination="itc-Xw-ShE" id="UG2-tF-UGy"/>
                                                                     <outlet property="textField" destination="kGm-l4-f17" id="sGI-v4-Kda"/>
                                                                 </connections>
                                                             </tableCellView>
@@ -331,6 +351,7 @@
         </toolbar>
     </objects>
     <resources>
+        <image name="NSFollowLinkFreestandingTemplate" width="14" height="14"/>
         <image name="NSTouchBarIconViewTemplate" width="14" height="30"/>
         <image name="reload" width="24" height="24"/>
     </resources>

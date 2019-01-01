@@ -241,7 +241,7 @@ extension ListViewController: NSTableViewDelegate {
         }
         else if column.identifier.rawValue == "valueColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ValueCell"),
-                                          owner: nil) as! NSTableCellView
+                                          owner: nil) as! ValueCellView
             view.textField?.stringValue = propertyList[row].value
             return view
         }
