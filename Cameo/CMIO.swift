@@ -12,24 +12,25 @@ import CoreMediaIO
 
 enum PropertyType {
     enum Kind {
-        case pod, podArray, cf, cfArray
+        case pod, podArray, cf, cfArray, function
     }
     
     case boolean, boolean32, int32, uint32, uint64, float32, float64, fourCC,
         classID, objectID, deviceID,
-        audioValueTranslation, audioValueRange, propertyAddress, streamConfiguration, streamDeck,
+        audioValueRange, propertyAddress, streamConfiguration, streamDeck,
         pid,
         smpteCallback, scheduledOutputCallback,
         componentDescription, time, cgRect
     case arrayOfDeviceIDs, arrayOfObjectIDs, arrayOfStreamIDs, arrayOfUInt32s, arrayOfFloat64s, arrayOfAudioValueRanges
     case string, formatDescription, sampleBuffer, clock
     case arrayOfFormatDescriptions
+    case audioValueTranslation
 
     var kind: Kind {
         switch self {
         case .boolean, .boolean32, .int32, .uint32, .uint64, .float32, .float64, .fourCC,
              .classID, .objectID, .deviceID,
-             .audioValueTranslation, .audioValueRange, .propertyAddress, .streamConfiguration, .streamDeck,
+             .audioValueRange, .propertyAddress, .streamConfiguration, .streamDeck,
              .pid,
              .smpteCallback, .scheduledOutputCallback,
              .componentDescription, .time, .cgRect:
@@ -40,6 +41,8 @@ enum PropertyType {
             return .cf
         case .arrayOfFormatDescriptions:
             return .cfArray
+        case .audioValueTranslation:
+            return .function
         }
     }
     
@@ -229,18 +232,18 @@ enum SystemProperty: PropertySet {
     
     static let descriptors: [SystemProperty: PropertyDescriptor] = [
         .processIsMaster: PropertyDescriptor(kCMIOHardwarePropertyProcessIsMaster, .boolean32),
-        .isInitingOrExiting: PropertyDescriptor(kCMIOHardwarePropertyIsInitingOrExiting, .boolean),
+        .isInitingOrExiting: PropertyDescriptor(kCMIOHardwarePropertyIsInitingOrExiting, .boolean32),
         .devices: PropertyDescriptor(kCMIOHardwarePropertyDevices, .arrayOfDeviceIDs),
         .defaultInputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultInputDevice, .deviceID),
         .defaultOutputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultOutputDevice, .deviceID),
         .deviceForUID: PropertyDescriptor(kCMIOHardwarePropertyDeviceForUID, .audioValueTranslation),
-        .sleepingIsAllowed: PropertyDescriptor(kCMIOHardwarePropertySleepingIsAllowed, .boolean),
-        .unloadingIsAllowed: PropertyDescriptor(kCMIOHardwarePropertyUnloadingIsAllowed, .boolean),
+        .sleepingIsAllowed: PropertyDescriptor(kCMIOHardwarePropertySleepingIsAllowed, .boolean32),
+        .unloadingIsAllowed: PropertyDescriptor(kCMIOHardwarePropertyUnloadingIsAllowed, .boolean32),
         .plugInForBundleID: PropertyDescriptor(kCMIOHardwarePropertyPlugInForBundleID, .audioValueTranslation),
-        .userSessionIsActiveOrHeadless: PropertyDescriptor(kCMIOHardwarePropertyUserSessionIsActiveOrHeadless, .boolean),
-        .suspendedBySystem: PropertyDescriptor(kCMIOHardwarePropertySuspendedBySystem, .boolean),
-        .allowScreenCaptureDevices: PropertyDescriptor(kCMIOHardwarePropertyAllowScreenCaptureDevices, .boolean),
-        .allowWirelessScreenCaptureDevices: PropertyDescriptor(kCMIOHardwarePropertyAllowWirelessScreenCaptureDevices, .boolean)
+        .userSessionIsActiveOrHeadless: PropertyDescriptor(kCMIOHardwarePropertyUserSessionIsActiveOrHeadless, .boolean32),
+        .suspendedBySystem: PropertyDescriptor(kCMIOHardwarePropertySuspendedBySystem, .boolean32),
+        .allowScreenCaptureDevices: PropertyDescriptor(kCMIOHardwarePropertyAllowScreenCaptureDevices, .boolean32),
+        .allowWirelessScreenCaptureDevices: PropertyDescriptor(kCMIOHardwarePropertyAllowWirelessScreenCaptureDevices, .boolean32)
     ]
 }
 
@@ -268,7 +271,7 @@ enum DeviceProperty: PropertySet {
         .streamConfiguration: PropertyDescriptor(kCMIODevicePropertyStreamConfiguration, .streamConfiguration),
         .deviceMaster: PropertyDescriptor(kCMIODevicePropertyDeviceMaster, .pid),
         .excludeNonDALAccess: PropertyDescriptor(kCMIODevicePropertyExcludeNonDALAccess, .boolean32),
-        .clientSyncDiscontinuity: PropertyDescriptor(kCMIODevicePropertyClientSyncDiscontinuity, .boolean32),
+        .clientSyncDiscontinuity: PropertyDescriptor(kCMIODevicePropertyClientSyncDiscontinuity, .boolean),
         .smpteTimeCallback: PropertyDescriptor(kCMIODevicePropertySMPTETimeCallback, .smpteCallback),
         .canProcessAVCCommand: PropertyDescriptor(kCMIODevicePropertyCanProcessAVCCommand, .boolean),
         .avcDeviceType: PropertyDescriptor(kCMIODevicePropertyAVCDeviceType, .uint32),
@@ -534,12 +537,10 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         }
     case .objectID, .deviceID:
         if let value: CMIOObjectID = PropertyType.podTypeValue(for: selector, in: objectID) {
-            return "@\(value)"
+            return value != kCMIOObjectUnknown ? "@\(value)" : "<null>"
         }
     case .audioValueTranslation:
-        if let value: AudioValueTranslation = PropertyType.podTypeValue(for: selector, in: objectID) {
-            return "\(value)"
-        }
+        return "<function>"
     case .audioValueRange:
         if let value: AudioValueRange = PropertyType.podTypeValue(for: selector, in: objectID) {
             return "AudioValueRange {\(value.mMinimum), \(value.mMaximum)}"
@@ -592,7 +593,7 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         }
     case .arrayOfDeviceIDs, .arrayOfObjectIDs, .arrayOfStreamIDs:
         if let value: [CMIOObjectID] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {
-            return "[" + value.map { "@\($0)" }.joined(separator: ", ") + "]"
+            return "[" + value.map { $0 != kCMIOObjectUnknown ? "@\($0)" : "<null>" }.joined(separator: ", ") + "]"
         }
     case .arrayOfAudioValueRanges:
         if let value: [AudioValueRange] = PropertyType.podArrayTypeValue(for: selector, in: objectID) {

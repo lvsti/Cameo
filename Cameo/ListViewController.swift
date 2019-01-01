@@ -59,7 +59,7 @@ func properties<S>(from type: S.Type, in objectID: CMIOObjectID) -> [CMIOPropert
         let item = CMIOPropertyItem(selector: S.descriptors[prop]!.selector,
                                     name: "\(prop)",
                                     isSettable: Property.isSettable(prop, in: objectID),
-                                    value: Property.description(of: prop, in: objectID) ?? "<undefined>",
+                                    value: Property.description(of: prop, in: objectID) ?? "#ERROR",
                                     fourCC: isFourCC ? Property.value(of: prop, in: objectID) : nil)
         propertyList.append(item)
     }
@@ -135,6 +135,9 @@ final class ListViewController: NSViewController {
                     propertyList.append(contentsOf: properties(from: ExposureControlProperty.self, in: node.objectID))
                 }
             }
+        }
+        else if node.classID == kCMIOSystemObjectClassID {
+            propertyList.append(contentsOf: properties(from: SystemProperty.self, in: node.objectID))
         }
     }
     
