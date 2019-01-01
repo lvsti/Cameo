@@ -552,7 +552,7 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         }
     case .streamConfiguration:
         if let value: CMIODeviceStreamConfiguration = PropertyType.podTypeValue(for: selector, in: objectID) {
-            return "\(value)"
+            return "CMIODeviceStreamConfiguration {\(value.mNumberStreams)}"
         }
     case .pid:
         if let value: pid_t = PropertyType.podTypeValue(for: selector, in: objectID) {
@@ -572,15 +572,27 @@ func propertyDescription(for selector: CMIOObjectPropertySelector, ofType type: 
         }
     case .streamDeck:
         if let value: CMIOStreamDeck = PropertyType.podTypeValue(for: selector, in: objectID) {
-            return "\(value)"
+            return "CMIOStreamDeck {\(value.mStatus), \(value.mState), \(value.mState2)}"
         }
     case .smpteCallback:
         if let value: CMIODeviceSMPTETimeCallback = PropertyType.podTypeValue(for: selector, in: objectID) {
-            return "\(value)"
+            if value.mGetSMPTETimeProc != nil {
+                let ctx = value.mRefCon != nil ? "\(value.mRefCon!)" : "0x0"
+                return "CMIODeviceSMPTETimeCallback {proc=\(value.mGetSMPTETimeProc!), ctx=\(ctx)}"
+            }
+            else {
+                return "<null>"
+            }
         }
     case .scheduledOutputCallback:
         if let value: CMIOStreamScheduledOutputNotificationProcAndRefCon = PropertyType.podTypeValue(for: selector, in: objectID) {
-            return "\(value)"
+            if value.scheduledOutputNotificationProc != nil {
+                let ctx = value.scheduledOutputNotificationRefCon != nil ? "\(value.scheduledOutputNotificationRefCon!)" : "0x0"
+                return "CMIOStreamScheduledOutputNotificationProcAndRefCon {proc=\(value.scheduledOutputNotificationProc!), ctx=\(ctx)"
+            }
+            else {
+                return "<null>"
+            }
         }
         
     case .arrayOfUInt32s:
