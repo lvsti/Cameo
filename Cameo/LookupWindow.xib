@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="LookupWindowController" customModule="Cameo" customModuleProvider="target">
             <connections>
+                <outlet property="searchField" destination="EHB-BE-8ws" id="1cS-dZ-cm4"/>
                 <outlet property="tableView" destination="I8b-Js-v11" id="Upe-D5-Ufq"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="UbV-P3-8vl"/>
             </connections>

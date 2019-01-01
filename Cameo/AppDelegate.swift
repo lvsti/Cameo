@@ -25,11 +25,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
 
-    @IBAction func showLookupWindow(_ sender: Any) {
+    @IBAction func showLookupWindow(_ sender: Any?) {
         if lookupWindowController == nil {
             lookupWindowController = LookupWindowController(window: nil)
         }
         lookupWindowController.window?.makeKeyAndOrderFront(nil)
+    }
+    
+    func showLookupWindow(for fourCC: UInt32) {
+        showLookupWindow(nil)
+        lookupWindowController.show(for: fourCC)
     }
     
 }

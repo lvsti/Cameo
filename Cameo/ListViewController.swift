@@ -22,6 +22,7 @@ struct CMIOPropertyItem {
     var name: String
     var isSettable: Bool
     var value: String
+    var fourCC: UInt32?
 }
 
 func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
@@ -54,10 +55,12 @@ func properties<S>(from type: S.Type, in objectID: CMIOObjectID) -> [CMIOPropert
     var propertyList: [CMIOPropertyItem] = []
     let props = S.allExisting(in: objectID)
     for prop in props {
+        let isFourCC = S.descriptors[prop]!.type == .fourCC || S.descriptors[prop]!.type == .classID
         let item = CMIOPropertyItem(selector: S.descriptors[prop]!.selector,
                                     name: "\(prop)",
-            isSettable: Property.isSettable(prop, in: objectID),
-            value: Property.description(of: prop, in: objectID) ?? "<undefined>")
+                                    isSettable: Property.isSettable(prop, in: objectID),
+                                    value: Property.description(of: prop, in: objectID) ?? "<undefined>",
+                                    fourCC: isFourCC ? Property.value(of: prop, in: objectID) : nil)
         propertyList.append(item)
     }
     return propertyList
@@ -105,7 +108,8 @@ final class ListViewController: NSViewController {
         propertyList.append(CMIOPropertyItem(selector: CMIOObjectPropertySelector(kCMIOObjectPropertyScopeWildcard),
                                              name: "objectID",
                                              isSettable: false,
-                                             value: "@\(node.objectID)"))
+                                             value: "@\(node.objectID)",
+                                             fourCC: nil))
         
         propertyList.append(contentsOf: properties(from: ObjectProperty.self, in: node.objectID))
 
@@ -243,6 +247,8 @@ extension ListViewController: NSTableViewDelegate {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ValueCell"),
                                           owner: nil) as! ValueCellView
             view.textField?.stringValue = propertyList[row].value
+            view.showsLinkButton = propertyList[row].fourCC != nil
+            view.delegate = self
             return view
         }
         else if column.identifier.rawValue == "fourccColumn" {
@@ -264,3 +270,13 @@ extension ListViewController: NSTableViewDelegate {
     }
 }
 
+extension ListViewController: ValueCellDelegate {
+    func valueCellDidClickLinkButton(_ sender: ValueCellView) {
+        let clickedRow = tableView.row(for: sender)
+        guard clickedRow >= 0, let fourCC = propertyList[clickedRow].fourCC else {
+            return
+        }
+        
+        (NSApp.delegate as? AppDelegate)?.showLookupWindow(for: fourCC)
+    }
+}

@@ -10,10 +10,11 @@ import Cocoa
 
 final class LookupWindowController: NSWindowController {
     
+    @IBOutlet private weak var searchField: NSTextField!
     @IBOutlet private weak var tableView: NSTableView!
     
     private var matches: [FourCCEntry] = []
-    private var observer: NSObjectProtocol?
+    private var observers: [NSObjectProtocol] = []
     
     override var windowNibName: NSNib.Name? {
         return "LookupWindow"
@@ -21,23 +22,26 @@ final class LookupWindowController: NSWindowController {
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        observer = NotificationCenter.default.addObserver(forName: NSWindow.didResignKeyNotification,
-                                                          object: window!,
-                                                          queue: nil, using: { [weak self] _ in
+        observers.append(NotificationCenter.default.addObserver(forName: NSWindow.didResignKeyNotification,
+                                                                object: window!,
+                                                                queue: nil,
+                                                                using: { [weak self] _ in
             self?.window?.close()
-        })
+        }))
+        observers.append(NotificationCenter.default.addObserver(forName: NSWindow.didBecomeKeyNotification,
+                                                                object: window!,
+                                                                queue: nil,
+                                                                using: { [weak self] _ in
+            self?.window?.makeFirstResponder(self?.searchField)
+        }))
     }
     
     override func cancelOperation(_ sender: Any?) {
         window?.close()
     }
     
-}
-
-extension LookupWindowController: NSTextFieldDelegate {
-    
-    func controlTextDidChange(_ obj: Notification) {
-        if let searchTerm = (obj.object as? NSTextField)?.stringValue, !searchTerm.isEmpty {
+    private func showResults(matching searchTerm: String?) {
+        if let searchTerm = searchTerm, !searchTerm.isEmpty {
             matches = FourCCDatabase.shared.entriesMatching(searchTerm)
         }
         else {
@@ -45,6 +49,27 @@ extension LookupWindowController: NSTextFieldDelegate {
         }
         
         tableView.reloadData()
+    }
+
+    func show(for fourCCValue: UInt32) {
+        searchField.stringValue = fourCC(from: fourCCValue) ?? ""
+        
+        if let match = FourCCDatabase.shared.entry(forValue: Int(fourCCValue)) {
+            matches = [match]
+        }
+        else {
+            matches = []
+        }
+        
+        tableView.reloadData()
+    }
+
+}
+
+extension LookupWindowController: NSTextFieldDelegate {
+    
+    func controlTextDidChange(_ obj: Notification) {
+        showResults(matching: (obj.object as? NSTextField)?.stringValue)
     }
 
     func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
