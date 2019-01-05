@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		BE253FFC21DBBF1400C90876 /* ValueCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE253FFB21DBBF1400C90876 /* ValueCellView.swift */; };
+		BE9EFC8221E118B4000CC1CA /* PreviewWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */; };
+		BE9EFC8421E118C3000CC1CA /* PreviewWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */; };
 		BEA6FBD621D964FC00FFFB8C /* LookupWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */; };
 		BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */; };
 		BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */; };
@@ -26,6 +28,8 @@
 
 /* Begin PBXFileReference section */
 		BE253FFB21DBBF1400C90876 /* ValueCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueCellView.swift; sourceTree = "<group>"; };
+		BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreviewWindow.xib; sourceTree = "<group>"; };
+		BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWindowController.swift; sourceTree = "<group>"; };
 		BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LookupWindow.xib; sourceTree = "<group>"; };
 		BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindowController.swift; sourceTree = "<group>"; };
 		BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindow.swift; sourceTree = "<group>"; };
@@ -88,6 +92,8 @@
 				BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */,
 				BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */,
 				BEC91F4421D2453B00453456 /* MainMenu.xib */,
+				BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */,
+				BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */,
 				BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */,
 				BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */,
 				BE253FFB21DBBF1400C90876 /* ValueCellView.swift */,
@@ -161,6 +167,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE9EFC8221E118B4000CC1CA /* PreviewWindow.xib in Resources */,
 				BEC91F4321D2453B00453456 /* Assets.xcassets in Resources */,
 				BEACA43021D4DF8800D8DC45 /* QuickLookView.xib in Resources */,
 				BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */,
@@ -185,6 +192,7 @@
 				BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */,
 				BE253FFC21DBBF1400C90876 /* ValueCellView.swift in Sources */,
 				BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */,
+				BE9EFC8421E118C3000CC1CA /* PreviewWindowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

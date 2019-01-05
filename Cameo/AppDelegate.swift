@@ -14,6 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     
     private var lookupWindowController: LookupWindowController!
+    private var previewWindowController: PreviewWindowController!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         window.contentViewController = ListViewController()
@@ -24,12 +25,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true
+    }
 
-    @IBAction func showLookupWindow(_ sender: Any?) {
+    @IBAction private func showLookupWindow(_ sender: Any?) {
         if lookupWindowController == nil {
             lookupWindowController = LookupWindowController(window: nil)
         }
-        lookupWindowController.window?.makeKeyAndOrderFront(nil)
+        lookupWindowController.showWindow(nil)
     }
     
     func showLookupWindow(for fourCC: UInt32) {
@@ -37,5 +42,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lookupWindowController.show(for: fourCC)
     }
     
+    @IBAction private func showCameraPreviewWindow(_ sender: Any?) {
+        if previewWindowController == nil {
+            previewWindowController = PreviewWindowController(window: nil)
+            previewWindowController.delegate = self
+        }
+        previewWindowController.showWindow(nil)
+    }
 }
 
+extension AppDelegate: PreviewWindowControllerDelegate {
+    func previewWindowWillClose() {
+        previewWindowController = nil
+    }
+}

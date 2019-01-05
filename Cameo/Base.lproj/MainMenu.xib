@@ -305,7 +305,17 @@
                                     <action selector="showLookupWindow:" target="Voe-Tx-rLC" id="mGD-KA-cbx"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Camera Preview" keyEquivalent="C" id="N1X-UL-Y1E">
+                                <connections>
+                                    <action selector="showCameraPreviewWindow:" target="Voe-Tx-rLC" id="gnU-7z-CSf"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="9FF-N6-wIl"/>
+                            <menuItem title="Close Window" keyEquivalent="w" id="nJB-IH-suf">
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="rmb-ZE-hzQ"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

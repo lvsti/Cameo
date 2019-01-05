@@ -341,17 +341,24 @@
                         <action selector="reloadClicked:" target="-2" id="zxi-Rn-5AX"/>
                     </connections>
                 </toolbarItem>
+                <toolbarItem implicitItemIdentifier="63B97AE7-7B03-4780-802F-EFB7964D7242" label="Open Camera" paletteLabel="Open Camera" tag="-1" image="NSSlideshowTemplate" sizingBehavior="auto" autovalidates="NO" id="Uqb-BI-mdC">
+                    <connections>
+                        <action selector="showCameraPreviewWindow:" target="-1" id="4Ep-F0-KCY"/>
+                    </connections>
+                </toolbarItem>
                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="CS8-2s-q6a"/>
             </allowedToolbarItems>
             <defaultToolbarItems>
-                <toolbarItem reference="CS8-2s-q6a"/>
                 <toolbarItem reference="lRX-91-ETK"/>
+                <toolbarItem reference="CS8-2s-q6a"/>
+                <toolbarItem reference="Uqb-BI-mdC"/>
             </defaultToolbarItems>
             <point key="canvasLocation" x="95" y="-175"/>
         </toolbar>
     </objects>
     <resources>
         <image name="NSFollowLinkFreestandingTemplate" width="14" height="14"/>
+        <image name="NSSlideshowTemplate" width="17" height="14"/>
         <image name="NSTouchBarIconViewTemplate" width="14" height="30"/>
         <image name="reload" width="24" height="24"/>
     </resources>

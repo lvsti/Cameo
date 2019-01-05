@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PreviewWindowController" customModule="Cameo" customModuleProvider="target">
+            <connections>
+                <outlet property="cameraView" destination="Hzs-yc-Pbk" id="m2V-gi-2RO"/>
+                <outlet property="deviceDropdown" destination="vJf-iM-kB5" id="2F8-Yy-H4e"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="cO5-nb-Qbw"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Camera Preview" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="800" y="381" width="320" height="241"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <value key="minSize" type="size" width="320" height="241"/>
+            <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="241"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hzs-yc-Pbk">
+                        <rect key="frame" x="0.0" y="61" width="320" height="180"/>
+                    </customView>
+                    <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vJf-iM-kB5">
+                        <rect key="frame" x="58" y="17" width="205" height="26"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="200" id="v6f-vP-g0t"/>
+                        </constraints>
+                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="nyV-bO-FyD" id="f5C-Od-rH7">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="UC5-5a-QVh">
+                                <items>
+                                    <menuItem title="Item 1" state="on" id="nyV-bO-FyD"/>
+                                    <menuItem title="Item 2" id="86N-Tg-iYo"/>
+                                    <menuItem title="Item 3" id="oWi-W9-DRO"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                    </popUpButton>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8dI-g2-NLH">
+                        <rect key="frame" x="262" y="13" width="47" height="32"/>
+                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSRefreshTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="dah-1N-aL0">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="reloadDevicesClicked:" target="-2" id="Jib-F6-yAs"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="Hzs-yc-Pbk" secondAttribute="trailing" id="2QH-If-sjr"/>
+                    <constraint firstItem="8dI-g2-NLH" firstAttribute="leading" secondItem="vJf-iM-kB5" secondAttribute="trailing" constant="8" id="8hE-Z9-KyS"/>
+                    <constraint firstItem="Hzs-yc-Pbk" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" id="Mme-Bp-Ge7"/>
+                    <constraint firstItem="vJf-iM-kB5" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="P5j-vO-SX5"/>
+                    <constraint firstItem="vJf-iM-kB5" firstAttribute="top" secondItem="Hzs-yc-Pbk" secondAttribute="bottom" constant="20" id="Yh5-d7-ehU"/>
+                    <constraint firstItem="Hzs-yc-Pbk" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="bMB-rl-eRx"/>
+                    <constraint firstAttribute="bottom" secondItem="8dI-g2-NLH" secondAttribute="bottom" constant="20" id="s5L-0L-GMS"/>
+                    <constraint firstAttribute="bottom" secondItem="vJf-iM-kB5" secondAttribute="bottom" constant="20" id="vct-eZ-Gsb"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="zj1-fY-W2H"/>
+            </connections>
+            <point key="canvasLocation" x="204.5" y="195.5"/>
+        </window>
+    </objects>
+    <resources>
+        <image name="NSRefreshTemplate" width="11" height="15"/>
+    </resources>
+</document>
