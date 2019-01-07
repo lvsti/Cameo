@@ -11,6 +11,8 @@
 		BE9EFC8221E118B4000CC1CA /* PreviewWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */; };
 		BE9EFC8421E118C3000CC1CA /* PreviewWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */; };
 		BE9EFC8621E15B7A000CC1CA /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8521E15B7A000CC1CA /* Property.swift */; };
+		BE9EFC8921E15F42000CC1CA /* AdjustControlPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9EFC8821E15F42000CC1CA /* AdjustControlPanel.xib */; };
+		BE9EFC8B21E15F50000CC1CA /* AdjustControlPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8A21E15F50000CC1CA /* AdjustControlPanelController.swift */; };
 		BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9121E25C6A000CC1CA /* Control.swift */; };
 		BE9EFC9421E25E9C000CC1CA /* CMIOObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9321E25E9C000CC1CA /* CMIOObject.swift */; };
 		BEA6FBD621D964FC00FFFB8C /* LookupWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */; };
@@ -34,6 +36,8 @@
 		BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreviewWindow.xib; sourceTree = "<group>"; };
 		BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWindowController.swift; sourceTree = "<group>"; };
 		BE9EFC8521E15B7A000CC1CA /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
+		BE9EFC8821E15F42000CC1CA /* AdjustControlPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AdjustControlPanel.xib; sourceTree = "<group>"; };
+		BE9EFC8A21E15F50000CC1CA /* AdjustControlPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustControlPanelController.swift; sourceTree = "<group>"; };
 		BE9EFC9121E25C6A000CC1CA /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		BE9EFC9321E25E9C000CC1CA /* CMIOObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIOObject.swift; sourceTree = "<group>"; };
 		BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LookupWindow.xib; sourceTree = "<group>"; };
@@ -98,6 +102,8 @@
 			isa = PBXGroup;
 			children = (
 				BE9EFC9021E25C5D000CC1CA /* CMIO */,
+				BE9EFC8821E15F42000CC1CA /* AdjustControlPanel.xib */,
+				BE9EFC8A21E15F50000CC1CA /* AdjustControlPanelController.swift */,
 				BEC91F4021D2453B00453456 /* AppDelegate.swift */,
 				BEC91F4221D2453B00453456 /* Assets.xcassets */,
 				BEA6FBDD21D9737900FFFB8C /* fourcc.json */,
@@ -187,6 +193,7 @@
 				BE9EFC8221E118B4000CC1CA /* PreviewWindow.xib in Resources */,
 				BEC91F4321D2453B00453456 /* Assets.xcassets in Resources */,
 				BEACA43021D4DF8800D8DC45 /* QuickLookView.xib in Resources */,
+				BE9EFC8921E15F42000CC1CA /* AdjustControlPanel.xib in Resources */,
 				BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */,
 				BEC91F5121D246CD00453456 /* ListView.xib in Resources */,
 				BEA6FBDE21D9737900FFFB8C /* fourcc.json in Resources */,
@@ -211,6 +218,7 @@
 				BEC91F5621D2581500453456 /* CMIOProperties.swift in Sources */,
 				BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */,
 				BE253FFC21DBBF1400C90876 /* ValueCellView.swift in Sources */,
+				BE9EFC8B21E15F50000CC1CA /* AdjustControlPanelController.swift in Sources */,
 				BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */,
 				BE9EFC8421E118C3000CC1CA /* PreviewWindowController.swift in Sources */,
 			);

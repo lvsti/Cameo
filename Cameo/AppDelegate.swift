@@ -15,6 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private var lookupWindowController: LookupWindowController!
     private var previewWindowController: PreviewWindowController!
+    private var adjustControlPanelController: AdjustControlPanelController!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         window.contentViewController = ListViewController()
@@ -49,6 +50,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         previewWindowController.showWindow(nil)
     }
+    
+    func showAdjustControlPanel(for controlID: UInt32) {
+        guard adjustControlPanelController == nil else {
+            return
+        }
+
+        adjustControlPanelController = AdjustControlPanelController(controlID: controlID)
+        adjustControlPanelController.delegate = self
+        window.beginSheet(adjustControlPanelController.window!) { _ in
+            self.adjustControlPanelController = nil
+        }
+    }
 }
 
 extension AppDelegate: PreviewWindowControllerDelegate {
@@ -56,3 +69,11 @@ extension AppDelegate: PreviewWindowControllerDelegate {
         previewWindowController = nil
     }
 }
+
+extension AppDelegate: AdjustControlPanelControllerDelegate {
+    func adjustControlPanelDidDismiss() {
+        window.endSheet(adjustControlPanelController.window!)
+    }
+}
+
+

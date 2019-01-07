@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ListViewController" customModule="Cameo" customModuleProvider="target">
             <connections>
+                <outlet property="adjustControlToolbarItem" destination="YcG-8l-pYy" id="xnc-DM-Wge"/>
                 <outlet property="outlineView" destination="tmE-UJ-g6s" id="8vA-4d-Hlp"/>
                 <outlet property="tableView" destination="Qn2-PC-Wmp" id="3l3-Ju-Xo7"/>
                 <outlet property="toolbar" destination="jpi-pV-cdB" id="rlf-K2-ofC"/>
@@ -346,9 +347,16 @@
                         <action selector="showCameraPreviewWindow:" target="-1" id="4Ep-F0-KCY"/>
                     </connections>
                 </toolbarItem>
+                <toolbarItem implicitItemIdentifier="75973E62-9AE4-4094-8867-A75149E5AB2A" label="Adjust Control" paletteLabel="Adjust Control" tag="-1" image="NSTouchBarComposeTemplate" sizingBehavior="auto" autovalidates="NO" id="YcG-8l-pYy">
+                    <connections>
+                        <action selector="adjustControlClicked:" target="-2" id="IRU-9i-mlg"/>
+                    </connections>
+                </toolbarItem>
                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="CS8-2s-q6a"/>
             </allowedToolbarItems>
             <defaultToolbarItems>
+                <toolbarItem reference="YcG-8l-pYy"/>
+                <toolbarItem reference="CS8-2s-q6a"/>
                 <toolbarItem reference="lRX-91-ETK"/>
                 <toolbarItem reference="CS8-2s-q6a"/>
                 <toolbarItem reference="Uqb-BI-mdC"/>
@@ -359,6 +367,7 @@
     <resources>
         <image name="NSFollowLinkFreestandingTemplate" width="14" height="14"/>
         <image name="NSSlideshowTemplate" width="17" height="14"/>
+        <image name="NSTouchBarComposeTemplate" width="21" height="30"/>
         <image name="NSTouchBarIconViewTemplate" width="14" height="30"/>
         <image name="reload" width="24" height="24"/>
     </resources>

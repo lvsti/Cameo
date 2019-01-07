@@ -71,6 +71,7 @@ final class ListViewController: NSViewController {
     @IBOutlet private weak var outlineView: NSOutlineView!
     @IBOutlet private weak var tableView: NSTableView!
     @IBOutlet private var toolbar: NSToolbar!
+    @IBOutlet private weak var adjustControlToolbarItem: NSToolbarItem!
     
     var tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
                         classID: CMIOClassID(kCMIOSystemObjectClassID),
@@ -92,6 +93,8 @@ final class ListViewController: NSViewController {
         outlineView.expandItem(nil, expandChildren: true)
         
         tableView.reloadData()
+        
+        adjustControlToolbarItem.isEnabled = false
     }
     
     private func reloadTree() {
@@ -165,6 +168,19 @@ final class ListViewController: NSViewController {
         reloadPropertyList(for: node)
         tableView.reloadData()
     }
+    
+    @IBAction private func adjustControlClicked(_ sender: Any) {
+        guard outlineView.selectedRow >= 0 else {
+            return
+        }
+        
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+        guard node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID)) else {
+            return
+        }
+        
+        (NSApp.delegate as! AppDelegate).showAdjustControlPanel(for: node.objectID)
+    }
 }
 
 extension ListViewController: NSOutlineViewDelegate {
@@ -177,6 +193,8 @@ extension ListViewController: NSOutlineViewDelegate {
         
         reloadPropertyList(for: node)
         tableView.reloadData()
+        
+        adjustControlToolbarItem.isEnabled = node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID))
     }
 }
 
