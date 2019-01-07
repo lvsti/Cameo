@@ -165,6 +165,34 @@ enum PropertyType {
         return UnsafeBufferPointer<CFTypeRef>(start: typedData, count: count).compactMap { $0 as? T }
     }
 
+    static func setPODTypeValue<T>(_ value: T,
+                                   for selector: CMIOObjectPropertySelector,
+                                   qualifiedBy qualifier: QualifierProtocol? = nil,
+                                   in objectID: CMIOObjectID) -> Bool {
+        var address = CMIOObjectPropertyAddress(selector)
+        let dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
+        var value = value
+        
+        let status = CMIOObjectSetPropertyData(objectID, &address,
+                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
+                                               dataSize, &value)
+        return status == 0
+    }
+
+    static func setCFTypeValue<T>(_ value: T,
+                                  for selector: CMIOObjectPropertySelector,
+                                  qualifiedBy qualifier: QualifierProtocol? = nil,
+                                  in objectID: CMIOObjectID) -> Bool {
+        var address = CMIOObjectPropertyAddress(selector)
+        let dataSize: UInt32 = UInt32(MemoryLayout<CFTypeRef>.size)
+        var value = value as CFTypeRef
+        
+        let status = CMIOObjectSetPropertyData(objectID, &address,
+                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
+                                               dataSize, &value)
+        return status == 0
+    }
+
 }
 
 
@@ -248,6 +276,18 @@ enum Property {
         var address = CMIOObjectPropertyAddress(desc.selector)
         
         return CMIOObjectHasProperty(objectID, &address)
+    }
+    
+    static func setValue<S, T>(_ value: T,
+                               for property: S,
+                               qualifiedBy qualifier: QualifierProtocol? = nil,
+                               in objectID: CMIOObjectID) -> Bool where S: PropertySet {
+        let desc = S.descriptors[property]!
+        switch desc.type.kind {
+        case .pod: return PropertyType.setPODTypeValue(value, for: desc.selector, qualifiedBy: qualifier, in: objectID)
+        case .cf: return PropertyType.setCFTypeValue(value, for: desc.selector, qualifiedBy: qualifier, in: objectID)
+        default: return false
+        }
     }
 }
 
