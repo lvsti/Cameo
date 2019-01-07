@@ -11,6 +11,7 @@
 		BE9EFC8221E118B4000CC1CA /* PreviewWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */; };
 		BE9EFC8421E118C3000CC1CA /* PreviewWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */; };
 		BE9EFC8621E15B7A000CC1CA /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8521E15B7A000CC1CA /* Property.swift */; };
+		BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9121E25C6A000CC1CA /* Control.swift */; };
 		BE9EFC9421E25E9C000CC1CA /* CMIOObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9321E25E9C000CC1CA /* CMIOObject.swift */; };
 		BEA6FBD621D964FC00FFFB8C /* LookupWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */; };
 		BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */; };
@@ -33,6 +34,7 @@
 		BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreviewWindow.xib; sourceTree = "<group>"; };
 		BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWindowController.swift; sourceTree = "<group>"; };
 		BE9EFC8521E15B7A000CC1CA /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
+		BE9EFC9121E25C6A000CC1CA /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		BE9EFC9321E25E9C000CC1CA /* CMIOObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIOObject.swift; sourceTree = "<group>"; };
 		BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LookupWindow.xib; sourceTree = "<group>"; };
 		BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindowController.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 			children = (
 				BE9EFC9321E25E9C000CC1CA /* CMIOObject.swift */,
 				BEC91F5521D2581500453456 /* CMIOProperties.swift */,
+				BE9EFC9121E25C6A000CC1CA /* Control.swift */,
 				BE9EFC8521E15B7A000CC1CA /* Property.swift */,
 			);
 			path = CMIO;
@@ -200,6 +203,7 @@
 			files = (
 				BE9EFC9421E25E9C000CC1CA /* CMIOObject.swift in Sources */,
 				BEA6FBDC21D971CA00FFFB8C /* FourCCDatabase.swift in Sources */,
+				BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */,
 				BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */,
 				BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */,
 				BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */,
