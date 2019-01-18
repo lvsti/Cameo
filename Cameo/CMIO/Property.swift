@@ -364,11 +364,11 @@ func propertyDescription(for selector: CMIOObjectPropertySelector,
     case .propertyAddress:
         if let value: CMIOObjectPropertyAddress = PropertyType.podTypeValue(for: selector, qualifiedBy: qualifier, in: objectID) {
             return "CMIOObjectPropertyAddress {\(fourCCDescription(from: value.mSelector)!), " +
-            "\(fourCCDescription(from: value.mScope)!), \(fourCCDescription(from: value.mElement)!)"
+                "\(fourCCDescription(from: value.mScope)!), \(fourCCDescription(from: value.mElement)!)"
         }
     case .streamConfiguration:
-        if let value: CMIODeviceStreamConfiguration = PropertyType.podTypeValue(for: selector, qualifiedBy: qualifier, in: objectID) {
-            return "CMIODeviceStreamConfiguration {\(value.mNumberStreams)}"
+        if let value: [UInt32] = PropertyType.podArrayTypeValue(for: selector, qualifiedBy: qualifier, in: objectID) {
+            return "[" + value.dropFirst().map { "\($0)" }.joined(separator: ", ") + "]"
         }
     case .pid:
         if let value: pid_t = PropertyType.podTypeValue(for: selector, qualifiedBy: qualifier, in: objectID) {
