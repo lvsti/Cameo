@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="adjustControlToolbarItem" destination="YcG-8l-pYy" id="xnc-DM-Wge"/>
                 <outlet property="outlineView" destination="tmE-UJ-g6s" id="8vA-4d-Hlp"/>
+                <outlet property="scopeSelector" destination="AVg-C3-Zho" id="NLK-SM-Hn2"/>
                 <outlet property="tableView" destination="Qn2-PC-Wmp" id="3l3-Ju-Xo7"/>
                 <outlet property="toolbar" destination="jpi-pV-cdB" id="rlf-K2-ofC"/>
                 <outlet property="view" destination="c22-O7-iKe" id="Pbz-ZX-AkU"/>
@@ -335,7 +336,7 @@
             </constraints>
             <point key="canvasLocation" x="266.5" y="286"/>
         </customView>
-        <toolbar implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" centeredItem="lRX-91-ETK" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="small" id="jpi-pV-cdB">
+        <toolbar implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="small" id="jpi-pV-cdB">
             <allowedToolbarItems>
                 <toolbarItem implicitItemIdentifier="55994581-7281-4B4B-9983-2FA7247FB3A7" label="Reload Properties" paletteLabel="Reload Properties" tag="-1" image="reload" sizingBehavior="auto" autovalidates="NO" id="lRX-91-ETK">
                     <connections>
@@ -357,12 +358,28 @@
             <defaultToolbarItems>
                 <toolbarItem reference="YcG-8l-pYy"/>
                 <toolbarItem reference="CS8-2s-q6a"/>
-                <toolbarItem reference="lRX-91-ETK"/>
                 <toolbarItem reference="CS8-2s-q6a"/>
+                <toolbarItem reference="lRX-91-ETK"/>
                 <toolbarItem reference="Uqb-BI-mdC"/>
             </defaultToolbarItems>
+            <connections>
+                <outlet property="delegate" destination="-2" id="o8V-4X-OkN"/>
+            </connections>
             <point key="canvasLocation" x="95" y="-175"/>
         </toolbar>
+        <segmentedControl verticalHuggingPriority="750" id="AVg-C3-Zho">
+            <rect key="frame" x="0.0" y="0.0" width="64" height="23"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="MMx-hb-XAH">
+                <font key="font" metaFont="system" size="11"/>
+                <segments>
+                    <segment label="Global" selected="YES"/>
+                </segments>
+            </segmentedCell>
+            <connections>
+                <action selector="scopeSelectorChanged:" target="-2" id="GUg-u6-uKV"/>
+            </connections>
+        </segmentedControl>
     </objects>
     <resources>
         <image name="NSFollowLinkFreestandingTemplate" width="14" height="14"/>

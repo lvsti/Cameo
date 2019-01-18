@@ -51,16 +51,20 @@ func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
     return nodes
 }
 
-func properties<S>(from type: S.Type, in objectID: CMIOObjectID) -> [CMIOPropertyItem] where S: PropertySet {
+func properties<S>(from type: S.Type,
+                   scope: CMIOObjectPropertyScope,
+                   in objectID: CMIOObjectID) -> [CMIOPropertyItem] where S: PropertySet {
     var propertyList: [CMIOPropertyItem] = []
-    let props = S.allExisting(in: objectID)
+    let props = S.allExisting(scope: scope,
+                              element: CMIOObjectPropertyElement(kCMIOObjectPropertyElementWildcard),
+                              in: objectID)
     for prop in props {
         let isFourCC = S.descriptors[prop]!.type == .fourCC || S.descriptors[prop]!.type == .classID
         let item = CMIOPropertyItem(selector: S.descriptors[prop]!.selector,
                                     name: "\(prop)",
-                                    isSettable: Property.isSettable(prop, in: objectID),
-                                    value: Property.description(of: prop, in: objectID) ?? "#ERROR",
-                                    fourCC: isFourCC ? Property.value(of: prop, in: objectID) : nil)
+                                    isSettable: Property.isSettable(prop, scope: scope, in: objectID),
+                                    value: Property.description(of: prop, scope: scope, in: objectID) ?? "#ERROR",
+                                    fourCC: isFourCC ? Property.value(of: prop, scope: scope, in: objectID) : nil)
         propertyList.append(item)
     }
     return propertyList
@@ -72,12 +76,16 @@ final class ListViewController: NSViewController {
     @IBOutlet private weak var tableView: NSTableView!
     @IBOutlet private var toolbar: NSToolbar!
     @IBOutlet private weak var adjustControlToolbarItem: NSToolbarItem!
+    @IBOutlet private var scopeSelector: NSSegmentedControl!
     
-    var tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
-                        classID: CMIOClassID(kCMIOSystemObjectClassID),
-                        name: "System",
-                        children: [])
-    var propertyList: [CMIOPropertyItem] = []
+    private let scopeToolbarItemID = NSToolbarItem.Identifier(rawValue: "scopeItem")
+    
+    private var tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
+                                classID: CMIOClassID(kCMIOSystemObjectClassID),
+                                name: "System",
+                                children: [])
+    private var propertyList: [CMIOPropertyItem] = []
+    private var currentScope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal)
 
     override var nibName: NSNib.Name? {
         return "ListView"
@@ -95,6 +103,7 @@ final class ListViewController: NSViewController {
         tableView.reloadData()
         
         adjustControlToolbarItem.isEnabled = false
+        toolbar.insertItem(withItemIdentifier: scopeToolbarItemID, at: 2)
     }
     
     private func reloadTree() {
@@ -114,33 +123,33 @@ final class ListViewController: NSViewController {
                                              value: "@\(node.objectID)",
                                              fourCC: nil))
         
-        propertyList.append(contentsOf: properties(from: ObjectProperty.self, in: node.objectID))
+        propertyList.append(contentsOf: properties(from: ObjectProperty.self, scope: currentScope, in: node.objectID))
 
         if node.classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)) {
-            propertyList.append(contentsOf: properties(from: DeviceProperty.self, in: node.objectID))
+            propertyList.append(contentsOf: properties(from: DeviceProperty.self, scope: currentScope, in: node.objectID))
         }
         else if node.classID.isSubclass(of: CMIOClassID(kCMIOStreamClassID)) {
-            propertyList.append(contentsOf: properties(from: StreamProperty.self, in: node.objectID))
+            propertyList.append(contentsOf: properties(from: StreamProperty.self, scope: currentScope, in: node.objectID))
         }
         else if node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID)) {
-            propertyList.append(contentsOf: properties(from: ControlProperty.self, in: node.objectID))
+            propertyList.append(contentsOf: properties(from: ControlProperty.self, scope: currentScope, in: node.objectID))
             
             if node.classID.isSubclass(of: CMIOClassID(kCMIOBooleanControlClassID)) {
-                propertyList.append(contentsOf: properties(from: BooleanControlProperty.self, in: node.objectID))
+                propertyList.append(contentsOf: properties(from: BooleanControlProperty.self, scope: currentScope, in: node.objectID))
             }
             else if node.classID.isSubclass(of: CMIOClassID(kCMIOSelectorControlClassID)) {
-                propertyList.append(contentsOf: properties(from: SelectorControlProperty.self, in: node.objectID))
+                propertyList.append(contentsOf: properties(from: SelectorControlProperty.self, scope: currentScope, in: node.objectID))
             }
             else if node.classID.isSubclass(of: CMIOClassID(kCMIOFeatureControlClassID)) {
-                propertyList.append(contentsOf: properties(from: FeatureControlProperty.self, in: node.objectID))
+                propertyList.append(contentsOf: properties(from: FeatureControlProperty.self, scope: currentScope, in: node.objectID))
                 
                 if node.classID.isSubclass(of: CMIOClassID(kCMIOExposureControlClassID)) {
-                    propertyList.append(contentsOf: properties(from: ExposureControlProperty.self, in: node.objectID))
+                    propertyList.append(contentsOf: properties(from: ExposureControlProperty.self, scope: currentScope, in: node.objectID))
                 }
             }
         }
         else if node.classID == kCMIOSystemObjectClassID {
-            propertyList.append(contentsOf: properties(from: SystemProperty.self, in: node.objectID))
+            propertyList.append(contentsOf: properties(from: SystemProperty.self, scope: currentScope, in: node.objectID))
         }
     }
     
@@ -181,6 +190,24 @@ final class ListViewController: NSViewController {
         
         (NSApp.delegate as! AppDelegate).showAdjustControlPanel(for: node.objectID)
     }
+    
+    @IBAction private func scopeSelectorChanged(_ sender: Any) {
+        guard outlineView.selectedRow >= 0 else {
+            return
+        }
+        
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+
+        let scopes = [
+            kCMIOObjectPropertyScopeGlobal,
+            kCMIODevicePropertyScopeInput,
+            kCMIODevicePropertyScopeOutput,
+            kCMIODevicePropertyScopePlayThrough
+        ]
+        currentScope = CMIOObjectPropertyScope(scopes[scopeSelector.selectedSegment])
+        reloadPropertyList(for: node)
+        tableView.reloadData()
+    }
 }
 
 extension ListViewController: NSOutlineViewDelegate {
@@ -195,6 +222,43 @@ extension ListViewController: NSOutlineViewDelegate {
         tableView.reloadData()
         
         adjustControlToolbarItem.isEnabled = node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID))
+        
+        let index = toolbar.items.firstIndex(where: { $0.itemIdentifier == scopeToolbarItemID })!
+        toolbar.removeItem(at: index)
+        toolbar.insertItem(withItemIdentifier: scopeToolbarItemID, at: index)
+    }
+}
+
+extension ListViewController: NSToolbarDelegate {
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        let previousScopeIndex = scopeSelector.selectedSegment
+        
+        if outlineView.selectedRow >= 0,
+           let node = outlineView.item(atRow: outlineView.selectedRow) as? CMIONode,
+           node.classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)) {
+            scopeSelector.segmentCount = 4
+            
+            ["Global", "Input", "Output", "Play-thru"].enumerated().forEach { tuple in
+                scopeSelector.setLabel(tuple.element, forSegment: tuple.offset)
+                let width = tuple.element.size(withAttributes: [.font: scopeSelector.font!]).width
+                scopeSelector.setWidth(width + 10, forSegment: tuple.offset)
+            }
+        }
+        else {
+            scopeSelector.segmentCount = 1
+            scopeSelector.setLabel("Global", forSegment: 0)
+        }
+
+        scopeSelector.sizeToFit()
+        scopeSelector.selectedSegment = min(previousScopeIndex, scopeSelector.segmentCount - 1)
+        
+        let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+        item.label = "Scope"
+        item.paletteLabel = "Scope"
+        item.isEnabled = scopeSelector.segmentCount > 1
+        item.view = scopeSelector
+        
+        return item
     }
 }
 
