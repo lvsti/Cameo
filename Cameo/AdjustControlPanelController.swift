@@ -108,11 +108,8 @@ final class AdjustControlPanelController: NSWindowController {
             featureValueTextField.stringValue = "\(model.currentValue)"
             featureValueTextField.isEnabled = model.isEnabled && !model.isAutomatic && !model.isTuning
             featureUnitNameLabel.stringValue = model.unitName ?? "units"
-            featureUnitNameLabel.isEnabled = model.isEnabled && !model.isAutomatic
             featureMinValueLabel.stringValue = "\(model.minValue)"
-            featureMinValueLabel.isEnabled = model.isEnabled && !model.isAutomatic
             featureMaxValueLabel.stringValue = "\(model.maxValue)"
-            featureMaxValueLabel.isEnabled = model.isEnabled && !model.isAutomatic
             featureTuneButton.title = model.isTuning ? "Tuning..." : "Tune"
             featureTuneButton.isEnabled = model.isEnabled && !model.isAutomatic && !model.isTuning
         }
