@@ -57,7 +57,7 @@ enum Control {
             return nil
         }
         
-        if classID.isSubclass(of: CMIOClassID(kCMIOBooleanControlClassID)) {
+        if classID.isSubclass(of: .booleanControl) {
             guard
                 let value: UInt32 = Property.value(of: BooleanControlProperty.value, in: controlID)
             else {
@@ -66,7 +66,7 @@ enum Control {
             
             return .boolean(BooleanControlModel(controlID: controlID, name: name, value: value != 0))
         }
-        else if classID.isSubclass(of: CMIOClassID(kCMIOSelectorControlClassID)) {
+        else if classID.isSubclass(of: .selectorControl) {
             guard
                 let itemIDs: [UInt32] = Property.arrayValue(of: SelectorControlProperty.availableItems, in: controlID),
                 let items: [(UInt32, String)] = try? itemIDs.map({
@@ -88,7 +88,7 @@ enum Control {
                                                   items: items,
                                                   currentItemID: currentItemID))
         }
-        else if classID.isSubclass(of: CMIOClassID(kCMIOFeatureControlClassID)) {
+        else if classID.isSubclass(of: .featureControl) {
             guard
                 let isEnabled: UInt32 = Property.value(of: FeatureControlProperty.onOff, in: controlID),
                 let isAutomatic: UInt32 = Property.value(of: FeatureControlProperty.automaticManual, in: controlID),

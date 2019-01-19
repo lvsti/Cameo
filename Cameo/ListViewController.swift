@@ -32,18 +32,18 @@ func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
         for child in children {
             let subtree = cmioChildren(of: child)
             let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
-            let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? CMIOClassID(kCMIOObjectClassID)
+            let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? .object
             nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
         }
     }
     else if let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: objectID),
-        classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)),
+        classID.isSubclass(of: .device),
         let streams: [CMIOStreamID] = Property.arrayValue(of: DeviceProperty.streams, in: objectID) {
         
         for child in streams {
             let subtree = cmioChildren(of: child)
             let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
-            let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? CMIOClassID(kCMIOObjectClassID)
+            let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? .object
             nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
         }
     }
@@ -81,7 +81,7 @@ final class ListViewController: NSViewController {
     private let scopeToolbarItemID = NSToolbarItem.Identifier(rawValue: "scopeItem")
     
     private var tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
-                                classID: CMIOClassID(kCMIOSystemObjectClassID),
+                                classID: .systemObject,
                                 name: "System",
                                 children: [])
     private var propertyList: [CMIOPropertyItem] = []
@@ -108,7 +108,7 @@ final class ListViewController: NSViewController {
     
     private func reloadTree() {
         tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
-                        classID: CMIOClassID(kCMIOSystemObjectClassID),
+                        classID: .systemObject,
                         name: "System",
                         children: cmioChildren(of: CMIOObjectID(kCMIOObjectSystemObject)))
         print(tree)
@@ -125,30 +125,30 @@ final class ListViewController: NSViewController {
         
         propertyList.append(contentsOf: properties(from: ObjectProperty.self, scope: currentScope, in: node.objectID))
 
-        if node.classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)) {
+        if node.classID.isSubclass(of: .device) {
             propertyList.append(contentsOf: properties(from: DeviceProperty.self, scope: currentScope, in: node.objectID))
         }
-        else if node.classID.isSubclass(of: CMIOClassID(kCMIOStreamClassID)) {
+        else if node.classID.isSubclass(of: .stream) {
             propertyList.append(contentsOf: properties(from: StreamProperty.self, scope: currentScope, in: node.objectID))
         }
-        else if node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID)) {
+        else if node.classID.isSubclass(of: .control) {
             propertyList.append(contentsOf: properties(from: ControlProperty.self, scope: currentScope, in: node.objectID))
             
-            if node.classID.isSubclass(of: CMIOClassID(kCMIOBooleanControlClassID)) {
+            if node.classID.isSubclass(of: .booleanControl) {
                 propertyList.append(contentsOf: properties(from: BooleanControlProperty.self, scope: currentScope, in: node.objectID))
             }
-            else if node.classID.isSubclass(of: CMIOClassID(kCMIOSelectorControlClassID)) {
+            else if node.classID.isSubclass(of: .selectorControl) {
                 propertyList.append(contentsOf: properties(from: SelectorControlProperty.self, scope: currentScope, in: node.objectID))
             }
-            else if node.classID.isSubclass(of: CMIOClassID(kCMIOFeatureControlClassID)) {
+            else if node.classID.isSubclass(of: .featureControl) {
                 propertyList.append(contentsOf: properties(from: FeatureControlProperty.self, scope: currentScope, in: node.objectID))
                 
-                if node.classID.isSubclass(of: CMIOClassID(kCMIOExposureControlClassID)) {
+                if node.classID.isSubclass(of: .exposureControl) {
                     propertyList.append(contentsOf: properties(from: ExposureControlProperty.self, scope: currentScope, in: node.objectID))
                 }
             }
         }
-        else if node.classID == kCMIOSystemObjectClassID {
+        else if node.classID == .systemObject {
             propertyList.append(contentsOf: properties(from: SystemProperty.self, scope: currentScope, in: node.objectID))
         }
     }
@@ -184,7 +184,7 @@ final class ListViewController: NSViewController {
         }
         
         let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
-        guard node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID)) else {
+        guard node.classID.isSubclass(of: .control) else {
             return
         }
         
@@ -221,7 +221,7 @@ extension ListViewController: NSOutlineViewDelegate {
         reloadPropertyList(for: node)
         tableView.reloadData()
         
-        adjustControlToolbarItem.isEnabled = node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID))
+        adjustControlToolbarItem.isEnabled = node.classID.isSubclass(of: .control)
         
         let index = toolbar.items.firstIndex(where: { $0.itemIdentifier == scopeToolbarItemID })!
         toolbar.removeItem(at: index)
@@ -235,7 +235,7 @@ extension ListViewController: NSToolbarDelegate {
         
         if outlineView.selectedRow >= 0,
            let node = outlineView.item(atRow: outlineView.selectedRow) as? CMIONode,
-           node.classID.isSubclass(of: CMIOClassID(kCMIODeviceClassID)) {
+           node.classID.isSubclass(of: .device) {
             scopeSelector.segmentCount = 4
             
             ["Global", "Input", "Output", "Play-thru"].enumerated().forEach { tuple in
@@ -294,12 +294,12 @@ extension ListViewController: NSOutlineViewDataSource {
         view.textField?.stringValue = node.name
         
         var image: NSImage?
-        switch Int(node.classID) {
-        case kCMIOSystemObjectClassID: image = NSImage(named: NSImage.networkName)
-        case kCMIOPlugInClassID: image = NSImage(named: NSImage.shareTemplateName)
-        case kCMIODeviceClassID: image = NSImage(named: NSImage.computerName)
-        case kCMIOStreamClassID: image = NSImage(named: NSImage.slideshowTemplateName)
-        case _ where node.classID.isSubclass(of: CMIOClassID(kCMIOControlClassID)):
+        switch node.classID {
+        case .systemObject: image = NSImage(named: NSImage.networkName)
+        case .plugIn: image = NSImage(named: NSImage.shareTemplateName)
+        case .device: image = NSImage(named: NSImage.computerName)
+        case .stream: image = NSImage(named: NSImage.slideshowTemplateName)
+        case _ where node.classID.isSubclass(of: .control):
             image = NSImage(named: NSImage.preferencesGeneralName)
         default: image = NSImage(named: NSImage.touchBarIconViewTemplateName)
         }
