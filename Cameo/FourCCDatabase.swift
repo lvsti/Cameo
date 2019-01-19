@@ -35,6 +35,8 @@ class FourCCDatabase {
             $0.constantName.localizedCaseInsensitiveContains(searchTerm) ||
             $0.fourCC.localizedCaseInsensitiveContains(searchTerm) ||
             String($0.rawValue, radix: 16, uppercase: false).localizedCaseInsensitiveContains(searchTerm) ||
+            ((searchTerm.hasPrefix("0x") || searchTerm.hasPrefix("0X")) &&
+                "0x\(String($0.rawValue, radix: 16, uppercase: false))".localizedCaseInsensitiveContains(searchTerm)) ||
             String($0.rawValue, radix: 10, uppercase: false).contains(searchTerm)
         }
     }
