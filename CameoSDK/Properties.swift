@@ -204,3 +204,26 @@ public enum ExposureControlProperty: CaseIterable, PropertySet, PropertySetInter
     ]
 }
 
+struct PropertyDescriptor {
+    let selector: CMIOObjectPropertySelector
+    let type: PropertyType
+    
+    init(_ selector: Int, _ type: PropertyType) {
+        self.selector = CMIOObjectPropertySelector(selector)
+        self.type = type
+    }
+}
+
+protocol PropertySetInternal: PropertySet, Hashable {
+    static var descriptors: [Self: PropertyDescriptor] { get }
+}
+
+extension PropertySetInternal {
+    public var selector: CMIOObjectPropertySelector {
+        return Self.descriptors[self]!.selector
+    }
+    
+    public var type: PropertyType {
+        return Self.descriptors[self]!.type
+    }
+}
