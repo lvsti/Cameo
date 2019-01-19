@@ -234,7 +234,11 @@ public extension PropertySet where Self : CaseIterable {
     }
 }
 
+public protocol PropertyListener {}
+
+
 public enum Property {
+    
     public static func value<S, T>(of property: S,
                                    scope: CMIOObjectPropertyScope = .anyScope,
                                    element: CMIOObjectPropertyElement = .anyElement,
@@ -300,6 +304,74 @@ public enum Property {
         case .pod: return PropertyType.setPODTypeValue(value, for: address, qualifiedBy: qualifier, in: objectID)
         case .cf: return PropertyType.setCFTypeValue(value, for: address, qualifiedBy: qualifier, in: objectID)
         default: return false
+        }
+    }
+    
+    public static func addListener<S>(for property: S,
+                                      scope: CMIOObjectPropertyScope = .anyScope,
+                                      element: CMIOObjectPropertyElement = .anyElement,
+                                      in objectID: CMIOObjectID,
+                                      queue: DispatchQueue? = nil,
+                                      block: @escaping ([CMIOObjectPropertyAddress]) -> Void) -> PropertyListener? where S: PropertySet {
+        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        
+        return Listener(objectID: objectID, address: address, queue: queue) { addressCount, addressPtr in
+            guard addressCount > 0, let array = addressPtr else { return }
+            block(UnsafeBufferPointer(start: array, count: Int(addressCount)).map { $0 })
+        }
+    }
+    
+    public static func removeListener(_ listener: PropertyListener) -> Bool {
+        guard let listener = listener as? Listener else {
+            return false
+        }
+        
+        return listener.deactivate()
+    }
+    
+    class Listener: PropertyListener {
+        private let objectID: CMIOObjectID
+        private let address: CMIOObjectPropertyAddress
+        private let queue: DispatchQueue?
+        private let block: CMIOObjectPropertyListenerBlock
+        private var isActive: Bool
+        
+        init?(objectID: CMIOObjectID,
+              address: CMIOObjectPropertyAddress,
+              queue: DispatchQueue?,
+              block: @escaping CMIOObjectPropertyListenerBlock) {
+            self.objectID = objectID
+            self.address = address
+            self.queue = queue
+            self.block = block
+            
+            var address = address
+            let status = CMIOObjectAddPropertyListenerBlock(objectID, &address, queue, block)
+            guard status == kCMIOHardwareNoError else {
+                return nil
+            }
+            
+            isActive = true
+        }
+        
+        @discardableResult
+        func deactivate() -> Bool {
+            guard isActive else { return true }
+            
+            var address = self.address
+            let status = CMIOObjectRemovePropertyListenerBlock(objectID, &address, queue, block)
+            guard status == kCMIOHardwareNoError else {
+                return false
+            }
+            
+            isActive = false
+            return true
+        }
+        
+        deinit {
+            if isActive {
+                deactivate()
+            }
         }
     }
 }
