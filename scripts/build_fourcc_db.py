@@ -22,7 +22,7 @@ def clean_up_preprocessed(preprocessed_path):
 	os.remove(preprocessed_path)
 
 def preprocess_source(source_path, preprocessed_path):
-	return os.popen("/usr/bin/clang -E %s -o %s" % (source_path, preprocessed_path)).read()
+	return os.popen("/usr/bin/clang -E %s -o %s -isysroot `xcode-select -p`/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" % (source_path, preprocessed_path)).read()
 
 def parse_fourccs(preprocessed_path):
 	infile = open(preprocessed_path, "r")
