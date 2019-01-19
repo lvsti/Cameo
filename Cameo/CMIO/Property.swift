@@ -195,18 +195,31 @@ enum PropertyType {
 
 }
 
+extension CMIOObjectPropertyScope {
+    static let global = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal)
+    static let anyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeWildcard)
+    static let deviceInput = CMIOObjectPropertyScope(kCMIODevicePropertyScopeInput)
+    static let deviceOutput = CMIOObjectPropertyScope(kCMIODevicePropertyScopeOutput)
+    static let devicePlayThrough = CMIOObjectPropertyScope(kCMIODevicePropertyScopePlayThrough)
+}
+
+extension CMIOObjectPropertyElement {
+    static let master = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster)
+    static let anyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementWildcard)
+}
+
 
 extension CMIOObjectPropertyAddress {
     init(_ selector: CMIOObjectPropertySelector,
-         _ scope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
-         _ element: CMIOObjectPropertyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster)) {
+         _ scope: CMIOObjectPropertyScope = .anyScope,
+         _ element: CMIOObjectPropertyElement = .anyElement) {
         self.init(mSelector: selector, mScope: scope, mElement: element)
     }
 }
 
 struct PropertyDescriptor {
-    var selector: CMIOObjectPropertySelector
-    var type: PropertyType
+    let selector: CMIOObjectPropertySelector
+    let type: PropertyType
     
     init(_ selector: Int, _ type: PropertyType) {
         self.selector = CMIOObjectPropertySelector(selector)
@@ -223,8 +236,8 @@ protocol PropertySet: CaseIterable, Hashable {
 }
 
 extension PropertySet {
-    static func allExisting(scope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
-                            element: CMIOObjectPropertyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster),
+    static func allExisting(scope: CMIOObjectPropertyScope = .anyScope,
+                            element: CMIOObjectPropertyElement = .anyElement,
                             in objectID: CMIOObjectID) -> [Self] {
         return allCases.filter { Property.exists($0, scope: scope, element: element, in: objectID) }
     }
@@ -233,8 +246,8 @@ extension PropertySet {
 
 enum Property {
     static func value<S, T>(of property: S,
-                            scope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
-                            element: CMIOObjectPropertyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster),
+                            scope: CMIOObjectPropertyScope = .anyScope,
+                            element: CMIOObjectPropertyElement = .anyElement,
                             qualifiedBy qualifier: QualifierProtocol? = nil,
                             in objectID: CMIOObjectID) -> T? where S: PropertySet {
         let desc = S.descriptors[property]!
@@ -248,8 +261,8 @@ enum Property {
     }
 
     static func arrayValue<S, T>(of property: S,
-                                 scope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
-                                 element: CMIOObjectPropertyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster),
+                                 scope: CMIOObjectPropertyScope = .anyScope,
+                                 element: CMIOObjectPropertyElement = .anyElement,
                                  qualifiedBy qualifier: QualifierProtocol? = nil,
                                  in objectID: CMIOObjectID) -> [T]? where S: PropertySet {
         let desc = S.descriptors[property]!
@@ -263,8 +276,8 @@ enum Property {
     }
     
     static func description<S>(of property: S,
-                               scope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
-                               element: CMIOObjectPropertyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster),
+                               scope: CMIOObjectPropertyScope = .anyScope,
+                               element: CMIOObjectPropertyElement = .anyElement,
                                qualifiedBy qualifier: QualifierProtocol? = nil,
                                in objectID: CMIOObjectID) -> String? where S: PropertySet {
         let desc = S.descriptors[property]!
@@ -274,8 +287,8 @@ enum Property {
     }
     
     static func isSettable<S>(_ property: S,
-                              scope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
-                              element: CMIOObjectPropertyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster),
+                              scope: CMIOObjectPropertyScope = .anyScope,
+                              element: CMIOObjectPropertyElement = .anyElement,
                               in objectID: CMIOObjectID) -> Bool where S: PropertySet {
         let desc = S.descriptors[property]!
         var address = CMIOObjectPropertyAddress(desc.selector, scope, element)
@@ -291,8 +304,8 @@ enum Property {
     }
     
     static func exists<S>(_ property: S,
-                          scope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
-                          element: CMIOObjectPropertyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster),
+                          scope: CMIOObjectPropertyScope = .anyScope,
+                          element: CMIOObjectPropertyElement = .anyElement,
                           in objectID: CMIOObjectID) -> Bool where S: PropertySet {
         let desc = S.descriptors[property]!
         var address = CMIOObjectPropertyAddress(desc.selector, scope, element)
@@ -302,8 +315,8 @@ enum Property {
     
     static func setValue<S, T>(_ value: T,
                                for property: S,
-                               scope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
-                               element: CMIOObjectPropertyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster),
+                               scope: CMIOObjectPropertyScope = .anyScope,
+                               element: CMIOObjectPropertyElement = .anyElement,
                                qualifiedBy qualifier: QualifierProtocol? = nil,
                                in objectID: CMIOObjectID) -> Bool where S: PropertySet {
         let desc = S.descriptors[property]!

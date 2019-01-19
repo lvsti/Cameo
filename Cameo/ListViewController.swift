@@ -56,7 +56,7 @@ func properties<S>(from type: S.Type,
                    in objectID: CMIOObjectID) -> [CMIOPropertyItem] where S: PropertySet {
     var propertyList: [CMIOPropertyItem] = []
     let props = S.allExisting(scope: scope,
-                              element: CMIOObjectPropertyElement(kCMIOObjectPropertyElementWildcard),
+                              element: .anyElement,
                               in: objectID)
     for prop in props {
         let isFourCC = S.descriptors[prop]!.type == .fourCC || S.descriptors[prop]!.type == .classID
@@ -85,7 +85,7 @@ final class ListViewController: NSViewController {
                                 name: "System",
                                 children: [])
     private var propertyList: [CMIOPropertyItem] = []
-    private var currentScope: CMIOObjectPropertyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal)
+    private var currentScope: CMIOObjectPropertyScope = .global
 
     override var nibName: NSNib.Name? {
         return "ListView"
@@ -198,11 +198,11 @@ final class ListViewController: NSViewController {
         
         let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
 
-        let scopes = [
-            kCMIOObjectPropertyScopeGlobal,
-            kCMIODevicePropertyScopeInput,
-            kCMIODevicePropertyScopeOutput,
-            kCMIODevicePropertyScopePlayThrough
+        let scopes: [CMIOObjectPropertyScope] = [
+            .global,
+            .deviceInput,
+            .deviceOutput,
+            .devicePlayThrough
         ]
         currentScope = CMIOObjectPropertyScope(scopes[scopeSelector.selectedSegment])
         reloadPropertyList(for: node)
