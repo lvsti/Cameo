@@ -79,7 +79,7 @@ public enum PropertyType {
         let status = CMIOObjectGetPropertyData(objectID, &address,
                                                UInt32(qualifier?.size ?? 0), qualifier?.data,
                                                dataSize, &dataUsed, data)
-        guard status == 0 else {
+        guard status == kCMIOHardwareNoError else {
             return nil
         }
         
@@ -96,7 +96,7 @@ public enum PropertyType {
         var status = CMIOObjectGetPropertyDataSize(objectID, &address,
                                                    UInt32(qualifier?.size ?? 0), qualifier?.data,
                                                    &dataSize)
-        guard status == 0 else {
+        guard status == kCMIOHardwareNoError else {
             return nil
         }
         
@@ -108,7 +108,7 @@ public enum PropertyType {
         status = CMIOObjectGetPropertyData(objectID, &address,
                                            UInt32(qualifier?.size ?? 0), qualifier?.data,
                                            dataSize, &dataUsed, data)
-        guard status == 0 else {
+        guard status == kCMIOHardwareNoError else {
             return nil
         }
         
@@ -128,7 +128,7 @@ public enum PropertyType {
         let status = CMIOObjectGetPropertyData(objectID, &address,
                                                UInt32(qualifier?.size ?? 0), qualifier?.data,
                                                dataSize, &dataUsed, data)
-        guard status == 0 else {
+        guard status == kCMIOHardwareNoError else {
             return nil
         }
         
@@ -145,7 +145,7 @@ public enum PropertyType {
         var status = CMIOObjectGetPropertyDataSize(objectID, &address,
                                                    UInt32(qualifier?.size ?? 0), qualifier?.data,
                                                    &dataSize)
-        guard status == 0 else {
+        guard status == kCMIOHardwareNoError else {
             return nil
         }
         
@@ -157,7 +157,7 @@ public enum PropertyType {
         status = CMIOObjectGetPropertyData(objectID, &address,
                                            UInt32(qualifier?.size ?? 0), qualifier?.data,
                                            dataSize, &dataUsed, data)
-        guard status == 0 else {
+        guard status == kCMIOHardwareNoError else {
             return nil
         }
         
@@ -176,7 +176,7 @@ public enum PropertyType {
         let status = CMIOObjectSetPropertyData(objectID, &address,
                                                UInt32(qualifier?.size ?? 0), qualifier?.data,
                                                dataSize, &value)
-        return status == 0
+        return status == kCMIOHardwareNoError
     }
 
     static func setCFTypeValue<T>(_ value: T,
@@ -190,7 +190,7 @@ public enum PropertyType {
         let status = CMIOObjectSetPropertyData(objectID, &address,
                                                UInt32(qualifier?.size ?? 0), qualifier?.data,
                                                dataSize, &value)
-        return status == 0
+        return status == kCMIOHardwareNoError
     }
 
 }
@@ -272,7 +272,7 @@ public enum Property {
         var isSettable: DarwinBoolean = false
         
         let status = CMIOObjectIsPropertySettable(objectID, &address, &isSettable)
-        guard status == 0 else {
+        guard status == kCMIOHardwareNoError else {
             return false
         }
         
