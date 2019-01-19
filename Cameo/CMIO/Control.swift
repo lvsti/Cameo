@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreMediaIO
+import CameoSDK
 
 struct BooleanControlModel {
     var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)

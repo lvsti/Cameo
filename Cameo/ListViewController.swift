@@ -9,6 +9,7 @@
 import Cocoa
 import CoreMediaIO
 import Carbon.HIToolbox
+import CameoSDK
 
 struct CMIONode {
     var objectID: CMIOObjectID
@@ -80,7 +81,7 @@ final class ListViewController: NSViewController {
     
     private let scopeToolbarItemID = NSToolbarItem.Identifier(rawValue: "scopeItem")
     
-    private var tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
+    private var tree = CMIONode(objectID: .system,
                                 classID: .systemObject,
                                 name: "System",
                                 children: [])
@@ -107,10 +108,10 @@ final class ListViewController: NSViewController {
     }
     
     private func reloadTree() {
-        tree = CMIONode(objectID: CMIOObjectID(kCMIOObjectSystemObject),
+        tree = CMIONode(objectID: .system,
                         classID: .systemObject,
                         name: "System",
-                        children: cmioChildren(of: CMIOObjectID(kCMIOObjectSystemObject)))
+                        children: cmioChildren(of: .system))
         print(tree)
     }
     
