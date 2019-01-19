@@ -9,48 +9,6 @@
 import Cocoa
 import CoreMediaIO
 import Carbon.HIToolbox
-import CameoSDK
-
-struct CMIONode {
-    var objectID: CMIOObjectID
-    var classID: CMIOClassID
-    var name: String
-    var children: [CMIONode]
-}
-
-struct CMIOPropertyItem {
-    var selector: CMIOObjectPropertySelector
-    var name: String
-    var isSettable: Bool
-    var value: String
-    var fourCC: UInt32?
-}
-
-func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
-    var nodes: [CMIONode] = []
-
-    if let children: [CMIOObjectID] = Property.arrayValue(of: ObjectProperty.ownedObjects, in: objectID) {
-        for child in children {
-            let subtree = cmioChildren(of: child)
-            let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
-            let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? .object
-            nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
-        }
-    }
-    else if let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: objectID),
-        classID.isSubclass(of: .device),
-        let streams: [CMIOStreamID] = Property.arrayValue(of: DeviceProperty.streams, in: objectID) {
-        
-        for child in streams {
-            let subtree = cmioChildren(of: child)
-            let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
-            let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? .object
-            nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
-        }
-    }
-    
-    return nodes
-}
 
 
 final class ListViewController: NSViewController {
@@ -63,10 +21,7 @@ final class ListViewController: NSViewController {
     
     private let scopeToolbarItemID = NSToolbarItem.Identifier(rawValue: "scopeItem")
     
-    private var tree = CMIONode(objectID: .system,
-                                classID: .systemObject,
-                                name: "System",
-                                children: [])
+    private let objectTreeDataSource = ObjectTreeDataSource()
     private let propertyListDataSource = PropertyListDataSource()
     private var currentScope: CMIOObjectPropertyScope = .global
 
@@ -79,7 +34,8 @@ final class ListViewController: NSViewController {
         
         (NSApp.delegate as? AppDelegate)?.window.toolbar = toolbar
         
-        reloadTree()
+        objectTreeDataSource.reload()
+        
         outlineView.reloadData()
         outlineView.expandItem(nil, expandChildren: true)
         
@@ -87,14 +43,6 @@ final class ListViewController: NSViewController {
         
         adjustControlToolbarItem.isEnabled = false
         toolbar.insertItem(withItemIdentifier: scopeToolbarItemID, at: 2)
-    }
-    
-    private func reloadTree() {
-        tree = CMIONode(objectID: .system,
-                        classID: .systemObject,
-                        name: "System",
-                        children: cmioChildren(of: .system))
-        print(tree)
     }
     
     override func keyDown(with event: NSEvent) {
@@ -219,7 +167,7 @@ extension ListViewController: NSOutlineViewDataSource {
 
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         guard let item = item else {
-            return tree
+            return objectTreeDataSource.tree
         }
         
         return (item as! CMIONode).children[index]
