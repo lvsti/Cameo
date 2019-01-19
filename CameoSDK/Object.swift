@@ -9,7 +9,11 @@
 import Foundation
 import CoreMediaIO
 
-extension CMIOClassID {
+public extension CMIOObjectID {
+    static let system = CMIOObjectID(kCMIOObjectSystemObject)
+}
+
+public extension CMIOClassID {
     static let object = CMIOClassID(kCMIOObjectClassID)
     static let systemObject = CMIOClassID(kCMIOSystemObjectClassID)
     static let plugIn = CMIOClassID(kCMIOPlugInClassID)
@@ -94,7 +98,7 @@ extension CMIOClassID {
         zoomRelativeControl
     ]
 
-    func isSubclass(of baseClassID: CMIOClassID) -> Bool {
+    public func isSubclass(of baseClassID: CMIOClassID) -> Bool {
         switch baseClassID {
         case CMIOClassID.object: return true
         case CMIOClassID.control:

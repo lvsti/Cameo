@@ -10,11 +10,9 @@
 		BE253FFC21DBBF1400C90876 /* ValueCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE253FFB21DBBF1400C90876 /* ValueCellView.swift */; };
 		BE9EFC8221E118B4000CC1CA /* PreviewWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */; };
 		BE9EFC8421E118C3000CC1CA /* PreviewWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */; };
-		BE9EFC8621E15B7A000CC1CA /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8521E15B7A000CC1CA /* Property.swift */; };
 		BE9EFC8921E15F42000CC1CA /* AdjustControlPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9EFC8821E15F42000CC1CA /* AdjustControlPanel.xib */; };
 		BE9EFC8B21E15F50000CC1CA /* AdjustControlPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8A21E15F50000CC1CA /* AdjustControlPanelController.swift */; };
 		BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9121E25C6A000CC1CA /* Control.swift */; };
-		BE9EFC9421E25E9C000CC1CA /* CMIOObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9321E25E9C000CC1CA /* CMIOObject.swift */; };
 		BEA6FBD621D964FC00FFFB8C /* LookupWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */; };
 		BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */; };
 		BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */; };
@@ -22,14 +20,43 @@
 		BEA6FBDE21D9737900FFFB8C /* fourcc.json in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBDD21D9737900FFFB8C /* fourcc.json */; };
 		BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */; };
 		BEACA43021D4DF8800D8DC45 /* QuickLookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */; };
+		BEC255A821F384050053F137 /* CameoSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = BEC255A621F384050053F137 /* CameoSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BEC255AB21F384050053F137 /* CameoSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC255A421F384050053F137 /* CameoSDK.framework */; };
+		BEC255AC21F384050053F137 /* CameoSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BEC255A421F384050053F137 /* CameoSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BEC255B121F384660053F137 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9321E25E9C000CC1CA /* Object.swift */; };
+		BEC255B221F384BF0053F137 /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F5521D2581500453456 /* Properties.swift */; };
+		BEC255B321F384D00053F137 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8521E15B7A000CC1CA /* Property.swift */; };
 		BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4021D2453B00453456 /* AppDelegate.swift */; };
 		BEC91F4321D2453B00453456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4221D2453B00453456 /* Assets.xcassets */; };
 		BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4421D2453B00453456 /* MainMenu.xib */; };
 		BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4E21D246C200453456 /* ListViewController.swift */; };
 		BEC91F5121D246CD00453456 /* ListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F5021D246CD00453456 /* ListView.xib */; };
 		BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC91F5321D2484400453456 /* CoreMediaIO.framework */; };
-		BEC91F5621D2581500453456 /* CMIOProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F5521D2581500453456 /* CMIOProperties.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BEC255A921F384050053F137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BEC91F3521D2453B00453456 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BEC255A321F384050053F137;
+			remoteInfo = CameoSDK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BEC255B021F384050053F137 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BEC255AC21F384050053F137 /* CameoSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BE253FFB21DBBF1400C90876 /* ValueCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueCellView.swift; sourceTree = "<group>"; };
@@ -39,7 +66,7 @@
 		BE9EFC8821E15F42000CC1CA /* AdjustControlPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AdjustControlPanel.xib; sourceTree = "<group>"; };
 		BE9EFC8A21E15F50000CC1CA /* AdjustControlPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustControlPanelController.swift; sourceTree = "<group>"; };
 		BE9EFC9121E25C6A000CC1CA /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
-		BE9EFC9321E25E9C000CC1CA /* CMIOObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIOObject.swift; sourceTree = "<group>"; };
+		BE9EFC9321E25E9C000CC1CA /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 		BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LookupWindow.xib; sourceTree = "<group>"; };
 		BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindowController.swift; sourceTree = "<group>"; };
 		BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindow.swift; sourceTree = "<group>"; };
@@ -47,6 +74,9 @@
 		BEA6FBDD21D9737900FFFB8C /* fourcc.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fourcc.json; sourceTree = "<group>"; };
 		BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookViewController.swift; sourceTree = "<group>"; };
 		BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QuickLookView.xib; sourceTree = "<group>"; };
+		BEC255A421F384050053F137 /* CameoSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CameoSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEC255A621F384050053F137 /* CameoSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameoSDK.h; sourceTree = "<group>"; };
+		BEC255A721F384050053F137 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BEC91F3D21D2453B00453456 /* Cameo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cameo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC91F4021D2453B00453456 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BEC91F4221D2453B00453456 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -55,15 +85,23 @@
 		BEC91F4E21D246C200453456 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		BEC91F5021D246CD00453456 /* ListView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListView.xib; sourceTree = "<group>"; };
 		BEC91F5321D2484400453456 /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
-		BEC91F5521D2581500453456 /* CMIOProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIOProperties.swift; sourceTree = "<group>"; };
+		BEC91F5521D2581500453456 /* Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Properties.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BEC255A121F384050053F137 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BEC91F3A21D2453B00453456 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */,
+				BEC255AB21F384050053F137 /* CameoSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,18 +111,28 @@
 		BE9EFC9021E25C5D000CC1CA /* CMIO */ = {
 			isa = PBXGroup;
 			children = (
-				BE9EFC9321E25E9C000CC1CA /* CMIOObject.swift */,
-				BEC91F5521D2581500453456 /* CMIOProperties.swift */,
 				BE9EFC9121E25C6A000CC1CA /* Control.swift */,
-				BE9EFC8521E15B7A000CC1CA /* Property.swift */,
 			);
 			path = CMIO;
+			sourceTree = "<group>";
+		};
+		BEC255A521F384050053F137 /* CameoSDK */ = {
+			isa = PBXGroup;
+			children = (
+				BEC255A621F384050053F137 /* CameoSDK.h */,
+				BEC255A721F384050053F137 /* Info.plist */,
+				BE9EFC9321E25E9C000CC1CA /* Object.swift */,
+				BEC91F5521D2581500453456 /* Properties.swift */,
+				BE9EFC8521E15B7A000CC1CA /* Property.swift */,
+			);
+			path = CameoSDK;
 			sourceTree = "<group>";
 		};
 		BEC91F3421D2453B00453456 = {
 			isa = PBXGroup;
 			children = (
 				BEC91F3F21D2453B00453456 /* Cameo */,
+				BEC255A521F384050053F137 /* CameoSDK */,
 				BEC91F3E21D2453B00453456 /* Products */,
 				BEC91F5221D2484400453456 /* Frameworks */,
 			);
@@ -94,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				BEC91F3D21D2453B00453456 /* Cameo.app */,
+				BEC255A421F384050053F137 /* CameoSDK.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -134,7 +183,36 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		BEC2559F21F384050053F137 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEC255A821F384050053F137 /* CameoSDK.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		BEC255A321F384050053F137 /* CameoSDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BEC255AF21F384050053F137 /* Build configuration list for PBXNativeTarget "CameoSDK" */;
+			buildPhases = (
+				BEC2559F21F384050053F137 /* Headers */,
+				BEC255A021F384050053F137 /* Sources */,
+				BEC255A121F384050053F137 /* Frameworks */,
+				BEC255A221F384050053F137 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CameoSDK;
+			productName = CameoSDK;
+			productReference = BEC255A421F384050053F137 /* CameoSDK.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		BEC91F3C21D2453B00453456 /* Cameo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BEC91F4B21D2453B00453456 /* Build configuration list for PBXNativeTarget "Cameo" */;
@@ -142,10 +220,12 @@
 				BEC91F3921D2453B00453456 /* Sources */,
 				BEC91F3A21D2453B00453456 /* Frameworks */,
 				BEC91F3B21D2453B00453456 /* Resources */,
+				BEC255B021F384050053F137 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BEC255AA21F384050053F137 /* PBXTargetDependency */,
 			);
 			name = Cameo;
 			productName = Cameo;
@@ -162,6 +242,9 @@
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Tamas Lustyik";
 				TargetAttributes = {
+					BEC255A321F384050053F137 = {
+						CreatedOnToolsVersion = 10.1;
+					};
 					BEC91F3C21D2453B00453456 = {
 						CreatedOnToolsVersion = 10.1;
 					};
@@ -181,11 +264,19 @@
 			projectRoot = "";
 			targets = (
 				BEC91F3C21D2453B00453456 /* Cameo */,
+				BEC255A321F384050053F137 /* CameoSDK */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		BEC255A221F384050053F137 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BEC91F3B21D2453B00453456 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -204,18 +295,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BEC255A021F384050053F137 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEC255B321F384D00053F137 /* Property.swift in Sources */,
+				BEC255B221F384BF0053F137 /* Properties.swift in Sources */,
+				BEC255B121F384660053F137 /* Object.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BEC91F3921D2453B00453456 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE9EFC9421E25E9C000CC1CA /* CMIOObject.swift in Sources */,
 				BEA6FBDC21D971CA00FFFB8C /* FourCCDatabase.swift in Sources */,
 				BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */,
 				BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */,
 				BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */,
 				BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */,
-				BE9EFC8621E15B7A000CC1CA /* Property.swift in Sources */,
-				BEC91F5621D2581500453456 /* CMIOProperties.swift in Sources */,
 				BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */,
 				BE253FFC21DBBF1400C90876 /* ValueCellView.swift in Sources */,
 				BE9EFC8B21E15F50000CC1CA /* AdjustControlPanelController.swift in Sources */,
@@ -225,6 +323,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BEC255AA21F384050053F137 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BEC255A321F384050053F137 /* CameoSDK */;
+			targetProxy = BEC255A921F384050053F137 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		BEC91F4421D2453B00453456 /* MainMenu.xib */ = {
@@ -238,6 +344,62 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		BEC255AD21F384050053F137 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = CameoSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.CameoSDK;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		BEC255AE21F384050053F137 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = CameoSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.CameoSDK;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		BEC91F4921D2453B00453456 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -356,6 +518,7 @@
 		BEC91F4C21D2453B00453456 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -373,6 +536,7 @@
 		BEC91F4D21D2453B00453456 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -390,6 +554,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BEC255AF21F384050053F137 /* Build configuration list for PBXNativeTarget "CameoSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BEC255AD21F384050053F137 /* Debug */,
+				BEC255AE21F384050053F137 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BEC91F3821D2453B00453456 /* Build configuration list for PBXProject "Cameo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

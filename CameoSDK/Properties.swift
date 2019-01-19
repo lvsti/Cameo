@@ -10,7 +10,7 @@ import Foundation
 import CoreMediaIO
 
 
-enum ObjectProperty: PropertySet {
+public enum ObjectProperty: CaseIterable, PropertySet, PropertySetInternal {
     case `class`, owner, creator, name, manufacturer, elementName, elementCategoryName, elementNumberName, ownedObjects
     
     static let descriptors: [ObjectProperty: PropertyDescriptor] = [
@@ -26,7 +26,7 @@ enum ObjectProperty: PropertySet {
     ]
 }
 
-enum SystemProperty: PropertySet {
+public enum SystemProperty: CaseIterable, PropertySet, PropertySetInternal {
     case processIsMaster, isInitingOrExiting, devices, defaultInputDevice, defaultOutputDevice,
         deviceForUID, sleepingIsAllowed, unloadingIsAllowed, plugInForBundleID,
         userSessionIsActiveOrHeadless, suspendedBySystem, allowScreenCaptureDevices,
@@ -49,7 +49,7 @@ enum SystemProperty: PropertySet {
     ]
 }
 
-enum DeviceProperty: PropertySet {
+public enum DeviceProperty: CaseIterable, PropertySet, PropertySetInternal {
     case plugIn, deviceUID, modelUID, transportType, deviceIsAlive, deviceHasChanged, deviceIsRunning,
         deviceIsRunningSomewhere, deviceCanBeDefaultDevice, hogMode, latency, streams,
         streamConfiguration, deviceMaster, excludeNonDALAccess, clientSyncDiscontinuity, smpteTimeCallback,
@@ -90,7 +90,7 @@ enum DeviceProperty: PropertySet {
     ]
 }
 
-enum StreamProperty: PropertySet {
+public enum StreamProperty: CaseIterable, PropertySet, PropertySetInternal {
     case direction, terminalType, startingChannel, latency, formatDescription, formatDescriptions,
         stillImage, stillImageFormatDescriptions, frameRate, minimumFrameRate, frameRates,
         frameRateRanges, noDataTimeoutInMSec, deviceSyncTimeoutInMSec, noDataEventCount,
@@ -139,7 +139,7 @@ enum StreamProperty: PropertySet {
     ]
 }
 
-enum ControlProperty: PropertySet {
+public enum ControlProperty: CaseIterable, PropertySet, PropertySetInternal {
     case scope, element, variant
     
     static let descriptors: [ControlProperty: PropertyDescriptor] = [
@@ -149,7 +149,7 @@ enum ControlProperty: PropertySet {
     ]
 }
 
-enum BooleanControlProperty: PropertySet {
+public enum BooleanControlProperty: CaseIterable, PropertySet, PropertySetInternal {
     case value
     
     static let descriptors: [BooleanControlProperty: PropertyDescriptor] = [
@@ -157,7 +157,7 @@ enum BooleanControlProperty: PropertySet {
     ]
 }
 
-enum SelectorControlProperty: PropertySet {
+public enum SelectorControlProperty: CaseIterable, PropertySet, PropertySetInternal {
     case currentItem, availableItems, itemName
     
     static let descriptors: [SelectorControlProperty: PropertyDescriptor] = [
@@ -167,7 +167,7 @@ enum SelectorControlProperty: PropertySet {
     ]
 }
 
-enum FeatureControlProperty: PropertySet {
+public enum FeatureControlProperty: CaseIterable, PropertySet, PropertySetInternal {
     case onOff, automaticManual, absoluteNative, tune, nativeValue, absoluteValue,
         nativeRange, absoluteRange, convertNativeToAbsolute, convertAbsoluteToNative,
         absoluteUnitName
@@ -187,7 +187,7 @@ enum FeatureControlProperty: PropertySet {
     ]
 }
 
-enum ExposureControlProperty: PropertySet {
+public enum ExposureControlProperty: CaseIterable, PropertySet, PropertySetInternal {
     case regionOfInterest, lockThreshold, unlockThreshold, target, convergenceSpeed,
         stability, stable, integrationTime, maximumGain
     

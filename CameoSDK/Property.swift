@@ -10,16 +10,16 @@ import Foundation
 import CoreMediaIO
 
 
-protocol QualifierProtocol {
+public protocol QualifierProtocol {
     var data: UnsafeMutableRawPointer { get }
     var size: Int { get }
 }
 
-class Qualifier<T>: QualifierProtocol {
-    let data: UnsafeMutableRawPointer
-    let size: Int
+public class Qualifier<T>: QualifierProtocol {
+    public let data: UnsafeMutableRawPointer
+    public let size: Int
     
-    init(from scalar: T) {
+    public init(from scalar: T) {
         size = MemoryLayout<T>.size
         data = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: MemoryLayout<T>.alignment)
         let typedData = data.bindMemory(to: T.self, capacity: 1)
@@ -31,8 +31,8 @@ class Qualifier<T>: QualifierProtocol {
     }
 }
 
-enum PropertyType {
-    enum Kind {
+public enum PropertyType {
+    public enum Kind {
         case pod, podArray, cf, cfArray, function
     }
     
@@ -47,7 +47,7 @@ enum PropertyType {
     case arrayOfFormatDescriptions
     case audioValueTranslation
 
-    var kind: Kind {
+    public var kind: Kind {
         switch self {
         case .boolean, .boolean32, .int32, .uint32, .uint64, .float32, .float64, .fourCC,
              .classID, .objectID, .deviceID,
@@ -195,7 +195,7 @@ enum PropertyType {
 
 }
 
-extension CMIOObjectPropertyScope {
+public extension CMIOObjectPropertyScope {
     static let global = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal)
     static let anyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeWildcard)
     static let deviceInput = CMIOObjectPropertyScope(kCMIODevicePropertyScopeInput)
@@ -203,17 +203,34 @@ extension CMIOObjectPropertyScope {
     static let devicePlayThrough = CMIOObjectPropertyScope(kCMIODevicePropertyScopePlayThrough)
 }
 
-extension CMIOObjectPropertyElement {
+public extension CMIOObjectPropertyElement {
     static let master = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster)
     static let anyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementWildcard)
 }
 
 
-extension CMIOObjectPropertyAddress {
+public extension CMIOObjectPropertyAddress {
     init(_ selector: CMIOObjectPropertySelector,
          _ scope: CMIOObjectPropertyScope = .anyScope,
          _ element: CMIOObjectPropertyElement = .anyElement) {
         self.init(mSelector: selector, mScope: scope, mElement: element)
+    }
+}
+
+public protocol PropertySet {
+    var selector: CMIOObjectPropertySelector { get }
+    var type: PropertyType { get }
+    
+    static func allExisting(scope: CMIOObjectPropertyScope,
+                            element: CMIOObjectPropertyElement,
+                            in objectID: CMIOObjectID) -> [Self]
+}
+
+public extension PropertySet where Self : CaseIterable {
+    static func allExisting(scope: CMIOObjectPropertyScope = .anyScope,
+                            element: CMIOObjectPropertyElement = .anyElement,
+                            in objectID: CMIOObjectID) -> [Self] {
+        return allCases.filter { Property.exists($0, scope: scope, element: element, in: objectID) }
     }
 }
 
@@ -227,40 +244,26 @@ struct PropertyDescriptor {
     }
 }
 
-
-protocol PropertySet: CaseIterable, Hashable {
-    var selector: CMIOObjectPropertySelector { get }
-    var type: PropertyType { get }
-    
+protocol PropertySetInternal: PropertySet, Hashable {
     static var descriptors: [Self: PropertyDescriptor] { get }
-    static func allExisting(scope: CMIOObjectPropertyScope,
-                            element: CMIOObjectPropertyElement,
-                            in objectID: CMIOObjectID) -> [Self]
 }
 
-extension PropertySet {
-    static func allExisting(scope: CMIOObjectPropertyScope = .anyScope,
-                            element: CMIOObjectPropertyElement = .anyElement,
-                            in objectID: CMIOObjectID) -> [Self] {
-        return allCases.filter { Property.exists($0, scope: scope, element: element, in: objectID) }
-    }
-    
-    var selector: CMIOObjectPropertySelector {
+extension PropertySetInternal {
+    public var selector: CMIOObjectPropertySelector {
         return Self.descriptors[self]!.selector
     }
-
-    var type: PropertyType {
+    
+    public var type: PropertyType {
         return Self.descriptors[self]!.type
     }
 }
 
-
-enum Property {
-    static func value<S, T>(of property: S,
-                            scope: CMIOObjectPropertyScope = .anyScope,
-                            element: CMIOObjectPropertyElement = .anyElement,
-                            qualifiedBy qualifier: QualifierProtocol? = nil,
-                            in objectID: CMIOObjectID) -> T? where S: PropertySet {
+public enum Property {
+    public static func value<S, T>(of property: S,
+                                   scope: CMIOObjectPropertyScope = .anyScope,
+                                   element: CMIOObjectPropertyElement = .anyElement,
+                                   qualifiedBy qualifier: QualifierProtocol? = nil,
+                                   in objectID: CMIOObjectID) -> T? where S: PropertySet {
         let address = CMIOObjectPropertyAddress(property.selector, scope, element)
         
         switch property.type.kind {
@@ -270,11 +273,11 @@ enum Property {
         }
     }
 
-    static func arrayValue<S, T>(of property: S,
-                                 scope: CMIOObjectPropertyScope = .anyScope,
-                                 element: CMIOObjectPropertyElement = .anyElement,
-                                 qualifiedBy qualifier: QualifierProtocol? = nil,
-                                 in objectID: CMIOObjectID) -> [T]? where S: PropertySet {
+    public static func arrayValue<S, T>(of property: S,
+                                        scope: CMIOObjectPropertyScope = .anyScope,
+                                        element: CMIOObjectPropertyElement = .anyElement,
+                                        qualifiedBy qualifier: QualifierProtocol? = nil,
+                                        in objectID: CMIOObjectID) -> [T]? where S: PropertySet {
         let address = CMIOObjectPropertyAddress(property.selector, scope, element)
 
         switch property.type.kind {
@@ -284,20 +287,10 @@ enum Property {
         }
     }
     
-    static func description<S>(of property: S,
-                               scope: CMIOObjectPropertyScope = .anyScope,
-                               element: CMIOObjectPropertyElement = .anyElement,
-                               qualifiedBy qualifier: QualifierProtocol? = nil,
-                               in objectID: CMIOObjectID) -> String? where S: PropertySet {
-        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
-
-        return propertyDescription(for: address, ofType: property.type, qualifiedBy: qualifier, in: objectID)
-    }
-    
-    static func isSettable<S>(_ property: S,
-                              scope: CMIOObjectPropertyScope = .anyScope,
-                              element: CMIOObjectPropertyElement = .anyElement,
-                              in objectID: CMIOObjectID) -> Bool where S: PropertySet {
+    public static func isSettable<S>(_ property: S,
+                                     scope: CMIOObjectPropertyScope = .anyScope,
+                                     element: CMIOObjectPropertyElement = .anyElement,
+                                     in objectID: CMIOObjectID) -> Bool where S: PropertySet {
         var address = CMIOObjectPropertyAddress(property.selector, scope, element)
 
         var isSettable: DarwinBoolean = false
@@ -310,21 +303,21 @@ enum Property {
         return isSettable.boolValue
     }
     
-    static func exists<S>(_ property: S,
-                          scope: CMIOObjectPropertyScope = .anyScope,
-                          element: CMIOObjectPropertyElement = .anyElement,
-                          in objectID: CMIOObjectID) -> Bool where S: PropertySet {
+    public static func exists<S>(_ property: S,
+                                 scope: CMIOObjectPropertyScope = .anyScope,
+                                 element: CMIOObjectPropertyElement = .anyElement,
+                                 in objectID: CMIOObjectID) -> Bool where S: PropertySet {
         var address = CMIOObjectPropertyAddress(property.selector, scope, element)
 
         return CMIOObjectHasProperty(objectID, &address)
     }
     
-    static func setValue<S, T>(_ value: T,
-                               for property: S,
-                               scope: CMIOObjectPropertyScope = .anyScope,
-                               element: CMIOObjectPropertyElement = .anyElement,
-                               qualifiedBy qualifier: QualifierProtocol? = nil,
-                               in objectID: CMIOObjectID) -> Bool where S: PropertySet {
+    public static func setValue<S, T>(_ value: T,
+                                      for property: S,
+                                      scope: CMIOObjectPropertyScope = .anyScope,
+                                      element: CMIOObjectPropertyElement = .anyElement,
+                                      qualifiedBy qualifier: QualifierProtocol? = nil,
+                                      in objectID: CMIOObjectID) -> Bool where S: PropertySet {
         let address = CMIOObjectPropertyAddress(property.selector, scope, element)
 
         switch property.type.kind {
@@ -333,169 +326,4 @@ enum Property {
         default: return false
         }
     }
-}
-
-
-func fourCC(from value: UInt32) -> String? {
-    let chars: [UInt8] = [
-        UInt8((value >> 24) & 0xff),
-        UInt8((value >> 16) & 0xff),
-        UInt8((value >> 8) & 0xff),
-        UInt8(value & 0xff)
-    ]
-    return String(bytes: chars, encoding: .ascii)
-}
-
-func fourCCDescription(from value: UInt32) -> String? {
-    guard let fcc = fourCC(from: value) else {
-        return nil
-    }
-    
-    if let entry = FourCCDatabase.shared.entry(forValue: Int(value)) {
-        return "'\(fcc)' (\(entry.constantName))"
-    }
-    
-    return "'\(fcc)'"
-}
-
-
-func propertyDescription(for address: CMIOObjectPropertyAddress,
-                         ofType type: PropertyType,
-                         qualifiedBy qualifier: QualifierProtocol? = nil,
-                         in objectID: CMIOObjectID) -> String? {
-    switch type {
-    case .boolean:
-        if let value: DarwinBoolean = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .boolean32:
-        if let value: UInt32 = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return value != 0 ? "true (\(value))" : "false (0)"
-        }
-    case .int32, .uint32:
-        if let value: UInt32 = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .uint64:
-        if let value: UInt64 = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .float32:
-        if let value: Float32 = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .float64:
-        if let value: Float64 = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .fourCC, .classID:
-        if let value: CMIOClassID = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            if let fcc = fourCCDescription(from: value) {
-                return "\(fcc)"
-            }
-            return "\(value)"
-        }
-    case .objectID, .deviceID:
-        if let value: CMIOObjectID = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return value != kCMIOObjectUnknown ? "@\(value)" : "<null>"
-        }
-    case .audioValueTranslation:
-        return "<function>"
-    case .audioValueRange:
-        if let value: AudioValueRange = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "AudioValueRange {\(value.mMinimum), \(value.mMaximum)}"
-        }
-    case .propertyAddress:
-        if let value: CMIOObjectPropertyAddress = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "CMIOObjectPropertyAddress {\(fourCCDescription(from: value.mSelector)!), " +
-                "\(fourCCDescription(from: value.mScope)!), \(fourCCDescription(from: value.mElement)!)"
-        }
-    case .streamConfiguration:
-        if let value: [UInt32] = PropertyType.podArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "[" + value.dropFirst().map { "\($0)" }.joined(separator: ", ") + "]"
-        }
-    case .pid:
-        if let value: pid_t = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-//    case .componentDescription:
-//        if let value: ComponentDescription = PropertyType.podTypeValue(for: selector, qualifiedBy: qualifier, in: objectID) {
-//            return "\(value)"
-//        }
-    case .time:
-        if let value: CMTime = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "CMTime {\(value.value) / \(value.timescale)}"
-        }
-    case .cgRect:
-        if let value: CGRect = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "CGRect {{\(value.origin.x), \(value.origin.y)}, {\(value.size.width), \(value.size.height)}}"
-        }
-    case .streamDeck:
-        if let value: CMIOStreamDeck = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "CMIOStreamDeck {\(value.mStatus), \(value.mState), \(value.mState2)}"
-        }
-    case .smpteCallback:
-        if let value: CMIODeviceSMPTETimeCallback = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            if value.mGetSMPTETimeProc != nil {
-                let ctx = value.mRefCon != nil ? "\(value.mRefCon!)" : "0x0"
-                return "CMIODeviceSMPTETimeCallback {proc=\(value.mGetSMPTETimeProc!), ctx=\(ctx)}"
-            }
-            else {
-                return "<null>"
-            }
-        }
-    case .scheduledOutputCallback:
-        if let value: CMIOStreamScheduledOutputNotificationProcAndRefCon = PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            if value.scheduledOutputNotificationProc != nil {
-                let ctx = value.scheduledOutputNotificationRefCon != nil ? "\(value.scheduledOutputNotificationRefCon!)" : "0x0"
-                return "CMIOStreamScheduledOutputNotificationProcAndRefCon {proc=\(value.scheduledOutputNotificationProc!), ctx=\(ctx)"
-            }
-            else {
-                return "<null>"
-            }
-        }
-        
-    case .arrayOfUInt32s:
-        if let value: [UInt32] = PropertyType.podArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .arrayOfFloat64s:
-        if let value: [Float64] = PropertyType.podArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .arrayOfDeviceIDs, .arrayOfObjectIDs, .arrayOfStreamIDs:
-        if let value: [CMIOObjectID] = PropertyType.podArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "[" + value.map { $0 != kCMIOObjectUnknown ? "@\($0)" : "<null>" }.joined(separator: ", ") + "]"
-        }
-    case .arrayOfAudioValueRanges:
-        if let value: [AudioValueRange] = PropertyType.podArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "[" + value.map { "AudioValueRange {\($0.mMinimum), \($0.mMaximum)}" }.joined(separator: ", ") + "]"
-        }
-        
-    case .string:
-        if let value: CFString = PropertyType.cfTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .formatDescription:
-        if let value: CMFormatDescription = PropertyType.cfTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .sampleBuffer:
-        if let value: CMSampleBuffer = PropertyType.cfTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-    case .clock:
-        if let value: CFTypeRef = PropertyType.cfTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "\(value)"
-        }
-        
-    case .arrayOfFormatDescriptions:
-        if let value: [CMFormatDescription] = PropertyType.cfArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID) {
-            return "[" + value.map { "\($0)" }.joined(separator: ", ") + "]"
-        }
-        
-    default:
-        break
-    }
-    return nil
 }
