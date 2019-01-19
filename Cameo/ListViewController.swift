@@ -59,8 +59,8 @@ func properties<S>(from type: S.Type,
                               element: .anyElement,
                               in: objectID)
     for prop in props {
-        let isFourCC = S.descriptors[prop]!.type == .fourCC || S.descriptors[prop]!.type == .classID
-        let item = CMIOPropertyItem(selector: S.descriptors[prop]!.selector,
+        let isFourCC = prop.type == .fourCC || prop.type == .classID
+        let item = CMIOPropertyItem(selector: prop.selector,
                                     name: "\(prop)",
                                     isSettable: Property.isSettable(prop, scope: scope, in: objectID),
                                     value: Property.description(of: prop, scope: scope, in: objectID) ?? "#ERROR",

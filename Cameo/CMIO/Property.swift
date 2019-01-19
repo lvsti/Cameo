@@ -229,6 +229,9 @@ struct PropertyDescriptor {
 
 
 protocol PropertySet: CaseIterable, Hashable {
+    var selector: CMIOObjectPropertySelector { get }
+    var type: PropertyType { get }
+    
     static var descriptors: [Self: PropertyDescriptor] { get }
     static func allExisting(scope: CMIOObjectPropertyScope,
                             element: CMIOObjectPropertyElement,
@@ -241,6 +244,14 @@ extension PropertySet {
                             in objectID: CMIOObjectID) -> [Self] {
         return allCases.filter { Property.exists($0, scope: scope, element: element, in: objectID) }
     }
+    
+    var selector: CMIOObjectPropertySelector {
+        return Self.descriptors[self]!.selector
+    }
+
+    var type: PropertyType {
+        return Self.descriptors[self]!.type
+    }
 }
 
 
@@ -250,10 +261,9 @@ enum Property {
                             element: CMIOObjectPropertyElement = .anyElement,
                             qualifiedBy qualifier: QualifierProtocol? = nil,
                             in objectID: CMIOObjectID) -> T? where S: PropertySet {
-        let desc = S.descriptors[property]!
-        let address = CMIOObjectPropertyAddress(desc.selector, scope, element)
+        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
         
-        switch desc.type.kind {
+        switch property.type.kind {
         case .pod: return PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID)
         case .cf: return PropertyType.cfTypeValue(for: address, qualifiedBy: qualifier, in: objectID)
         default: return nil
@@ -265,10 +275,9 @@ enum Property {
                                  element: CMIOObjectPropertyElement = .anyElement,
                                  qualifiedBy qualifier: QualifierProtocol? = nil,
                                  in objectID: CMIOObjectID) -> [T]? where S: PropertySet {
-        let desc = S.descriptors[property]!
-        let address = CMIOObjectPropertyAddress(desc.selector, scope, element)
-        
-        switch desc.type.kind {
+        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
+
+        switch property.type.kind {
         case .podArray: return PropertyType.podArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID)
         case .cfArray: return PropertyType.cfArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID)
         default: return nil
@@ -280,18 +289,16 @@ enum Property {
                                element: CMIOObjectPropertyElement = .anyElement,
                                qualifiedBy qualifier: QualifierProtocol? = nil,
                                in objectID: CMIOObjectID) -> String? where S: PropertySet {
-        let desc = S.descriptors[property]!
-        let address = CMIOObjectPropertyAddress(desc.selector, scope, element)
+        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
 
-        return propertyDescription(for: address, ofType: desc.type, qualifiedBy: qualifier, in: objectID)
+        return propertyDescription(for: address, ofType: property.type, qualifiedBy: qualifier, in: objectID)
     }
     
     static func isSettable<S>(_ property: S,
                               scope: CMIOObjectPropertyScope = .anyScope,
                               element: CMIOObjectPropertyElement = .anyElement,
                               in objectID: CMIOObjectID) -> Bool where S: PropertySet {
-        let desc = S.descriptors[property]!
-        var address = CMIOObjectPropertyAddress(desc.selector, scope, element)
+        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
 
         var isSettable: DarwinBoolean = false
         
@@ -307,8 +314,7 @@ enum Property {
                           scope: CMIOObjectPropertyScope = .anyScope,
                           element: CMIOObjectPropertyElement = .anyElement,
                           in objectID: CMIOObjectID) -> Bool where S: PropertySet {
-        let desc = S.descriptors[property]!
-        var address = CMIOObjectPropertyAddress(desc.selector, scope, element)
+        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
 
         return CMIOObjectHasProperty(objectID, &address)
     }
@@ -319,10 +325,9 @@ enum Property {
                                element: CMIOObjectPropertyElement = .anyElement,
                                qualifiedBy qualifier: QualifierProtocol? = nil,
                                in objectID: CMIOObjectID) -> Bool where S: PropertySet {
-        let desc = S.descriptors[property]!
-        let address = CMIOObjectPropertyAddress(desc.selector, scope, element)
-        
-        switch desc.type.kind {
+        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
+
+        switch property.type.kind {
         case .pod: return PropertyType.setPODTypeValue(value, for: address, qualifiedBy: qualifier, in: objectID)
         case .cf: return PropertyType.setCFTypeValue(value, for: address, qualifiedBy: qualifier, in: objectID)
         default: return false
