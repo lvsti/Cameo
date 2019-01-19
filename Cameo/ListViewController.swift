@@ -52,24 +52,6 @@ func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
     return nodes
 }
 
-func properties<S>(from type: S.Type,
-                   scope: CMIOObjectPropertyScope,
-                   in objectID: CMIOObjectID) -> [CMIOPropertyItem] where S: PropertySet {
-    var propertyList: [CMIOPropertyItem] = []
-    let props = S.allExisting(scope: scope,
-                              element: .anyElement,
-                              in: objectID)
-    for prop in props {
-        let isFourCC = prop.type == .fourCC || prop.type == .classID
-        let item = CMIOPropertyItem(selector: prop.selector,
-                                    name: "\(prop)",
-                                    isSettable: Property.isSettable(prop, scope: scope, in: objectID),
-                                    value: Property.description(of: prop, scope: scope, in: objectID) ?? "#ERROR",
-                                    fourCC: isFourCC ? Property.value(of: prop, scope: scope, in: objectID) : nil)
-        propertyList.append(item)
-    }
-    return propertyList
-}
 
 final class ListViewController: NSViewController {
     
@@ -85,7 +67,7 @@ final class ListViewController: NSViewController {
                                 classID: .systemObject,
                                 name: "System",
                                 children: [])
-    private var propertyList: [CMIOPropertyItem] = []
+    private let propertyListDataSource = PropertyListDataSource()
     private var currentScope: CMIOObjectPropertyScope = .global
 
     override var nibName: NSNib.Name? {
@@ -115,45 +97,6 @@ final class ListViewController: NSViewController {
         print(tree)
     }
     
-    private func reloadPropertyList(for node: CMIONode) {
-        propertyList.removeAll()
-        
-        propertyList.append(CMIOPropertyItem(selector: CMIOObjectPropertySelector(kCMIOObjectPropertyScopeWildcard),
-                                             name: "objectID",
-                                             isSettable: false,
-                                             value: "@\(node.objectID)",
-                                             fourCC: nil))
-        
-        propertyList.append(contentsOf: properties(from: ObjectProperty.self, scope: currentScope, in: node.objectID))
-
-        if node.classID.isSubclass(of: .device) {
-            propertyList.append(contentsOf: properties(from: DeviceProperty.self, scope: currentScope, in: node.objectID))
-        }
-        else if node.classID.isSubclass(of: .stream) {
-            propertyList.append(contentsOf: properties(from: StreamProperty.self, scope: currentScope, in: node.objectID))
-        }
-        else if node.classID.isSubclass(of: .control) {
-            propertyList.append(contentsOf: properties(from: ControlProperty.self, scope: currentScope, in: node.objectID))
-            
-            if node.classID.isSubclass(of: .booleanControl) {
-                propertyList.append(contentsOf: properties(from: BooleanControlProperty.self, scope: currentScope, in: node.objectID))
-            }
-            else if node.classID.isSubclass(of: .selectorControl) {
-                propertyList.append(contentsOf: properties(from: SelectorControlProperty.self, scope: currentScope, in: node.objectID))
-            }
-            else if node.classID.isSubclass(of: .featureControl) {
-                propertyList.append(contentsOf: properties(from: FeatureControlProperty.self, scope: currentScope, in: node.objectID))
-                
-                if node.classID.isSubclass(of: .exposureControl) {
-                    propertyList.append(contentsOf: properties(from: ExposureControlProperty.self, scope: currentScope, in: node.objectID))
-                }
-            }
-        }
-        else if node.classID == .systemObject {
-            propertyList.append(contentsOf: properties(from: SystemProperty.self, scope: currentScope, in: node.objectID))
-        }
-    }
-    
     override func keyDown(with event: NSEvent) {
         guard event.keyCode == kVK_Space, tableView.selectedRow >= 0 else {
             super.keyDown(with: event)
@@ -175,7 +118,8 @@ final class ListViewController: NSViewController {
         }
         
         let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
-        reloadPropertyList(for: node)
+        
+        propertyListDataSource.reload(forNode: node, scope: currentScope)
         tableView.reloadData()
     }
     
@@ -206,7 +150,8 @@ final class ListViewController: NSViewController {
             .devicePlayThrough
         ]
         currentScope = CMIOObjectPropertyScope(scopes[scopeSelector.selectedSegment])
-        reloadPropertyList(for: node)
+        
+        propertyListDataSource.reload(forNode: node, scope: currentScope)
         tableView.reloadData()
     }
 }
@@ -219,7 +164,7 @@ extension ListViewController: NSOutlineViewDelegate {
         
         let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
         
-        reloadPropertyList(for: node)
+        propertyListDataSource.reload(forNode: node, scope: currentScope)
         tableView.reloadData()
         
         adjustControlToolbarItem.isEnabled = node.classID.isSubclass(of: .control)
@@ -313,7 +258,7 @@ extension ListViewController: NSOutlineViewDataSource {
 
 extension ListViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return propertyList.count
+        return propertyListDataSource.items.count
     }
 }
 
@@ -326,28 +271,28 @@ extension ListViewController: NSTableViewDelegate {
         if column.identifier.rawValue == "propertyColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PropertyCell"),
                                           owner: nil) as! NSTableCellView
-            view.textField?.stringValue = propertyList[row].name
+            view.textField?.stringValue = propertyListDataSource.items[row].name
             return view
         }
         else if column.identifier.rawValue == "valueColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ValueCell"),
                                           owner: nil) as! ValueCellView
-            view.textField?.stringValue = propertyList[row].value
-            view.showsLinkButton = propertyList[row].fourCC != nil
+            view.textField?.stringValue = propertyListDataSource.items[row].value
+            view.showsLinkButton = propertyListDataSource.items[row].fourCC != nil
             view.delegate = self
             return view
         }
         else if column.identifier.rawValue == "fourccColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "FourCCCell"),
                                           owner: nil) as! NSTableCellView
-            view.textField?.stringValue = "'\(fourCC(from: propertyList[row].selector)!)'"
+            view.textField?.stringValue = "'\(fourCC(from: propertyListDataSource.items[row].selector)!)'"
             return view
         }
         else if column.identifier.rawValue == "settableColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "SettableCell"),
                                           owner: nil) as! NSTableCellView
             let checkbox = view.viewWithTag(1000) as! NSButton
-            checkbox.state = propertyList[row].isSettable ? .on : .off
+            checkbox.state = propertyListDataSource.items[row].isSettable ? .on : .off
             
             return view
         }
@@ -359,7 +304,7 @@ extension ListViewController: NSTableViewDelegate {
 extension ListViewController: ValueCellDelegate {
     func valueCellDidClickLinkButton(_ sender: ValueCellView) {
         let clickedRow = tableView.row(for: sender)
-        guard clickedRow >= 0, let fourCC = propertyList[clickedRow].fourCC else {
+        guard clickedRow >= 0, let fourCC = propertyListDataSource.items[clickedRow].fourCC else {
             return
         }
         

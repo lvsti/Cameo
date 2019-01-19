@@ -27,6 +27,7 @@
 		BEC255B221F384BF0053F137 /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F5521D2581500453456 /* Properties.swift */; };
 		BEC255B321F384D00053F137 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8521E15B7A000CC1CA /* Property.swift */; };
 		BEC255B521F385510053F137 /* PropertyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B421F385510053F137 /* PropertyDescription.swift */; };
+		BEC255B721F39B7D0053F137 /* PropertyListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B621F39B7D0053F137 /* PropertyListDataSource.swift */; };
 		BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4021D2453B00453456 /* AppDelegate.swift */; };
 		BEC91F4321D2453B00453456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4221D2453B00453456 /* Assets.xcassets */; };
 		BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4421D2453B00453456 /* MainMenu.xib */; };
@@ -79,6 +80,7 @@
 		BEC255A621F384050053F137 /* CameoSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameoSDK.h; sourceTree = "<group>"; };
 		BEC255A721F384050053F137 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BEC255B421F385510053F137 /* PropertyDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyDescription.swift; sourceTree = "<group>"; };
+		BEC255B621F39B7D0053F137 /* PropertyListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListDataSource.swift; sourceTree = "<group>"; };
 		BEC91F3D21D2453B00453456 /* Cameo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cameo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC91F4021D2453B00453456 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BEC91F4221D2453B00453456 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				BEC91F4421D2453B00453456 /* MainMenu.xib */,
 				BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */,
 				BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */,
+				BEC255B621F39B7D0053F137 /* PropertyListDataSource.swift */,
 				BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */,
 				BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */,
 				BE253FFB21DBBF1400C90876 /* ValueCellView.swift */,
@@ -316,6 +319,7 @@
 				BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */,
 				BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */,
 				BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */,
+				BEC255B721F39B7D0053F137 /* PropertyListDataSource.swift in Sources */,
 				BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */,
 				BEC255B521F385510053F137 /* PropertyDescription.swift in Sources */,
 				BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */,
