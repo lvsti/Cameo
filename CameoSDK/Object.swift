@@ -100,10 +100,10 @@ public extension CMIOClassID {
 
     public func isSubclass(of baseClassID: CMIOClassID) -> Bool {
         switch baseClassID {
-        case CMIOClassID.object: return true
-        case CMIOClassID.control:
+        case .object: return true
+        case .control:
             switch self {
-            case CMIOClassID.control, CMIOClassID.booleanControl, CMIOClassID.selectorControl, CMIOClassID.featureControl:
+            case .control, .booleanControl, .selectorControl, .featureControl:
                 return true
             case _ where CMIOClassID.booleanControlClassIDs.contains(self):
                 return true
@@ -115,14 +115,14 @@ public extension CMIOClassID {
                 return false
             }
             
-        case CMIOClassID.booleanControl:
-            return self == CMIOClassID.booleanControl || CMIOClassID.booleanControlClassIDs.contains(self)
+        case .booleanControl:
+            return self == .booleanControl || CMIOClassID.booleanControlClassIDs.contains(self)
             
-        case CMIOClassID.selectorControl:
-            return self == CMIOClassID.selectorControl || CMIOClassID.selectorControlClassIDs.contains(self)
+        case .selectorControl:
+            return self == .selectorControl || CMIOClassID.selectorControlClassIDs.contains(self)
             
-        case CMIOClassID.featureControl:
-            return self == CMIOClassID.featureControl || CMIOClassID.featureControlClassIDs.contains(self)
+        case .featureControl:
+            return self == .featureControl || CMIOClassID.featureControlClassIDs.contains(self)
             
         default:
             return self == baseClassID
