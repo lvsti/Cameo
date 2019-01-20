@@ -37,7 +37,7 @@ final class ObjectTreeDataSource {
         if let children: [CMIOObjectID] = Property.arrayValue(of: ObjectProperty.ownedObjects, in: objectID) {
             for child in children {
                 let subtree = cmioChildren(of: child)
-                let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
+                let name = Property.description(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
                 let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? .object
                 nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
             }
@@ -48,7 +48,7 @@ final class ObjectTreeDataSource {
             
             for child in streams {
                 let subtree = cmioChildren(of: child)
-                let name: String = Property.value(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
+                let name = Property.description(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
                 let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? .object
                 nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
             }

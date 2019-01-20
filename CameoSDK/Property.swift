@@ -70,133 +70,6 @@ public enum PropertyType {
             return .function
         }
     }
-    
-    static func podTypeValue<T>(for address: CMIOObjectPropertyAddress,
-                                qualifiedBy qualifier: QualifierProtocol? = nil,
-                                in objectID: CMIOObjectID) -> T? {
-        var address = address
-        var dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
-        var dataUsed: UInt32 = 0
-        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<T>.alignment)
-        defer { data.deallocate() }
-        
-        let status = CMIOObjectGetPropertyData(objectID, &address,
-                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
-                                               dataSize, &dataUsed, data)
-        guard status == kCMIOHardwareNoError else {
-            return nil
-        }
-        
-        let typedData = data.bindMemory(to: T.self, capacity: 1)
-        return typedData.pointee
-    }
-
-    static func podArrayTypeValue<T>(for address: CMIOObjectPropertyAddress,
-                                     qualifiedBy qualifier: QualifierProtocol? = nil,
-                                     in objectID: CMIOObjectID) -> [T]? {
-        var address = address
-        var dataSize: UInt32 = 0
-        
-        var status = CMIOObjectGetPropertyDataSize(objectID, &address,
-                                                   UInt32(qualifier?.size ?? 0), qualifier?.data,
-                                                   &dataSize)
-        guard status == kCMIOHardwareNoError else {
-            return nil
-        }
-        
-        let count = Int(dataSize) / MemoryLayout<T>.size
-        var dataUsed: UInt32 = 0
-        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<T>.alignment)
-        defer { data.deallocate() }
-        
-        status = CMIOObjectGetPropertyData(objectID, &address,
-                                           UInt32(qualifier?.size ?? 0), qualifier?.data,
-                                           dataSize, &dataUsed, data)
-        guard status == kCMIOHardwareNoError else {
-            return nil
-        }
-        
-        let typedData = data.bindMemory(to: T.self, capacity: count)
-        return UnsafeBufferPointer<T>(start: typedData, count: count).map { $0 }
-    }
-
-    static func cfTypeValue<T>(for address: CMIOObjectPropertyAddress,
-                               qualifiedBy qualifier: QualifierProtocol? = nil,
-                               in objectID: CMIOObjectID) -> T? {
-        var address = address
-        var dataSize: UInt32 = UInt32(MemoryLayout<CFTypeRef>.size)
-        var dataUsed: UInt32 = 0
-        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<CFTypeRef>.alignment)
-        defer { data.deallocate() }
-        
-        let status = CMIOObjectGetPropertyData(objectID, &address,
-                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
-                                               dataSize, &dataUsed, data)
-        guard status == kCMIOHardwareNoError else {
-            return nil
-        }
-        
-        let typedData = data.bindMemory(to: CFTypeRef.self, capacity: 1)
-        return typedData.pointee as? T
-    }
-
-    static func cfArrayTypeValue<T>(for address: CMIOObjectPropertyAddress,
-                                    qualifiedBy qualifier: QualifierProtocol? = nil,
-                                    in objectID: CMIOObjectID) -> [T]? {
-        var address = address
-        var dataSize: UInt32 = 0
-        
-        var status = CMIOObjectGetPropertyDataSize(objectID, &address,
-                                                   UInt32(qualifier?.size ?? 0), qualifier?.data,
-                                                   &dataSize)
-        guard status == kCMIOHardwareNoError else {
-            return nil
-        }
-        
-        let count = Int(dataSize) / MemoryLayout<CFTypeRef>.size
-        var dataUsed: UInt32 = 0
-        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<CFTypeRef>.alignment)
-        defer { data.deallocate() }
-        
-        status = CMIOObjectGetPropertyData(objectID, &address,
-                                           UInt32(qualifier?.size ?? 0), qualifier?.data,
-                                           dataSize, &dataUsed, data)
-        guard status == kCMIOHardwareNoError else {
-            return nil
-        }
-        
-        let typedData = data.bindMemory(to: CFTypeRef.self, capacity: count)
-        return UnsafeBufferPointer<CFTypeRef>(start: typedData, count: count).compactMap { $0 as? T }
-    }
-
-    static func setPODTypeValue<T>(_ value: T,
-                                   for address: CMIOObjectPropertyAddress,
-                                   qualifiedBy qualifier: QualifierProtocol? = nil,
-                                   in objectID: CMIOObjectID) -> Bool {
-        var address = address
-        let dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
-        var value = value
-        
-        let status = CMIOObjectSetPropertyData(objectID, &address,
-                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
-                                               dataSize, &value)
-        return status == kCMIOHardwareNoError
-    }
-
-    static func setCFTypeValue<T>(_ value: T,
-                                  for address: CMIOObjectPropertyAddress,
-                                  qualifiedBy qualifier: QualifierProtocol? = nil,
-                                  in objectID: CMIOObjectID) -> Bool {
-        var address = address
-        let dataSize: UInt32 = UInt32(MemoryLayout<CFTypeRef>.size)
-        var value = value as CFTypeRef
-        
-        let status = CMIOObjectSetPropertyData(objectID, &address,
-                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
-                                               dataSize, &value)
-        return status == kCMIOHardwareNoError
-    }
-
 }
 
 public extension CMIOObjectPropertyScope {
@@ -249,13 +122,21 @@ public enum Property {
                                    element: CMIOObjectPropertyElement = .anyElement,
                                    qualifiedBy qualifier: QualifierProtocol? = nil,
                                    in objectID: CMIOObjectID) -> T? where S: PropertySet {
-        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        var dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
+        var dataUsed: UInt32 = 0
+        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<T>.alignment)
+        defer { data.deallocate() }
         
-        switch property.type.kind {
-        case .pod: return PropertyType.podTypeValue(for: address, qualifiedBy: qualifier, in: objectID)
-        case .cf: return PropertyType.cfTypeValue(for: address, qualifiedBy: qualifier, in: objectID)
-        default: return nil
+        let status = CMIOObjectGetPropertyData(objectID, &address,
+                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
+                                               dataSize, &dataUsed, data)
+        guard status == kCMIOHardwareNoError else {
+            return nil
         }
+        
+        let typedData = data.bindMemory(to: T.self, capacity: 1)
+        return typedData.pointee
     }
 
     public static func arrayValue<S, T>(of property: S,
@@ -263,13 +144,30 @@ public enum Property {
                                         element: CMIOObjectPropertyElement = .anyElement,
                                         qualifiedBy qualifier: QualifierProtocol? = nil,
                                         in objectID: CMIOObjectID) -> [T]? where S: PropertySet {
-        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
-
-        switch property.type.kind {
-        case .podArray: return PropertyType.podArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID)
-        case .cfArray: return PropertyType.cfArrayTypeValue(for: address, qualifiedBy: qualifier, in: objectID)
-        default: return nil
+        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        var dataSize: UInt32 = 0
+        
+        var status = CMIOObjectGetPropertyDataSize(objectID, &address,
+                                                   UInt32(qualifier?.size ?? 0), qualifier?.data,
+                                                   &dataSize)
+        guard status == kCMIOHardwareNoError else {
+            return nil
         }
+        
+        let count = Int(dataSize) / MemoryLayout<T>.size
+        var dataUsed: UInt32 = 0
+        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<T>.alignment)
+        defer { data.deallocate() }
+        
+        status = CMIOObjectGetPropertyData(objectID, &address,
+                                           UInt32(qualifier?.size ?? 0), qualifier?.data,
+                                           dataSize, &dataUsed, data)
+        guard status == kCMIOHardwareNoError else {
+            return nil
+        }
+        
+        let typedData = data.bindMemory(to: T.self, capacity: count)
+        return UnsafeBufferPointer<T>(start: typedData, count: count).map { $0 }
     }
     
     public static func isSettable<S>(_ property: S,
@@ -303,13 +201,14 @@ public enum Property {
                                       element: CMIOObjectPropertyElement = .anyElement,
                                       qualifiedBy qualifier: QualifierProtocol? = nil,
                                       in objectID: CMIOObjectID) -> Bool where S: PropertySet {
-        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
-
-        switch property.type.kind {
-        case .pod: return PropertyType.setPODTypeValue(value, for: address, qualifiedBy: qualifier, in: objectID)
-        case .cf: return PropertyType.setCFTypeValue(value, for: address, qualifiedBy: qualifier, in: objectID)
-        default: return false
-        }
+        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        let dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
+        var value = value
+        
+        let status = CMIOObjectSetPropertyData(objectID, &address,
+                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
+                                               dataSize, &value)
+        return status == kCMIOHardwareNoError
     }
     
     public static func addListener<S>(for property: S,
