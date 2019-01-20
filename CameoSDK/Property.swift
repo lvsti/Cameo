@@ -31,6 +31,10 @@ public class Qualifier<T>: QualifierProtocol {
     }
 }
 
+public enum PropertyReadSemantics {
+    case read, translation(PropertyType, PropertyType), optionallyQualifiedRead(PropertyType), qualifiedRead(PropertyType)
+}
+
 public enum PropertyType {
     public enum Kind {
         case pod, podArray, cf, cfArray, function
@@ -220,6 +224,7 @@ public extension CMIOObjectPropertyAddress {
 public protocol PropertySet {
     var selector: CMIOObjectPropertySelector { get }
     var type: PropertyType { get }
+    var readSemantics: PropertyReadSemantics { get }
     
     static func allExisting(scope: CMIOObjectPropertyScope,
                             element: CMIOObjectPropertyElement,

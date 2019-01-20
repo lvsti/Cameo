@@ -22,7 +22,7 @@ public enum ObjectProperty: CaseIterable, PropertySet, PropertySetInternal {
         .elementName: PropertyDescriptor(kCMIOObjectPropertyElementName, .string),
         .elementCategoryName: PropertyDescriptor(kCMIOObjectPropertyElementCategoryName, .string),
         .elementNumberName: PropertyDescriptor(kCMIOObjectPropertyElementNumberName, .string),
-        .ownedObjects: PropertyDescriptor(kCMIOObjectPropertyOwnedObjects, .arrayOfObjectIDs)
+        .ownedObjects: PropertyDescriptor(kCMIOObjectPropertyOwnedObjects, .arrayOfObjectIDs, .optionallyQualifiedRead(.arrayOfClassIDs))
     ]
 }
 
@@ -38,10 +38,10 @@ public enum SystemProperty: CaseIterable, PropertySet, PropertySetInternal {
         .devices: PropertyDescriptor(kCMIOHardwarePropertyDevices, .arrayOfDeviceIDs),
         .defaultInputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultInputDevice, .deviceID),
         .defaultOutputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultOutputDevice, .deviceID),
-        .deviceForUID: PropertyDescriptor(kCMIOHardwarePropertyDeviceForUID, .audioValueTranslation),
+        .deviceForUID: PropertyDescriptor(kCMIOHardwarePropertyDeviceForUID, .audioValueTranslation, .translation(.string, .deviceID)),
         .sleepingIsAllowed: PropertyDescriptor(kCMIOHardwarePropertySleepingIsAllowed, .boolean32),
         .unloadingIsAllowed: PropertyDescriptor(kCMIOHardwarePropertyUnloadingIsAllowed, .boolean32),
-        .plugInForBundleID: PropertyDescriptor(kCMIOHardwarePropertyPlugInForBundleID, .audioValueTranslation),
+        .plugInForBundleID: PropertyDescriptor(kCMIOHardwarePropertyPlugInForBundleID, .audioValueTranslation, .translation(.string, .objectID)),
         .userSessionIsActiveOrHeadless: PropertyDescriptor(kCMIOHardwarePropertyUserSessionIsActiveOrHeadless, .boolean32),
         .suspendedBySystem: PropertyDescriptor(kCMIOHardwarePropertySuspendedBySystem, .boolean32),
         .allowScreenCaptureDevices: PropertyDescriptor(kCMIOHardwarePropertyAllowScreenCaptureDevices, .boolean32),
@@ -84,7 +84,7 @@ public enum DeviceProperty: CaseIterable, PropertySet, PropertySetInternal {
         .suspendedByUser: PropertyDescriptor(kCMIODevicePropertySuspendedByUser, .boolean32),
         .linkedAndSyncedCoreAudioDeviceUID: PropertyDescriptor(kCMIODevicePropertyLinkedAndSyncedCoreAudioDeviceUID, .string),
         .iidcInitialUnitSpace: PropertyDescriptor(kCMIODevicePropertyIIDCInitialUnitSpace, .uint32),
-        .iidcCSRData: PropertyDescriptor(kCMIODevicePropertyIIDCCSRData, .uint32),
+        .iidcCSRData: PropertyDescriptor(kCMIODevicePropertyIIDCCSRData, .uint32, .qualifiedRead(.uint32)),
         .canSwitchFrameRatesWithoutFrameDrops: PropertyDescriptor(kCMIODevicePropertyCanSwitchFrameRatesWithoutFrameDrops, .boolean),
         .location: PropertyDescriptor(kCMIODevicePropertyLocation, .uint32)
     ]
@@ -108,12 +108,12 @@ public enum StreamProperty: CaseIterable, PropertySet, PropertySetInternal {
         .latency: PropertyDescriptor(kCMIOStreamPropertyLatency, .uint32),
         .formatDescription: PropertyDescriptor(kCMIOStreamPropertyFormatDescription, .formatDescription),
         .formatDescriptions: PropertyDescriptor(kCMIOStreamPropertyFormatDescriptions, .arrayOfFormatDescriptions),
-        .stillImage: PropertyDescriptor(kCMIOStreamPropertyStillImage, .sampleBuffer),
+        .stillImage: PropertyDescriptor(kCMIOStreamPropertyStillImage, .sampleBuffer, .qualifiedRead(.formatDescription)),
         .stillImageFormatDescriptions: PropertyDescriptor(kCMIOStreamPropertyStillImageFormatDescriptions, .arrayOfFormatDescriptions),
         .frameRate: PropertyDescriptor(kCMIOStreamPropertyFrameRate, .float64),
         .minimumFrameRate: PropertyDescriptor(kCMIOStreamPropertyMinimumFrameRate, .float64),
-        .frameRates: PropertyDescriptor(kCMIOStreamPropertyFrameRates, .arrayOfFloat64s),
-        .frameRateRanges: PropertyDescriptor(kCMIOStreamPropertyFrameRateRanges, .arrayOfAudioValueRanges),
+        .frameRates: PropertyDescriptor(kCMIOStreamPropertyFrameRates, .arrayOfFloat64s, .optionallyQualifiedRead(.formatDescription)),
+        .frameRateRanges: PropertyDescriptor(kCMIOStreamPropertyFrameRateRanges, .arrayOfAudioValueRanges, .optionallyQualifiedRead(.formatDescription)),
         .noDataTimeoutInMSec: PropertyDescriptor(kCMIOStreamPropertyNoDataTimeoutInMSec, .uint32),
         .deviceSyncTimeoutInMSec: PropertyDescriptor(kCMIOStreamPropertyDeviceSyncTimeoutInMSec, .uint32),
         .noDataEventCount: PropertyDescriptor(kCMIOStreamPropertyNoDataEventCount, .uint32),
@@ -132,7 +132,7 @@ public enum StreamProperty: CaseIterable, PropertySet, PropertySetInternal {
         .deckThreaded: PropertyDescriptor(kCMIOStreamPropertyDeckThreaded, .boolean32),
         .deckLocal: PropertyDescriptor(kCMIOStreamPropertyDeckLocal, .boolean32),
         .deckCueing: PropertyDescriptor(kCMIOStreamPropertyDeckCueing, .int32),
-        .initialPresentationTimeStampForLinkedAndSyncedAudio: PropertyDescriptor(kCMIOStreamPropertyInitialPresentationTimeStampForLinkedAndSyncedAudio, .time),
+        .initialPresentationTimeStampForLinkedAndSyncedAudio: PropertyDescriptor(kCMIOStreamPropertyInitialPresentationTimeStampForLinkedAndSyncedAudio, .time, .qualifiedRead(.time)),
         .scheduledOutputNotificationProc: PropertyDescriptor(kCMIOStreamPropertyScheduledOutputNotificationProc, .scheduledOutputCallback),
         .preferredFormatDescription: PropertyDescriptor(kCMIOStreamPropertyPreferredFormatDescription, .formatDescription),
         .preferredFrameRate: PropertyDescriptor(kCMIOStreamPropertyPreferredFrameRate, .float64)
@@ -163,7 +163,7 @@ public enum SelectorControlProperty: CaseIterable, PropertySet, PropertySetInter
     static let descriptors: [SelectorControlProperty: PropertyDescriptor] = [
         .currentItem: PropertyDescriptor(kCMIOSelectorControlPropertyCurrentItem, .uint32),
         .availableItems: PropertyDescriptor(kCMIOSelectorControlPropertyAvailableItems, .arrayOfUInt32s),
-        .itemName: PropertyDescriptor(kCMIOSelectorControlPropertyItemName, .string),
+        .itemName: PropertyDescriptor(kCMIOSelectorControlPropertyItemName, .string, .qualifiedRead(.uint32)),
     ]
 }
 
@@ -207,10 +207,12 @@ public enum ExposureControlProperty: CaseIterable, PropertySet, PropertySetInter
 struct PropertyDescriptor {
     let selector: CMIOObjectPropertySelector
     let type: PropertyType
+    let readSemantics: PropertyReadSemantics
     
-    init(_ selector: Int, _ type: PropertyType) {
+    init(_ selector: Int, _ type: PropertyType, _ readSemantics: PropertyReadSemantics = .read) {
         self.selector = CMIOObjectPropertySelector(selector)
         self.type = type
+        self.readSemantics = readSemantics
     }
 }
 
@@ -225,5 +227,9 @@ extension PropertySetInternal {
     
     public var type: PropertyType {
         return Self.descriptors[self]!.type
+    }
+
+    public var readSemantics: PropertyReadSemantics {
+        return Self.descriptors[self]!.readSemantics
     }
 }
