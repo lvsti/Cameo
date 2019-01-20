@@ -123,6 +123,11 @@ public enum Property {
                                    element: CMIOObjectPropertyElement = .anyElement,
                                    qualifiedBy qualifier: QualifierProtocol? = nil,
                                    in objectID: CMIOObjectID) -> T? where S: PropertySet {
+        switch property.readSemantics {
+        case .qualifiedRead where qualifier == nil: return nil
+        default: break
+        }
+
         var address = CMIOObjectPropertyAddress(property.selector, scope, element)
         var dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
         var dataUsed: UInt32 = 0
@@ -145,6 +150,11 @@ public enum Property {
                                         element: CMIOObjectPropertyElement = .anyElement,
                                         qualifiedBy qualifier: QualifierProtocol? = nil,
                                         in objectID: CMIOObjectID) -> [T]? where S: PropertySet {
+        switch property.readSemantics {
+        case .qualifiedRead where qualifier == nil: return nil
+        default: break
+        }
+        
         var address = CMIOObjectPropertyAddress(property.selector, scope, element)
         var dataSize: UInt32 = 0
         
