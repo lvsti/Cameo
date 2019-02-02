@@ -16,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var lookupWindowController: LookupWindowController!
     private var previewWindowController: PreviewWindowController!
     private var adjustControlPanelController: AdjustControlPanelController!
+    private var translationPanelController: TranslationPanelController!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         window.contentViewController = ListViewController()
@@ -62,6 +63,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.adjustControlPanelController = nil
         }
     }
+    
+    func showTranslationPanel(for item: PropertyListItem, in objectID: UInt32) {
+        guard translationPanelController == nil else {
+            return
+        }
+        
+        guard case .translation(let fromType, let toType) = item.readSemantics else {
+            return
+        }
+        
+        translationPanelController = TranslationPanelController(fromType: fromType,
+                                                                toType: toType,
+                                                                selector: item.selector,
+                                                                objectID: objectID)
+        translationPanelController.delegate = self
+        window.beginSheet(translationPanelController.window!) { _ in
+            self.translationPanelController = nil
+        }
+    }
 }
 
 extension AppDelegate: PreviewWindowControllerDelegate {
@@ -76,4 +96,8 @@ extension AppDelegate: AdjustControlPanelControllerDelegate {
     }
 }
 
-
+extension AppDelegate: TranslationPanelControllerDelegate {
+    func translationPanelDidDismiss() {
+        window.endSheet(translationPanelController.window!)
+    }
+}

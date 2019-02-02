@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE1FE3B62204F5F500647150 /* TranslationPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1FE3B52204F5F500647150 /* TranslationPanelController.swift */; };
 		BE253FFC21DBBF1400C90876 /* ValueCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE253FFB21DBBF1400C90876 /* ValueCellView.swift */; };
 		BE9EFC8221E118B4000CC1CA /* PreviewWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */; };
 		BE9EFC8421E118C3000CC1CA /* PreviewWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */; };
@@ -29,6 +30,7 @@
 		BEC255B521F385510053F137 /* PropertyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B421F385510053F137 /* PropertyDescription.swift */; };
 		BEC255B721F39B7D0053F137 /* PropertyListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B621F39B7D0053F137 /* PropertyListDataSource.swift */; };
 		BEC255B921F39E950053F137 /* ObjectTreeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B821F39E950053F137 /* ObjectTreeDataSource.swift */; };
+		BEC255BB21F5254C0053F137 /* TranslationPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC255BA21F5254C0053F137 /* TranslationPanel.xib */; };
 		BEC91F4121D2453B00453456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4021D2453B00453456 /* AppDelegate.swift */; };
 		BEC91F4321D2453B00453456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4221D2453B00453456 /* Assets.xcassets */; };
 		BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F4421D2453B00453456 /* MainMenu.xib */; };
@@ -62,6 +64,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BE1FE3B52204F5F500647150 /* TranslationPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationPanelController.swift; sourceTree = "<group>"; };
 		BE253FFB21DBBF1400C90876 /* ValueCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueCellView.swift; sourceTree = "<group>"; };
 		BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreviewWindow.xib; sourceTree = "<group>"; };
 		BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWindowController.swift; sourceTree = "<group>"; };
@@ -83,6 +86,7 @@
 		BEC255B421F385510053F137 /* PropertyDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyDescription.swift; sourceTree = "<group>"; };
 		BEC255B621F39B7D0053F137 /* PropertyListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListDataSource.swift; sourceTree = "<group>"; };
 		BEC255B821F39E950053F137 /* ObjectTreeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectTreeDataSource.swift; sourceTree = "<group>"; };
+		BEC255BA21F5254C0053F137 /* TranslationPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TranslationPanel.xib; sourceTree = "<group>"; };
 		BEC91F3D21D2453B00453456 /* Cameo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cameo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC91F4021D2453B00453456 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BEC91F4221D2453B00453456 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -177,6 +181,8 @@
 				BEC255B621F39B7D0053F137 /* PropertyListDataSource.swift */,
 				BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */,
 				BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */,
+				BEC255BA21F5254C0053F137 /* TranslationPanel.xib */,
+				BE1FE3B52204F5F500647150 /* TranslationPanelController.swift */,
 				BE253FFB21DBBF1400C90876 /* ValueCellView.swift */,
 			);
 			path = Cameo;
@@ -295,6 +301,7 @@
 				BEACA43021D4DF8800D8DC45 /* QuickLookView.xib in Resources */,
 				BE9EFC8921E15F42000CC1CA /* AdjustControlPanel.xib in Resources */,
 				BEC91F4621D2453B00453456 /* MainMenu.xib in Resources */,
+				BEC255BB21F5254C0053F137 /* TranslationPanel.xib in Resources */,
 				BEC91F5121D246CD00453456 /* ListView.xib in Resources */,
 				BEA6FBDE21D9737900FFFB8C /* fourcc.json in Resources */,
 				BEA6FBD621D964FC00FFFB8C /* LookupWindow.xib in Resources */,
@@ -318,6 +325,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE1FE3B62204F5F500647150 /* TranslationPanelController.swift in Sources */,
 				BEA6FBDC21D971CA00FFFB8C /* FourCCDatabase.swift in Sources */,
 				BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */,
 				BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */,

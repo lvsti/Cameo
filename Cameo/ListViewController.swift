@@ -102,6 +102,23 @@ final class ListViewController: NSViewController {
         propertyListDataSource.reload(forNode: node, scope: currentScope)
         tableView.reloadData()
     }
+    
+    @IBAction private func tableRowDoubleClicked(_ sender: Any) {
+        guard outlineView.selectedRow >= 0 else {
+            return
+        }
+        
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+        let item = propertyListDataSource.items[tableView.selectedRow]
+        
+        switch item.readSemantics {
+        case .translation:
+            (NSApp.delegate as? AppDelegate)?.showTranslationPanel(for: item, in: node.objectID)
+            break
+        default:
+            return
+        }
+    }
 }
 
 extension ListViewController: NSOutlineViewDelegate {

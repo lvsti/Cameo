@@ -294,6 +294,7 @@
                                                     </tableColumn>
                                                 </tableColumns>
                                                 <connections>
+                                                    <action trigger="doubleAction" selector="tableRowDoubleClicked:" target="-2" id="1Pv-py-JYC"/>
                                                     <outlet property="dataSource" destination="-2" id="Mli-Jb-6x5"/>
                                                     <outlet property="delegate" destination="-2" id="adh-8Q-snd"/>
                                                 </connections>
@@ -371,7 +372,7 @@
             <rect key="frame" x="0.0" y="0.0" width="64" height="23"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="MMx-hb-XAH">
-                <font key="font" metaFont="system" size="11"/>
+                <font key="font" metaFont="smallSystem"/>
                 <segments>
                     <segment label="Global" selected="YES"/>
                 </segments>

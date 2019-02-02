@@ -14,6 +14,7 @@ struct PropertyListItem {
     var selector: CMIOObjectPropertySelector
     var name: String
     var isSettable: Bool
+    var readSemantics: PropertyReadSemantics
     var value: String
     var fourCC: UInt32?
 }
@@ -31,6 +32,7 @@ class PropertyListDataSource {
         items.append(PropertyListItem(selector: CMIOObjectPropertySelector(kCMIOObjectPropertyScopeWildcard),
                                       name: "objectID",
                                       isSettable: false,
+                                      readSemantics: .read,
                                       value: "@\(node.objectID)",
                                       fourCC: nil))
 
@@ -66,7 +68,7 @@ class PropertyListDataSource {
     
     private func properties<S>(from type: S.Type,
                                scope: CMIOObjectPropertyScope,
-                               in objectID: CMIOObjectID) -> [PropertyListItem] where S: PropertySet {
+                               in objectID: CMIOObjectID) -> [PropertyListItem] where S: PropertySet, S: CaseIterable {
         var propertyList: [PropertyListItem] = []
         let props = S.allExisting(scope: scope,
                                   element: .anyElement,
@@ -76,6 +78,7 @@ class PropertyListDataSource {
             let item = PropertyListItem(selector: prop.selector,
                                         name: "\(prop)",
                                         isSettable: Property.isSettable(prop, scope: scope, in: objectID),
+                                        readSemantics: prop.readSemantics,
                                         value: Property.description(of: prop, scope: scope, in: objectID) ?? "#ERROR",
                                         fourCC: isFourCC ? Property.value(of: prop, scope: scope, in: objectID) : nil)
             propertyList.append(item)
