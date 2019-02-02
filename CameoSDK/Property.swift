@@ -36,10 +36,6 @@ public enum PropertyReadSemantics {
 }
 
 public enum PropertyType {
-    public enum Kind {
-        case pod, podArray, cf, cfArray
-    }
-    
     case boolean, boolean32, int32, uint32, uint64, float32, float64, fourCC,
         classID, objectID, deviceID,
         audioValueRange, propertyAddress, streamConfiguration, streamDeck,
@@ -51,26 +47,6 @@ public enum PropertyType {
     case string, formatDescription, sampleBuffer, clock
     case arrayOfFormatDescriptions
     case audioValueTranslation
-
-    public var kind: Kind {
-        switch self {
-        case .boolean, .boolean32, .int32, .uint32, .uint64, .float32, .float64, .fourCC,
-             .classID, .objectID, .deviceID,
-             .audioValueRange, .propertyAddress, .streamConfiguration, .streamDeck,
-             .pid,
-             .smpteCallback, .scheduledOutputCallback,
-             .componentDescription, .time, .cgRect,
-             .audioValueTranslation:
-            return .pod
-        case .arrayOfDeviceIDs, .arrayOfObjectIDs, .arrayOfClassIDs, .arrayOfStreamIDs,
-             .arrayOfUInt32s, .arrayOfFloat64s, .arrayOfAudioValueRanges:
-            return .podArray
-        case .string, .formatDescription, .sampleBuffer, .clock:
-            return .cf
-        case .arrayOfFormatDescriptions:
-            return .cfArray
-        }
-    }
 }
 
 public extension CMIOObjectPropertyScope {
