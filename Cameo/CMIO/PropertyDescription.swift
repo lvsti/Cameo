@@ -85,6 +85,9 @@ extension Property {
                 return value != kCMIOObjectUnknown ? "@\(value)" : "<null>"
             }
         case .audioValueTranslation:
+            if case .translation(let srcType, let dstType) = property.readSemantics {
+                return "<function: (\(srcType)) -> \(dstType)>"
+            }
             return "<function>"
         case .audioValueRange:
             if let value: AudioValueRange = getValue() {
@@ -186,4 +189,51 @@ extension Property {
         return nil
     }
     
+    struct AdHocPropertySet: PropertySet {
+        let selector: CMIOObjectPropertySelector
+        let type: PropertyType
+        let readSemantics: PropertyReadSemantics
+
+        static func allExisting(scope: CMIOObjectPropertyScope,
+                                element: CMIOObjectPropertyElement,
+                                in objectID: CMIOObjectID) -> [AdHocPropertySet] {
+            return []
+        }
+    }
+    
+    static func descriptionForTranslating<T>(_ value: T,
+                                             fromType: PropertyType,
+                                             toType: PropertyType,
+                                             for selector: CMIOObjectPropertySelector,
+                                             scope: CMIOObjectPropertyScope = .anyScope,
+                                             element: CMIOObjectPropertyElement = .anyElement,
+                                             in objectID: CMIOObjectID) -> String? {
+        let set = AdHocPropertySet(selector: selector,
+                                   type: .audioValueTranslation,
+                                   readSemantics: .translation(fromType, toType))
+        func getTranslatedValue<U>() -> U? {
+            switch fromType {
+            case .string:
+                return Property.translateValue(value as! CFString,
+                                               using: set,
+                                               scope: scope,
+                                               element: element,
+                                               in: objectID)
+            default:
+                break
+            }
+            return nil
+        }
+
+        switch toType {
+        case .objectID, .deviceID:
+            if let value: CMIOObjectID = getTranslatedValue() {
+                return value != kCMIOObjectUnknown ? "@\(value)" : "<null>"
+            }
+        default:
+            break
+        }
+
+        return nil
+    }
 }

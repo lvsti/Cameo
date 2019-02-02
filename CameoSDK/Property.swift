@@ -198,6 +198,38 @@ public enum Property {
         return status == kCMIOHardwareNoError
     }
     
+    public static func translateValue<S, T, U>(_ value: T,
+                                               using property: S,
+                                               scope: CMIOObjectPropertyScope = .anyScope,
+                                               element: CMIOObjectPropertyElement = .anyElement,
+                                               in objectID: CMIOObjectID) -> U? where S: PropertySet {
+        guard case .translation = property.readSemantics else {
+            return nil
+        }
+        
+        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        var value = value
+        var translatedValue = UnsafeMutablePointer<U>.allocate(capacity: 1)
+        defer { translatedValue.deallocate() }
+        
+        var translation = AudioValueTranslation(mInputData: &value,
+                                                mInputDataSize: UInt32(MemoryLayout<T>.size),
+                                                mOutputData: translatedValue,
+                                                mOutputDataSize: UInt32(MemoryLayout<U>.size))
+        
+        var dataUsed: UInt32 = 0
+        
+        let status = CMIOObjectGetPropertyData(objectID, &address,
+                                               0, nil,
+                                               UInt32(MemoryLayout<AudioValueTranslation>.size), &dataUsed,
+                                               &translation)
+        guard status == kCMIOHardwareNoError else {
+            return nil
+        }
+        
+        return translatedValue.pointee
+    }
+
     public static func addListener<S>(for property: S,
                                       scope: CMIOObjectPropertyScope = .anyScope,
                                       element: CMIOObjectPropertyElement = .anyElement,
