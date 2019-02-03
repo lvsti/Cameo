@@ -10,7 +10,7 @@ import Foundation
 import CoreMediaIO
 
 
-public enum ObjectProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum ObjectProperty: PropertySetInternal {
     case `class`, owner, creator, name, manufacturer, elementName, elementCategoryName, elementNumberName, ownedObjects
     
     static let descriptors: [ObjectProperty: PropertyDescriptor] = [
@@ -26,7 +26,7 @@ public enum ObjectProperty: CaseIterable, PropertySet, PropertySetInternal {
     ]
 }
 
-public enum SystemProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum SystemProperty: PropertySetInternal {
     case processIsMaster, isInitingOrExiting, devices, defaultInputDevice, defaultOutputDevice,
         deviceForUID, sleepingIsAllowed, unloadingIsAllowed, plugInForBundleID,
         userSessionIsActiveOrHeadless, suspendedBySystem, allowScreenCaptureDevices,
@@ -49,7 +49,7 @@ public enum SystemProperty: CaseIterable, PropertySet, PropertySetInternal {
     ]
 }
 
-public enum DeviceProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum DeviceProperty: PropertySetInternal {
     case plugIn, deviceUID, modelUID, transportType, deviceIsAlive, deviceHasChanged, deviceIsRunning,
         deviceIsRunningSomewhere, deviceCanBeDefaultDevice, hogMode, latency, streams,
         streamConfiguration, deviceMaster, excludeNonDALAccess, clientSyncDiscontinuity, smpteTimeCallback,
@@ -90,7 +90,7 @@ public enum DeviceProperty: CaseIterable, PropertySet, PropertySetInternal {
     ]
 }
 
-public enum StreamProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum StreamProperty: PropertySetInternal {
     case direction, terminalType, startingChannel, latency, formatDescription, formatDescriptions,
         stillImage, stillImageFormatDescriptions, frameRate, minimumFrameRate, frameRates,
         frameRateRanges, noDataTimeoutInMSec, deviceSyncTimeoutInMSec, noDataEventCount,
@@ -139,7 +139,7 @@ public enum StreamProperty: CaseIterable, PropertySet, PropertySetInternal {
     ]
 }
 
-public enum ControlProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum ControlProperty: PropertySetInternal {
     case scope, element, variant
     
     static let descriptors: [ControlProperty: PropertyDescriptor] = [
@@ -149,7 +149,7 @@ public enum ControlProperty: CaseIterable, PropertySet, PropertySetInternal {
     ]
 }
 
-public enum BooleanControlProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum BooleanControlProperty: PropertySetInternal {
     case value
     
     static let descriptors: [BooleanControlProperty: PropertyDescriptor] = [
@@ -157,7 +157,7 @@ public enum BooleanControlProperty: CaseIterable, PropertySet, PropertySetIntern
     ]
 }
 
-public enum SelectorControlProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum SelectorControlProperty: PropertySetInternal {
     case currentItem, availableItems, itemName
     
     static let descriptors: [SelectorControlProperty: PropertyDescriptor] = [
@@ -167,7 +167,7 @@ public enum SelectorControlProperty: CaseIterable, PropertySet, PropertySetInter
     ]
 }
 
-public enum FeatureControlProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum FeatureControlProperty: PropertySetInternal {
     case onOff, automaticManual, absoluteNative, tune, nativeValue, absoluteValue,
         nativeRange, absoluteRange, convertNativeToAbsolute, convertAbsoluteToNative,
         absoluteUnitName
@@ -187,7 +187,7 @@ public enum FeatureControlProperty: CaseIterable, PropertySet, PropertySetIntern
     ]
 }
 
-public enum ExposureControlProperty: CaseIterable, PropertySet, PropertySetInternal {
+public enum ExposureControlProperty: PropertySetInternal {
     case regionOfInterest, lockThreshold, unlockThreshold, target, convergenceSpeed,
         stability, stable, integrationTime, maximumGain
     
@@ -204,7 +204,7 @@ public enum ExposureControlProperty: CaseIterable, PropertySet, PropertySetInter
     ]
 }
 
-struct PropertyDescriptor {
+struct PropertyDescriptor: Property {
     let selector: CMIOObjectPropertySelector
     let type: PropertyType
     let readSemantics: PropertyReadSemantics

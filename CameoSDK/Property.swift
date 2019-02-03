@@ -71,40 +71,60 @@ public extension CMIOObjectPropertyAddress {
     }
 }
 
-public protocol PropertySet {
+public protocol Property {
     var selector: CMIOObjectPropertySelector { get }
     var type: PropertyType { get }
     var readSemantics: PropertyReadSemantics { get }
-    
+}
+
+public protocol PropertySet: Property, CaseIterable {
     static func allExisting(scope: CMIOObjectPropertyScope,
                             element: CMIOObjectPropertyElement,
                             in objectID: CMIOObjectID) -> [Self]
 }
 
-public extension PropertySet where Self : CaseIterable {
+public extension PropertySet {
     static func allExisting(scope: CMIOObjectPropertyScope = .anyScope,
                             element: CMIOObjectPropertyElement = .anyElement,
                             in objectID: CMIOObjectID) -> [Self] {
-        return allCases.filter { Property.exists($0, scope: scope, element: element, in: objectID) }
+        return allCases.filter { $0.exists(scope: scope, element: element, in: objectID) }
     }
 }
 
-public protocol PropertyListener {}
-
-
-public enum Property {
+public extension Property {
+    public func exists(scope: CMIOObjectPropertyScope = .anyScope,
+                       element: CMIOObjectPropertyElement = .anyElement,
+                       in objectID: CMIOObjectID) -> Bool {
+        var address = CMIOObjectPropertyAddress(selector, scope, element)
+        
+        return CMIOObjectHasProperty(objectID, &address)
+    }
     
-    public static func value<S, T>(of property: S,
-                                   scope: CMIOObjectPropertyScope = .anyScope,
-                                   element: CMIOObjectPropertyElement = .anyElement,
-                                   qualifiedBy qualifier: QualifierProtocol? = nil,
-                                   in objectID: CMIOObjectID) -> T? where S: PropertySet {
-        switch property.readSemantics {
+    public func isSettable(scope: CMIOObjectPropertyScope = .anyScope,
+                           element: CMIOObjectPropertyElement = .anyElement,
+                           in objectID: CMIOObjectID) -> Bool {
+        var address = CMIOObjectPropertyAddress(selector, scope, element)
+        
+        var isSettable: DarwinBoolean = false
+        
+        let status = CMIOObjectIsPropertySettable(objectID, &address, &isSettable)
+        guard status == kCMIOHardwareNoError else {
+            return false
+        }
+        
+        return isSettable.boolValue
+    }
+
+    public func value<T>(scope: CMIOObjectPropertyScope = .anyScope,
+                         element: CMIOObjectPropertyElement = .anyElement,
+                         qualifiedBy qualifier: QualifierProtocol? = nil,
+                         in objectID: CMIOObjectID) -> T? {
+        switch readSemantics {
         case .qualifiedRead where qualifier == nil: return nil
         default: break
         }
-
-        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        
+        var address = CMIOObjectPropertyAddress(selector, scope, element)
         var dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
         var dataUsed: UInt32 = 0
         var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<T>.alignment)
@@ -120,18 +140,17 @@ public enum Property {
         let typedData = data.bindMemory(to: T.self, capacity: 1)
         return typedData.pointee
     }
-
-    public static func arrayValue<S, T>(of property: S,
-                                        scope: CMIOObjectPropertyScope = .anyScope,
-                                        element: CMIOObjectPropertyElement = .anyElement,
-                                        qualifiedBy qualifier: QualifierProtocol? = nil,
-                                        in objectID: CMIOObjectID) -> [T]? where S: PropertySet {
-        switch property.readSemantics {
+    
+    public func arrayValue<T>(scope: CMIOObjectPropertyScope = .anyScope,
+                              element: CMIOObjectPropertyElement = .anyElement,
+                              qualifiedBy qualifier: QualifierProtocol? = nil,
+                              in objectID: CMIOObjectID) -> [T]? {
+        switch readSemantics {
         case .qualifiedRead where qualifier == nil: return nil
         default: break
         }
         
-        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        var address = CMIOObjectPropertyAddress(selector, scope, element)
         var dataSize: UInt32 = 0
         
         var status = CMIOObjectGetPropertyDataSize(objectID, &address,
@@ -157,38 +176,12 @@ public enum Property {
         return UnsafeBufferPointer<T>(start: typedData, count: count).map { $0 }
     }
     
-    public static func isSettable<S>(_ property: S,
-                                     scope: CMIOObjectPropertyScope = .anyScope,
-                                     element: CMIOObjectPropertyElement = .anyElement,
-                                     in objectID: CMIOObjectID) -> Bool where S: PropertySet {
-        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
-
-        var isSettable: DarwinBoolean = false
-        
-        let status = CMIOObjectIsPropertySettable(objectID, &address, &isSettable)
-        guard status == kCMIOHardwareNoError else {
-            return false
-        }
-        
-        return isSettable.boolValue
-    }
-    
-    public static func exists<S>(_ property: S,
-                                 scope: CMIOObjectPropertyScope = .anyScope,
-                                 element: CMIOObjectPropertyElement = .anyElement,
-                                 in objectID: CMIOObjectID) -> Bool where S: PropertySet {
-        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
-
-        return CMIOObjectHasProperty(objectID, &address)
-    }
-    
-    public static func setValue<S, T>(_ value: T,
-                                      for property: S,
-                                      scope: CMIOObjectPropertyScope = .anyScope,
-                                      element: CMIOObjectPropertyElement = .anyElement,
-                                      qualifiedBy qualifier: QualifierProtocol? = nil,
-                                      in objectID: CMIOObjectID) -> Bool where S: PropertySet {
-        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
+    public func setValue<T>(_ value: T,
+                            scope: CMIOObjectPropertyScope = .anyScope,
+                            element: CMIOObjectPropertyElement = .anyElement,
+                            qualifiedBy qualifier: QualifierProtocol? = nil,
+                            in objectID: CMIOObjectID) -> Bool {
+        var address = CMIOObjectPropertyAddress(selector, scope, element)
         let dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
         var value = value
         
@@ -198,16 +191,15 @@ public enum Property {
         return status == kCMIOHardwareNoError
     }
     
-    public static func translateValue<S, T, U>(_ value: T,
-                                               using property: S,
-                                               scope: CMIOObjectPropertyScope = .anyScope,
-                                               element: CMIOObjectPropertyElement = .anyElement,
-                                               in objectID: CMIOObjectID) -> U? where S: PropertySet {
-        guard case .translation = property.readSemantics else {
+    public func translateValue<T, U>(_ value: T,
+                                     scope: CMIOObjectPropertyScope = .anyScope,
+                                     element: CMIOObjectPropertyElement = .anyElement,
+                                     in objectID: CMIOObjectID) -> U? {
+        guard case .translation = readSemantics else {
             return nil
         }
         
-        var address = CMIOObjectPropertyAddress(property.selector, scope, element)
+        var address = CMIOObjectPropertyAddress(selector, scope, element)
         var value = value
         var translatedValue = UnsafeMutablePointer<U>.allocate(capacity: 1)
         defer { translatedValue.deallocate() }
@@ -230,71 +222,72 @@ public enum Property {
         return translatedValue.pointee
     }
 
-    public static func addListener<S>(for property: S,
-                                      scope: CMIOObjectPropertyScope = .anyScope,
-                                      element: CMIOObjectPropertyElement = .anyElement,
-                                      in objectID: CMIOObjectID,
-                                      queue: DispatchQueue? = nil,
-                                      block: @escaping ([CMIOObjectPropertyAddress]) -> Void) -> PropertyListener? where S: PropertySet {
-        let address = CMIOObjectPropertyAddress(property.selector, scope, element)
+    public func addListener(scope: CMIOObjectPropertyScope = .anyScope,
+                            element: CMIOObjectPropertyElement = .anyElement,
+                            in objectID: CMIOObjectID,
+                            queue: DispatchQueue? = nil,
+                            block: @escaping ([CMIOObjectPropertyAddress]) -> Void) -> PropertyListener? {
+        let address = CMIOObjectPropertyAddress(selector, scope, element)
         
-        return Listener(objectID: objectID, address: address, queue: queue) { addressCount, addressPtr in
+        return PropertyListenerImpl(objectID: objectID, address: address, queue: queue) { addressCount, addressPtr in
             guard addressCount > 0, let array = addressPtr else { return }
             block(UnsafeBufferPointer(start: array, count: Int(addressCount)).map { $0 })
         }
     }
     
-    public static func removeListener(_ listener: PropertyListener) -> Bool {
-        guard let listener = listener as? Listener else {
+    public func removeListener(_ listener: PropertyListener) -> Bool {
+        guard let listener = listener as? PropertyListenerImpl else {
             return false
         }
         
         return listener.deactivate()
     }
+}
+
+public protocol PropertyListener {}
+
+class PropertyListenerImpl: PropertyListener {
+    private let objectID: CMIOObjectID
+    private let address: CMIOObjectPropertyAddress
+    private let queue: DispatchQueue?
+    private let block: CMIOObjectPropertyListenerBlock
+    private var isActive: Bool
     
-    class Listener: PropertyListener {
-        private let objectID: CMIOObjectID
-        private let address: CMIOObjectPropertyAddress
-        private let queue: DispatchQueue?
-        private let block: CMIOObjectPropertyListenerBlock
-        private var isActive: Bool
+    init?(objectID: CMIOObjectID,
+          address: CMIOObjectPropertyAddress,
+          queue: DispatchQueue?,
+          block: @escaping CMIOObjectPropertyListenerBlock) {
+        self.objectID = objectID
+        self.address = address
+        self.queue = queue
+        self.block = block
         
-        init?(objectID: CMIOObjectID,
-              address: CMIOObjectPropertyAddress,
-              queue: DispatchQueue?,
-              block: @escaping CMIOObjectPropertyListenerBlock) {
-            self.objectID = objectID
-            self.address = address
-            self.queue = queue
-            self.block = block
-            
-            var address = address
-            let status = CMIOObjectAddPropertyListenerBlock(objectID, &address, queue, block)
-            guard status == kCMIOHardwareNoError else {
-                return nil
-            }
-            
-            isActive = true
+        var address = address
+        let status = CMIOObjectAddPropertyListenerBlock(objectID, &address, queue, block)
+        guard status == kCMIOHardwareNoError else {
+            return nil
         }
         
-        @discardableResult
-        func deactivate() -> Bool {
-            guard isActive else { return true }
-            
-            var address = self.address
-            let status = CMIOObjectRemovePropertyListenerBlock(objectID, &address, queue, block)
-            guard status == kCMIOHardwareNoError else {
-                return false
-            }
-            
-            isActive = false
-            return true
+        isActive = true
+    }
+    
+    @discardableResult
+    func deactivate() -> Bool {
+        guard isActive else { return true }
+        
+        var address = self.address
+        let status = CMIOObjectRemovePropertyListenerBlock(objectID, &address, queue, block)
+        guard status == kCMIOHardwareNoError else {
+            return false
         }
         
-        deinit {
-            if isActive {
-                deactivate()
-            }
+        isActive = false
+        return true
+    }
+    
+    deinit {
+        if isActive {
+            deactivate()
         }
     }
 }
