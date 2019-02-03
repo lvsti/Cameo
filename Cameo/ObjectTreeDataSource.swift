@@ -34,22 +34,22 @@ final class ObjectTreeDataSource {
     private func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
         var nodes: [CMIONode] = []
         
-        if let children: [CMIOObjectID] = Property.arrayValue(of: ObjectProperty.ownedObjects, in: objectID) {
+        if let children: [CMIOObjectID] = ObjectProperty.ownedObjects.arrayValue(in: objectID) {
             for child in children {
                 let subtree = cmioChildren(of: child)
-                let name = Property.description(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
-                let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? .object
+                let name = ObjectProperty.name.description(in: child) ?? "<untitled @\(child)>"
+                let classID: CMIOClassID = ObjectProperty.class.value(in: child) ?? .object
                 nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
             }
         }
-        else if let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: objectID),
+        else if let classID: CMIOClassID = ObjectProperty.class.value(in: objectID),
             classID.isSubclass(of: .device),
-            let streams: [CMIOStreamID] = Property.arrayValue(of: DeviceProperty.streams, in: objectID) {
+            let streams: [CMIOStreamID] = DeviceProperty.streams.arrayValue(in: objectID) {
             
             for child in streams {
                 let subtree = cmioChildren(of: child)
-                let name = Property.description(of: ObjectProperty.name, in: child) ?? "<untitled @\(child)>"
-                let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: child) ?? .object
+                let name = ObjectProperty.name.description(in: child) ?? "<untitled @\(child)>"
+                let classID: CMIOClassID = ObjectProperty.class.value(in: child) ?? .object
                 nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
             }
         }

@@ -111,9 +111,9 @@ final class ListViewController: NSViewController {
         let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
         let item = propertyListDataSource.items[tableView.selectedRow]
         
-        switch item.readSemantics {
+        switch item.property.readSemantics {
         case .translation:
-            (NSApp.delegate as? AppDelegate)?.showTranslationPanel(for: item, in: node.objectID)
+            (NSApp.delegate as? AppDelegate)?.showTranslationPanel(for: item.property, in: node.objectID)
             break
         default:
             return
@@ -250,7 +250,7 @@ extension ListViewController: NSTableViewDelegate {
         else if column.identifier.rawValue == "fourccColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "FourCCCell"),
                                           owner: nil) as! NSTableCellView
-            view.textField?.stringValue = "'\(fourCC(from: propertyListDataSource.items[row].selector)!)'"
+            view.textField?.stringValue = "'\(fourCC(from: propertyListDataSource.items[row].property.selector)!)'"
             return view
         }
         else if column.identifier.rawValue == "settableColumn" {

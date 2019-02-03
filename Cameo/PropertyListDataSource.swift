@@ -11,10 +11,9 @@ import CoreMediaIO
 import CameoSDK
 
 struct PropertyListItem {
-    var selector: CMIOObjectPropertySelector
+    var property: Property
     var name: String
     var isSettable: Bool
-    var readSemantics: PropertyReadSemantics
     var value: String
     var fourCC: UInt32?
 }
@@ -29,10 +28,15 @@ class PropertyListDataSource {
             return
         }
         
-        items.append(PropertyListItem(selector: CMIOObjectPropertySelector(kCMIOObjectPropertyScopeWildcard),
+        struct ObjectID: Property {
+            let selector: CMIOObjectPropertySelector = kCMIOObjectPropertySelectorWildcard
+            let type: PropertyType = .objectID
+            let readSemantics: PropertyReadSemantics = .read
+        }
+        
+        items.append(PropertyListItem(property: ObjectID(),
                                       name: "objectID",
                                       isSettable: false,
-                                      readSemantics: .read,
                                       value: "@\(node.objectID)",
                                       fourCC: nil))
 
@@ -68,19 +72,18 @@ class PropertyListDataSource {
     
     private func properties<S>(from type: S.Type,
                                scope: CMIOObjectPropertyScope,
-                               in objectID: CMIOObjectID) -> [PropertyListItem] where S: PropertySet, S: CaseIterable {
+                               in objectID: CMIOObjectID) -> [PropertyListItem] where S: PropertySet {
         var propertyList: [PropertyListItem] = []
         let props = S.allExisting(scope: scope,
                                   element: .anyElement,
                                   in: objectID)
         for prop in props {
             let isFourCC = prop.type == .fourCC || prop.type == .classID
-            let item = PropertyListItem(selector: prop.selector,
+            let item = PropertyListItem(property: prop,
                                         name: "\(prop)",
-                                        isSettable: Property.isSettable(prop, scope: scope, in: objectID),
-                                        readSemantics: prop.readSemantics,
-                                        value: Property.description(of: prop, scope: scope, in: objectID) ?? "#ERROR",
-                                        fourCC: isFourCC ? Property.value(of: prop, scope: scope, in: objectID) : nil)
+                                        isSettable: prop.isSettable(scope: scope, in: objectID),
+                                        value: prop.description(scope: scope, in: objectID) ?? "#ERROR",
+                                        fourCC: isFourCC ? prop.value(scope: scope, in: objectID) : nil)
             propertyList.append(item)
         }
         return propertyList

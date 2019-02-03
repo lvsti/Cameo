@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import CameoSDK
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -64,19 +65,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    func showTranslationPanel(for item: PropertyListItem, in objectID: UInt32) {
+    func showTranslationPanel(for property: Property, in objectID: UInt32) {
         guard translationPanelController == nil else {
             return
         }
         
-        guard case .translation(let fromType, let toType) = item.readSemantics else {
+        guard case .translation = property.readSemantics else {
             return
         }
         
-        translationPanelController = TranslationPanelController(fromType: fromType,
-                                                                toType: toType,
-                                                                selector: item.selector,
-                                                                objectID: objectID)
+        translationPanelController = TranslationPanelController(property: property, objectID: objectID)
         translationPanelController.delegate = self
         window.beginSheet(translationPanelController.window!) { _ in
             self.translationPanelController = nil

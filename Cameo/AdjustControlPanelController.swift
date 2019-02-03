@@ -137,9 +137,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.value = booleanValueCheckbox.state == .on
         
         guard
-            Property.setValue(UInt32(model.value ? 1 : 0),
-                              for: BooleanControlProperty.value,
-                              in: model.controlID)
+            BooleanControlProperty.value.setValue(UInt32(model.value ? 1 : 0), in: model.controlID)
         else {
             updateUI()
             return
@@ -156,9 +154,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.currentItemID = model.items[sender.tag].0
         
         guard
-            Property.setValue(model.currentItemID,
-                              for: SelectorControlProperty.currentItem,
-                              in: model.controlID)
+            SelectorControlProperty.currentItem.setValue(model.currentItemID, in: model.controlID)
         else {
             updateUI()
             return
@@ -175,9 +171,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.isEnabled = featureEnabledCheckbox.state == .on
         
         guard
-            Property.setValue(UInt32(model.isEnabled ? 1 : 0),
-                              for: FeatureControlProperty.onOff,
-                              in: model.controlID)
+            FeatureControlProperty.onOff.setValue(UInt32(model.isEnabled ? 1 : 0), in: model.controlID)
         else {
             updateUI()
             return
@@ -194,9 +188,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.isAutomatic = sender == featureAutomaticRadio
         
         guard
-            Property.setValue(UInt32(model.isAutomatic ? 1 : 0),
-                              for: FeatureControlProperty.automaticManual,
-                              in: model.controlID)
+            FeatureControlProperty.automaticManual.setValue(UInt32(model.isAutomatic ? 1 : 0), in: model.controlID)
         else {
             updateUI()
             return
@@ -214,9 +206,7 @@ final class AdjustControlPanelController: NSWindowController {
         
         let property: FeatureControlProperty = model.isInAbsoluteUnits ? .absoluteValue : .nativeValue
         guard
-            Property.setValue(model.currentValue,
-                              for: property,
-                              in: model.controlID)
+            property.setValue(model.currentValue, in: model.controlID)
         else {
             updateUI()
             return
@@ -234,9 +224,7 @@ final class AdjustControlPanelController: NSWindowController {
         
         let property: FeatureControlProperty = model.isInAbsoluteUnits ? .absoluteValue : .nativeValue
         guard
-            Property.setValue(model.currentValue,
-                              for: property,
-                              in: model.controlID)
+            property.setValue(model.currentValue, in: model.controlID)
         else {
             updateUI()
             return
@@ -253,9 +241,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.isTuning = true
         
         guard
-            Property.setValue(model.currentValue,
-                              for: FeatureControlProperty.tune,
-                              in: model.controlID)
+            FeatureControlProperty.tune.setValue(model.currentValue, in: model.controlID)
         else {
             updateUI()
             return

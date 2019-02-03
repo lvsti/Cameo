@@ -34,21 +34,20 @@ func fourCCDescription(from value: UInt32) -> String? {
 
 
 extension Property {
-    static func description<S>(of property: S,
-                               scope: CMIOObjectPropertyScope = .anyScope,
-                               element: CMIOObjectPropertyElement = .anyElement,
-                               qualifiedBy qualifier: QualifierProtocol? = nil,
-                               in objectID: CMIOObjectID) -> String? where S: PropertySet {
-        
+    func description(scope: CMIOObjectPropertyScope = .anyScope,
+                     element: CMIOObjectPropertyElement = .anyElement,
+                     qualifiedBy qualifier: QualifierProtocol? = nil,
+                     in objectID: CMIOObjectID) -> String? {
+
         func getValue<T>() -> T? {
-            return Property.value(of: property, scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
+            return value(scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
         }
 
         func getArrayValue<T>() -> [T]? {
-            return Property.arrayValue(of: property, scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
+            return arrayValue(scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
         }
 
-        switch property.type {
+        switch type {
         case .boolean:
             if let value: DarwinBoolean = getValue() {
                 return "\(value)"
@@ -85,7 +84,7 @@ extension Property {
                 return value != kCMIOObjectUnknown ? "@\(value)" : "<null>"
             }
         case .audioValueTranslation:
-            if case .translation(let srcType, let dstType) = property.readSemantics {
+            if case .translation(let srcType, let dstType) = readSemantics {
                 return "<function: (\(srcType)) -> \(dstType)>"
             }
             return "<function>"
@@ -189,36 +188,21 @@ extension Property {
         return nil
     }
     
-    struct AdHocPropertySet: PropertySet {
-        let selector: CMIOObjectPropertySelector
-        let type: PropertyType
-        let readSemantics: PropertyReadSemantics
-
-        static func allExisting(scope: CMIOObjectPropertyScope,
-                                element: CMIOObjectPropertyElement,
-                                in objectID: CMIOObjectID) -> [AdHocPropertySet] {
-            return []
+    func descriptionForTranslating<T>(_ value: T,
+                                      scope: CMIOObjectPropertyScope = .anyScope,
+                                      element: CMIOObjectPropertyElement = .anyElement,
+                                      in objectID: CMIOObjectID) -> String? {
+        guard case .translation(let fromType, let toType) = readSemantics else {
+            return nil
         }
-    }
-    
-    static func descriptionForTranslating<T>(_ value: T,
-                                             fromType: PropertyType,
-                                             toType: PropertyType,
-                                             for selector: CMIOObjectPropertySelector,
-                                             scope: CMIOObjectPropertyScope = .anyScope,
-                                             element: CMIOObjectPropertyElement = .anyElement,
-                                             in objectID: CMIOObjectID) -> String? {
-        let set = AdHocPropertySet(selector: selector,
-                                   type: .audioValueTranslation,
-                                   readSemantics: .translation(fromType, toType))
+        
         func getTranslatedValue<U>() -> U? {
             switch fromType {
             case .string:
-                return Property.translateValue(value as! CFString,
-                                               using: set,
-                                               scope: scope,
-                                               element: element,
-                                               in: objectID)
+                return translateValue(value as! CFString,
+                                      scope: scope,
+                                      element: element,
+                                      in: objectID)
             default:
                 break
             }

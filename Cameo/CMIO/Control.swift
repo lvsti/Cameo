@@ -52,15 +52,17 @@ enum CMIOError: Error {
 enum Control {
     static func model(for controlID: CMIOObjectID) -> ControlModel? {
         guard
-            let classID: CMIOClassID = Property.value(of: ObjectProperty.class, in: controlID),
-            let name: String = Property.value(of: ObjectProperty.name, in: controlID)
+            let classID: CMIOClassID = ObjectProperty.class.value(in: controlID),
+            let cfName: CFString = ObjectProperty.name.value(in: controlID)
         else {
             return nil
         }
         
+        let name = cfName as String
+        
         if classID.isSubclass(of: .booleanControl) {
             guard
-                let value: UInt32 = Property.value(of: BooleanControlProperty.value, in: controlID)
+                let value: UInt32 = BooleanControlProperty.value.value(in: controlID)
             else {
                 return nil
             }
@@ -69,17 +71,16 @@ enum Control {
         }
         else if classID.isSubclass(of: .selectorControl) {
             guard
-                let itemIDs: [UInt32] = Property.arrayValue(of: SelectorControlProperty.availableItems, in: controlID),
+                let itemIDs: [UInt32] = SelectorControlProperty.availableItems.arrayValue(in: controlID),
                 let items: [(UInt32, String)] = try? itemIDs.map({
-                    guard let itemName: String = Property.value(of: SelectorControlProperty.itemName,
-                                                                qualifiedBy: Qualifier(from: $0),
-                                                                in: controlID)
+                    guard let cfItemName: CFString = SelectorControlProperty.itemName.value(qualifiedBy: Qualifier(from: $0),
+                                                                                            in: controlID)
                     else {
                         throw CMIOError.unknown
                     }
-                    return ($0, itemName)
+                    return ($0, cfItemName as String)
                 }),
-                let currentItemID: UInt32 = Property.value(of: SelectorControlProperty.currentItem, in: controlID)
+                let currentItemID: UInt32 = SelectorControlProperty.currentItem.value(in: controlID)
             else {
                 return nil
             }
@@ -91,10 +92,10 @@ enum Control {
         }
         else if classID.isSubclass(of: .featureControl) {
             guard
-                let isEnabled: UInt32 = Property.value(of: FeatureControlProperty.onOff, in: controlID),
-                let isAutomatic: UInt32 = Property.value(of: FeatureControlProperty.automaticManual, in: controlID),
-                let isInAbsoluteUnits: UInt32 = Property.value(of: FeatureControlProperty.absoluteNative, in: controlID),
-                let isTuning: UInt32 = Property.value(of: FeatureControlProperty.tune, in: controlID)
+                let isEnabled: UInt32 = FeatureControlProperty.onOff.value(in: controlID),
+                let isAutomatic: UInt32 = FeatureControlProperty.automaticManual.value(in: controlID),
+                let isInAbsoluteUnits: UInt32 = FeatureControlProperty.absoluteNative.value(in: controlID),
+                let isTuning: UInt32 = FeatureControlProperty.tune.value(in: controlID)
             else {
                 return nil
             }
@@ -109,21 +110,21 @@ enum Control {
             
             if isInAbsoluteUnits != 0 {
                 guard
-                    let unitName: String = Property.value(of: FeatureControlProperty.absoluteUnitName, in: controlID),
-                    let range: AudioValueRange = Property.value(of: FeatureControlProperty.absoluteRange, in: controlID),
-                    let currentValue: Float = Property.value(of: FeatureControlProperty.absoluteValue, in: controlID)
+                    let cfUnitName: CFString = FeatureControlProperty.absoluteUnitName.value(in: controlID),
+                    let range: AudioValueRange = FeatureControlProperty.absoluteRange.value(in: controlID),
+                    let currentValue: Float = FeatureControlProperty.absoluteValue.value(in: controlID)
                 else {
                     return nil
                 }
-                model.unitName = unitName
+                model.unitName = cfUnitName as String
                 model.minValue = Float(range.mMinimum)
                 model.maxValue = Float(range.mMaximum)
                 model.currentValue = currentValue
             }
             else {
                 guard
-                    let range: AudioValueRange = Property.value(of: FeatureControlProperty.nativeRange, in: controlID),
-                    let currentValue: Float = Property.value(of: FeatureControlProperty.nativeValue, in: controlID)
+                    let range: AudioValueRange = FeatureControlProperty.nativeRange.value(in: controlID),
+                    let currentValue: Float = FeatureControlProperty.nativeValue.value(in: controlID)
                 else {
                     return nil
                 }

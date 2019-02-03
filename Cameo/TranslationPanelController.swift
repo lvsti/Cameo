@@ -8,7 +8,6 @@
 
 import Cocoa
 import CameoSDK
-import CoreMediaIO
 
 protocol TranslationPanelControllerDelegate: class {
     func translationPanelDidDismiss()
@@ -22,13 +21,9 @@ final class TranslationPanelController: NSWindowController {
     
     private let translation: (String) -> String
 
-    init?(fromType: PropertyType, toType: PropertyType, selector: CMIOObjectPropertySelector, objectID: UInt32) {
+    init?(property: Property, objectID: UInt32) {
         self.translation = {
-            Property.descriptionForTranslating($0,
-                                               fromType: fromType,
-                                               toType: toType,
-                                               for: selector,
-                                               in: objectID) ?? "#ERROR"
+            property.descriptionForTranslating($0, in: objectID) ?? "#ERROR"
         }
         super.init(window: nil)
     }
