@@ -241,31 +241,40 @@ extension ListViewController: NSTableViewDelegate {
             return nil
         }
         
+        let item = propertyListDataSource.items[row]
+        
         if column.identifier.rawValue == "propertyColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "PropertyCell"),
                                           owner: nil) as! NSTableCellView
-            view.textField?.stringValue = propertyListDataSource.items[row].name
+            view.textField?.stringValue = item.name
+            switch item.property.readSemantics {
+            case .read: view.imageView?.image = #imageLiteral(resourceName: "read")
+            case .translation: view.imageView?.image = #imageLiteral(resourceName: "translation")
+            case .qualifiedRead: view.imageView?.image = #imageLiteral(resourceName: "qualified")
+            case .optionallyQualifiedRead: view.imageView?.image = #imageLiteral(resourceName: "qualified_opt")
+            }
+            
             return view
         }
         else if column.identifier.rawValue == "valueColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ValueCell"),
                                           owner: nil) as! ValueCellView
-            view.textField?.stringValue = propertyListDataSource.items[row].value
-            view.showsLinkButton = propertyListDataSource.items[row].fourCC != nil
+            view.textField?.stringValue = item.value
+            view.showsLinkButton = item.fourCC != nil
             view.delegate = self
             return view
         }
         else if column.identifier.rawValue == "fourccColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "FourCCCell"),
                                           owner: nil) as! NSTableCellView
-            view.textField?.stringValue = "'\(fourCC(from: propertyListDataSource.items[row].property.selector)!)'"
+            view.textField?.stringValue = "'\(fourCC(from: item.property.selector)!)'"
             return view
         }
         else if column.identifier.rawValue == "settableColumn" {
             let view = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "SettableCell"),
                                           owner: nil) as! NSTableCellView
             let checkbox = view.viewWithTag(1000) as! NSButton
-            checkbox.state = propertyListDataSource.items[row].isSettable ? .on : .off
+            checkbox.state = item.isSettable ? .on : .off
             
             return view
         }
