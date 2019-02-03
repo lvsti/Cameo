@@ -19,16 +19,16 @@ struct CMIONode {
 
 final class ObjectTreeDataSource {
     
-    private(set) var tree = CMIONode(objectID: .system,
-                                     classID: .systemObject,
+    private(set) var tree = CMIONode(objectID: .systemObject,
+                                     classID: .system,
                                      name: "System",
                                      children: [])
     
     func reload() {
-        tree = CMIONode(objectID: .system,
-                        classID: .systemObject,
+        tree = CMIONode(objectID: .systemObject,
+                        classID: .system,
                         name: "System",
-                        children: cmioChildren(of: .system))
+                        children: cmioChildren(of: .systemObject))
     }
     
     private func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {

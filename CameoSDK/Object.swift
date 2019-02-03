@@ -10,12 +10,12 @@ import Foundation
 import CoreMediaIO
 
 public extension CMIOObjectID {
-    static let system = CMIOObjectID(kCMIOObjectSystemObject)
+    static let systemObject = CMIOObjectID(kCMIOObjectSystemObject)
 }
 
 public extension CMIOClassID {
     static let object = CMIOClassID(kCMIOObjectClassID)
-    static let systemObject = CMIOClassID(kCMIOSystemObjectClassID)
+    static let system = CMIOClassID(kCMIOSystemObjectClassID)
     static let plugIn = CMIOClassID(kCMIOPlugInClassID)
     static let device = CMIOClassID(kCMIODeviceClassID)
     static let stream = CMIOClassID(kCMIOStreamClassID)

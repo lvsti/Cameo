@@ -61,7 +61,7 @@ class PropertyListDataSource {
                 }
             }
         }
-        else if node.classID == .systemObject {
+        else if node.classID == .system {
             items.append(contentsOf: properties(from: SystemProperty.self, scope: scope, in: node.objectID))
         }
     }

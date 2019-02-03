@@ -206,7 +206,7 @@ extension ListViewController: NSOutlineViewDataSource {
         
         var image: NSImage?
         switch node.classID {
-        case .systemObject: image = NSImage(named: NSImage.networkName)
+        case .system: image = NSImage(named: NSImage.networkName)
         case .plugIn: image = NSImage(named: NSImage.shareTemplateName)
         case .device: image = NSImage(named: NSImage.computerName)
         case .stream: image = NSImage(named: NSImage.slideshowTemplateName)
