@@ -129,14 +129,22 @@ extension ListViewController: NSOutlineViewDelegate {
         
         let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
         
-        propertyListDataSource.reload(forNode: node, scope: currentScope)
-        tableView.reloadData()
-        
         adjustControlToolbarItem.isEnabled = node.classID.isSubclass(of: .control)
         
         let index = toolbar.items.firstIndex(where: { $0.itemIdentifier == scopeToolbarItemID })!
         toolbar.removeItem(at: index)
         toolbar.insertItem(withItemIdentifier: scopeToolbarItemID, at: index)
+        
+        let scopes: [CMIOObjectPropertyScope] = [
+            .global,
+            .deviceInput,
+            .deviceOutput,
+            .devicePlayThrough
+        ]
+        currentScope = CMIOObjectPropertyScope(scopes[scopeSelector.selectedSegment])
+
+        propertyListDataSource.reload(forNode: node, scope: currentScope)
+        tableView.reloadData()
     }
 }
 
