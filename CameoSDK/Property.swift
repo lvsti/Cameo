@@ -176,6 +176,7 @@ public extension Property {
         return UnsafeBufferPointer<T>(start: typedData, count: count).map { $0 }
     }
     
+    @discardableResult
     public func setValue<T>(_ value: T,
                             scope: CMIOObjectPropertyScope = .anyScope,
                             element: CMIOObjectPropertyElement = .anyElement,
