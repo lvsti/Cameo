@@ -20,9 +20,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var translationPanelController: TranslationPanelController!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        SystemProperty.allowScreenCaptureDevices.setValue(UInt32(1),
+                                                          scope: .global,
+                                                          element: .master,
+                                                          in: .systemObject)
+        SystemProperty.allowWirelessScreenCaptureDevices.setValue(UInt32(1),
+                                                                  scope: .global,
+                                                                  element: .master,
+                                                                  in: .systemObject)
+
         window.contentViewController = ListViewController()
         window.makeKeyAndOrderFront(nil)
-        // Insert code here to initialize your application
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

@@ -79,7 +79,7 @@ final class PreviewWindowController: NSWindowController {
     }
     
     private func reloadDevices() {
-        captureDevices = AVCaptureDevice.devices(for: .video)
+        captureDevices = AVCaptureDevice.devices(for: .video) + AVCaptureDevice.devices(for: .muxed)
         let devicesMenu = NSMenu(title: "Capture devices")
 
         for device in captureDevices {
