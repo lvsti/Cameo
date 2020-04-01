@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import CameoSDK
+import CMIOKit
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {

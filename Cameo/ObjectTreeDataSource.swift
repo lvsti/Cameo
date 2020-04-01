@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreMediaIO
-import CameoSDK
+import CMIOKit
 
 struct CMIONode {
     var objectID: CMIOObjectID

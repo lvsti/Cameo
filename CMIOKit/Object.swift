@@ -1,6 +1,6 @@
 //
-//  CMIOObject.swift
-//  Cameo
+//  Object.swift
+//  CMIOKit
 //
 //  Created by Tamás Lustyik on 2019. 01. 06..
 //  Copyright © 2019. Tamas Lustyik. All rights reserved.

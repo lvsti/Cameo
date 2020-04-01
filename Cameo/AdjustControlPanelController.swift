@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import CameoSDK
+import CMIOKit
 
 protocol AdjustControlPanelControllerDelegate: class {
     func adjustControlPanelDidDismiss()

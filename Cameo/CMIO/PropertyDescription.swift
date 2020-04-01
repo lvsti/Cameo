@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreMediaIO
-import CameoSDK
+import CMIOKit
 
 func fourCC(from value: UInt32) -> String? {
     let chars: [UInt8] = [

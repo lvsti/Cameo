@@ -1,6 +1,6 @@
 //
-//  PropertyType.swift
-//  Cameo
+//  Property.swift
+//  CMIOKit
 //
 //  Created by Tamás Lustyik on 2019. 01. 05..
 //  Copyright © 2019. Tamas Lustyik. All rights reserved.

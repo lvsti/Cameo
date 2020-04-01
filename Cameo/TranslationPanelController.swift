@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import CameoSDK
+import CMIOKit
 
 protocol TranslationPanelControllerDelegate: class {
     func translationPanelDidDismiss()
