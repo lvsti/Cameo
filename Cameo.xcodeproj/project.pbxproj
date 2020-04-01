@@ -13,7 +13,6 @@
 		BE9EFC8421E118C3000CC1CA /* PreviewWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */; };
 		BE9EFC8921E15F42000CC1CA /* AdjustControlPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9EFC8821E15F42000CC1CA /* AdjustControlPanel.xib */; };
 		BE9EFC8B21E15F50000CC1CA /* AdjustControlPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8A21E15F50000CC1CA /* AdjustControlPanelController.swift */; };
-		BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9121E25C6A000CC1CA /* Control.swift */; };
 		BEA6FBD621D964FC00FFFB8C /* LookupWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */; };
 		BEA6FBD821D968C000FFFB8C /* LookupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */; };
 		BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */; };
@@ -37,6 +36,7 @@
 		BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4E21D246C200453456 /* ListViewController.swift */; };
 		BEC91F5121D246CD00453456 /* ListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F5021D246CD00453456 /* ListView.xib */; };
 		BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC91F5321D2484400453456 /* CoreMediaIO.framework */; };
+		E807618C24353A38006B35A2 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9121E25C6A000CC1CA /* Control.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,7 +121,6 @@
 		BE9EFC9021E25C5D000CC1CA /* CMIO */ = {
 			isa = PBXGroup;
 			children = (
-				BE9EFC9121E25C6A000CC1CA /* Control.swift */,
 				BEC255B421F385510053F137 /* PropertyDescription.swift */,
 			);
 			path = CMIO;
@@ -132,6 +131,7 @@
 			children = (
 				BEC255A621F384050053F137 /* CMIOKit.h */,
 				BEC255A721F384050053F137 /* Info.plist */,
+				BE9EFC9121E25C6A000CC1CA /* Control.swift */,
 				BE9EFC9321E25E9C000CC1CA /* Object.swift */,
 				BEC91F5521D2581500453456 /* Properties.swift */,
 				BE9EFC8521E15B7A000CC1CA /* Property.swift */,
@@ -316,6 +316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEC255B321F384D00053F137 /* Property.swift in Sources */,
+				E807618C24353A38006B35A2 /* Control.swift in Sources */,
 				BEC255B221F384BF0053F137 /* Properties.swift in Sources */,
 				BEC255B121F384660053F137 /* Object.swift in Sources */,
 			);
@@ -327,7 +328,6 @@
 			files = (
 				BE1FE3B62204F5F500647150 /* TranslationPanelController.swift in Sources */,
 				BEA6FBDC21D971CA00FFFB8C /* FourCCDatabase.swift in Sources */,
-				BE9EFC9221E25C6A000CC1CA /* Control.swift in Sources */,
 				BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */,
 				BEA6FBDA21D96C4100FFFB8C /* LookupWindow.swift in Sources */,
 				BEC255B721F39B7D0053F137 /* PropertyListDataSource.swift in Sources */,

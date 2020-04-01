@@ -1,6 +1,6 @@
 //
 //  Control.swift
-//  Cameo
+//  CMIOKit
 //
 //  Created by Tamás Lustyik on 2019. 01. 06..
 //  Copyright © 2019. Tamas Lustyik. All rights reserved.
@@ -8,38 +8,37 @@
 
 import Foundation
 import CoreMediaIO
-import CMIOKit
 
-struct BooleanControlModel {
-    var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
-    var name: String = ""
-    var value: Bool = false
+public struct BooleanControlModel {
+    public var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
+    public var name: String = ""
+    public var value: Bool = false
 }
 
-struct SelectorControlModel {
-    var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
-    var name: String = ""
-    var items: [(UInt32, String)] = []
-    var currentItemID: UInt32 = 0
-    var currentItemIndex: Int? {
+public struct SelectorControlModel {
+    public var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
+    public var name: String = ""
+    public var items: [(UInt32, String)] = []
+    public var currentItemID: UInt32 = 0
+    public var currentItemIndex: Int? {
         return items.firstIndex(where: { $0.0 == currentItemID })
     }
 }
 
-struct FeatureControlModel {
-    var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
-    var name: String = ""
-    var isEnabled: Bool = false
-    var isAutomatic: Bool = false
-    var isTuning: Bool = false
-    var isInAbsoluteUnits: Bool = false
-    var minValue: Float = 0
-    var maxValue: Float = 0
-    var currentValue: Float = 0
-    var unitName: String?
+public struct FeatureControlModel {
+    public var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
+    public var name: String = ""
+    public var isEnabled: Bool = false
+    public var isAutomatic: Bool = false
+    public var isTuning: Bool = false
+    public var isInAbsoluteUnits: Bool = false
+    public var minValue: Float = 0
+    public var maxValue: Float = 0
+    public var currentValue: Float = 0
+    public var unitName: String?
 }
 
-enum ControlModel {
+public enum ControlModel {
     case boolean(BooleanControlModel)
     case selector(SelectorControlModel)
     case feature(FeatureControlModel)
@@ -49,8 +48,8 @@ enum CMIOError: Error {
     case unknown
 }
 
-enum Control {
-    static func model(for controlID: CMIOObjectID) -> ControlModel? {
+public enum Control {
+    public static func model(for controlID: CMIOObjectID) -> ControlModel? {
         guard
             let classID: CMIOClassID = ObjectProperty.class.value(in: controlID),
             let cfName: CFString = ObjectProperty.name.value(in: controlID)
@@ -140,4 +139,3 @@ enum Control {
         }
     }
 }
-
