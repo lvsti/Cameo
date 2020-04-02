@@ -64,6 +64,9 @@ public extension CMIOClassID {
     static let panTiltRelativeControl = CMIOClassID(kCMIOPanTiltRelativeControlClassID)
     static let zoomRelativeControl = CMIOClassID(kCMIOZoomRelativeControlClassID)
     
+    // macOS 10.15+
+    static let rollAbsoluteControl = CMIOClassID(0x726f6c61) // kCMIORollAbsoluteControlClassID
+    
     private static let featureControlClassIDs: Set<CMIOClassID> = [
         blackLevelControl,
         whiteLevelControl,
@@ -92,6 +95,7 @@ public extension CMIOClassID {
         panTiltAbsoluteControl,
         panTiltRelativeControl,
         zoomRelativeControl,
+        rollAbsoluteControl
     ]
 
     public func isSubclass(of baseClassID: CMIOClassID) -> Bool {

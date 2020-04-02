@@ -55,7 +55,7 @@ public enum DeviceProperty: PropertySetInternal {
         streamConfiguration, deviceMaster, excludeNonDALAccess, clientSyncDiscontinuity, smpteTimeCallback,
         canProcessAVCCommand, avcDeviceType, avcDeviceSignalMode, canProcessRS422Command, linkedCoreAudioDeviceUID,
         videoDigitizerComponents, suspendedByUser, linkedAndSyncedCoreAudioDeviceUID, iidcInitialUnitSpace,
-        iidcCSRData, canSwitchFrameRatesWithoutFrameDrops, location
+        iidcCSRData, canSwitchFrameRatesWithoutFrameDrops, location, hasStreamingError
 
     static let descriptors: [DeviceProperty: PropertyDescriptor] = [
         .plugIn: PropertyDescriptor(kCMIODevicePropertyPlugIn, .objectID),
@@ -86,7 +86,10 @@ public enum DeviceProperty: PropertySetInternal {
         .iidcInitialUnitSpace: PropertyDescriptor(kCMIODevicePropertyIIDCInitialUnitSpace, .uint32),
         .iidcCSRData: PropertyDescriptor(kCMIODevicePropertyIIDCCSRData, .uint32, .qualifiedRead(.uint32)),
         .canSwitchFrameRatesWithoutFrameDrops: PropertyDescriptor(kCMIODevicePropertyCanSwitchFrameRatesWithoutFrameDrops, .boolean),
-        .location: PropertyDescriptor(kCMIODevicePropertyLocation, .uint32)
+        .location: PropertyDescriptor(kCMIODevicePropertyLocation, .uint32),
+        
+        // macOS 10.15+
+        .hasStreamingError: PropertyDescriptor(0x73657272, .uint32), // kCMIODevicePropertyDeviceHasStreamingError
     ]
 }
 
