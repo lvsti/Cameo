@@ -23,7 +23,7 @@
 		BEC255A821F384050053F137 /* CMIOKit.h in Headers */ = {isa = PBXBuildFile; fileRef = BEC255A621F384050053F137 /* CMIOKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BEC255AB21F384050053F137 /* CMIOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC255A421F384050053F137 /* CMIOKit.framework */; };
 		BEC255AC21F384050053F137 /* CMIOKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BEC255A421F384050053F137 /* CMIOKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		BEC255B121F384660053F137 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9321E25E9C000CC1CA /* Object.swift */; };
+		BEC255B121F384660053F137 /* Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9321E25E9C000CC1CA /* Class.swift */; };
 		BEC255B221F384BF0053F137 /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F5521D2581500453456 /* Properties.swift */; };
 		BEC255B321F384D00053F137 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8521E15B7A000CC1CA /* Property.swift */; };
 		BEC255B521F385510053F137 /* PropertyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B421F385510053F137 /* PropertyDescription.swift */; };
@@ -37,6 +37,7 @@
 		BEC91F5121D246CD00453456 /* ListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F5021D246CD00453456 /* ListView.xib */; };
 		BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC91F5321D2484400453456 /* CoreMediaIO.framework */; };
 		E807618C24353A38006B35A2 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9121E25C6A000CC1CA /* Control.swift */; };
+		E807618E24353CD7006B35A2 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = E807618D24353CD7006B35A2 /* Object.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +73,7 @@
 		BE9EFC8821E15F42000CC1CA /* AdjustControlPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AdjustControlPanel.xib; sourceTree = "<group>"; };
 		BE9EFC8A21E15F50000CC1CA /* AdjustControlPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustControlPanelController.swift; sourceTree = "<group>"; };
 		BE9EFC9121E25C6A000CC1CA /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
-		BE9EFC9321E25E9C000CC1CA /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
+		BE9EFC9321E25E9C000CC1CA /* Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Class.swift; sourceTree = "<group>"; };
 		BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LookupWindow.xib; sourceTree = "<group>"; };
 		BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindowController.swift; sourceTree = "<group>"; };
 		BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindow.swift; sourceTree = "<group>"; };
@@ -96,6 +97,7 @@
 		BEC91F5021D246CD00453456 /* ListView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListView.xib; sourceTree = "<group>"; };
 		BEC91F5321D2484400453456 /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
 		BEC91F5521D2581500453456 /* Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Properties.swift; sourceTree = "<group>"; };
+		E807618D24353CD7006B35A2 /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,8 +133,9 @@
 			children = (
 				BEC255A621F384050053F137 /* CMIOKit.h */,
 				BEC255A721F384050053F137 /* Info.plist */,
+				BE9EFC9321E25E9C000CC1CA /* Class.swift */,
 				BE9EFC9121E25C6A000CC1CA /* Control.swift */,
-				BE9EFC9321E25E9C000CC1CA /* Object.swift */,
+				E807618D24353CD7006B35A2 /* Object.swift */,
 				BEC91F5521D2581500453456 /* Properties.swift */,
 				BE9EFC8521E15B7A000CC1CA /* Property.swift */,
 			);
@@ -315,10 +318,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E807618E24353CD7006B35A2 /* Object.swift in Sources */,
 				BEC255B321F384D00053F137 /* Property.swift in Sources */,
 				E807618C24353A38006B35A2 /* Control.swift in Sources */,
 				BEC255B221F384BF0053F137 /* Properties.swift in Sources */,
-				BEC255B121F384660053F137 /* Object.swift in Sources */,
+				BEC255B121F384660053F137 /* Class.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
