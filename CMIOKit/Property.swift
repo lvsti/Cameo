@@ -8,6 +8,9 @@
 
 import Foundation
 import CoreMediaIO
+#if NEEDS_VIDEO_DIGITIZER_COMPONENTS
+import CoreServices.CarbonCore.Components
+#endif
 
 
 public protocol QualifierProtocol {
@@ -46,6 +49,28 @@ public enum PropertyType {
     case string, formatDescription, sampleBuffer, clock
     case audioValueTranslation
     indirect case array(PropertyType)
+}
+
+public enum PropertyValue {
+    case boolean(Bool), boolean32(UInt32), int32(Int32), uint32(UInt32), uint64(UInt64),
+        float32(Float32), float64(Float64),
+        classID(CMIOClassID), objectID(CMIOObjectID),
+        audioValueRange(AudioValueRange), propertyAddress(CMIOObjectPropertyAddress),
+        streamConfiguration(channelCounts: [UInt32]), streamDeck(CMIOStreamDeck),
+        pid(pid_t),
+        smpteCallback(CMIODeviceSMPTETimeCallback),
+        scheduledOutputCallback(CMIOStreamScheduledOutputNotificationProcAndRefCon),
+        time(CMTime), rect(CGRect)
+    case string(String), formatDescription(CMFormatDescription), sampleBuffer(CMSampleBuffer), clock(CFTypeRef)
+    case arrayOfUInt32s([UInt32])
+    case arrayOfFloat64s([Float64])
+    case arrayOfObjectIDs([CMIOObjectID])
+    case arrayOfAudioValueRanges([AudioValueRange])
+    case arrayOfFormatDescriptions([CMFormatDescription])
+
+#if NEEDS_VIDEO_DIGITIZER_COMPONENTS
+    case arrayOfComponentDescriptions([ComponentDescription])
+#endif
 }
 
 public extension CMIOObjectPropertyScope {
@@ -113,11 +138,153 @@ public extension Property {
         
         return isSettable.boolValue
     }
+    
+    public func value(scope: CMIOObjectPropertyScope = .anyScope,
+                      element: CMIOObjectPropertyElement = .anyElement,
+                      qualifiedBy qualifier: QualifierProtocol? = nil,
+                      in objectID: CMIOObjectID) -> PropertyValue? {
+        func getValue<T>() -> T? {
+            return value(scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
+        }
+        
+        func getArrayValue<T>() -> [T]? {
+            return arrayValue(scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
+        }
 
-    public func value<T>(scope: CMIOObjectPropertyScope = .anyScope,
-                         element: CMIOObjectPropertyElement = .anyElement,
-                         qualifiedBy qualifier: QualifierProtocol? = nil,
-                         in objectID: CMIOObjectID) -> T? {
+        switch type {
+        case .boolean:
+            if let value: DarwinBoolean = getValue() {
+                return .boolean(value.boolValue)
+            }
+        case .boolean32:
+            if let value: UInt32 = getValue() {
+                return .boolean(value != 0)
+            }
+        case .uint32:
+            if let value: UInt32 = getValue() {
+                return .uint32(value)
+            }
+        case .int32:
+            if let value: Int32 = getValue() {
+                return .int32(value)
+            }
+        case .uint64:
+            if let value: UInt64 = getValue() {
+                return .uint64(value)
+            }
+        case .float32:
+            if let value: Float32 = getValue() {
+                return .float32(value)
+            }
+        case .float64:
+            if let value: Float64 = getValue() {
+                return .float64(value)
+            }
+        case .classID:
+            if let value: CMIOClassID = getValue() {
+                return .classID(value)
+            }
+        case .objectID:
+            if let value: CMIOObjectID = getValue() {
+                return .objectID(value)
+            }
+        case .audioValueTranslation:
+            // handled by translateValue()
+            return nil
+        case .audioValueRange:
+            if let value: AudioValueRange = getValue() {
+                return .audioValueRange(value)
+            }
+        case .propertyAddress:
+            if let value: CMIOObjectPropertyAddress = getValue() {
+                return .propertyAddress(value)
+            }
+        case .streamConfiguration:
+            if let value: [UInt32] = getArrayValue() {
+                return .streamConfiguration(channelCounts: Array(value.dropFirst()))
+            }
+        case .pid:
+            if let value: pid_t = getValue() {
+                return .pid(value)
+            }
+        case .time:
+            if let value: CMTime = getValue() {
+                return .time(value)
+            }
+        case .rect:
+            if let value: CGRect = getValue() {
+                return .rect(value)
+            }
+        case .streamDeck:
+            if let value: CMIOStreamDeck = getValue() {
+                return .streamDeck(value)
+            }
+        case .smpteCallback:
+            if let value: CMIODeviceSMPTETimeCallback = getValue() {
+                return .smpteCallback(value)
+            }
+        case .scheduledOutputCallback:
+            if let value: CMIOStreamScheduledOutputNotificationProcAndRefCon = getValue() {
+                return .scheduledOutputCallback(value)
+            }
+        case .array(let elemType):
+            switch elemType {
+            case .uint32:
+                if let value: [UInt32] = getArrayValue() {
+                    return .arrayOfUInt32s(value)
+                }
+            case .float64:
+                if let value: [Float64] = getArrayValue() {
+                    return .arrayOfFloat64s(value)
+                }
+            case .objectID:
+                if let value: [CMIOObjectID] = getArrayValue() {
+                    return .arrayOfObjectIDs(value)
+                }
+            case .audioValueRange:
+                if let value: [AudioValueRange] = getArrayValue() {
+                    return .arrayOfAudioValueRanges(value)
+                }
+            case .formatDescription:
+                if let value: [CMFormatDescription] = getArrayValue() {
+                    return .arrayOfFormatDescriptions(value)
+                }
+#if NEEDS_VIDEO_DIGITIZER_COMPONENTS
+            case .componentDescription:
+                if let value: [ComponentDescription] = getArrayValue() {
+                    return .arrayOfComponentDescriptions(value)
+                }
+#endif
+            default:
+                assertionFailure("unhandled array element type: \(elemType)")
+            }
+        case .string:
+            if let value: CFString = getValue() {
+                return .string(value as String)
+            }
+        case .formatDescription:
+            if let value: CMFormatDescription = getValue() {
+                return .formatDescription(value)
+            }
+        case .sampleBuffer:
+            if let value: CMSampleBuffer = getValue() {
+                return .sampleBuffer(value)
+            }
+        case .clock:
+            if let value: CFTypeRef = getValue() {
+                return .clock(value)
+            }
+        default:
+            assertionFailure("unhandled property type: \(type)")
+        }
+        
+        return nil
+    }
+
+    func value<T>(scope: CMIOObjectPropertyScope = .anyScope,
+                  element: CMIOObjectPropertyElement = .anyElement,
+                  qualifiedBy qualifier: QualifierProtocol? = nil,
+                  in objectID: CMIOObjectID) -> T? {
         switch readSemantics {
         case .qualifiedRead where qualifier == nil: return nil
         default: break
@@ -140,10 +307,10 @@ public extension Property {
         return typedData.pointee
     }
     
-    public func arrayValue<T>(scope: CMIOObjectPropertyScope = .anyScope,
-                              element: CMIOObjectPropertyElement = .anyElement,
-                              qualifiedBy qualifier: QualifierProtocol? = nil,
-                              in objectID: CMIOObjectID) -> [T]? {
+    func arrayValue<T>(scope: CMIOObjectPropertyScope = .anyScope,
+                       element: CMIOObjectPropertyElement = .anyElement,
+                       qualifiedBy qualifier: QualifierProtocol? = nil,
+                       in objectID: CMIOObjectID) -> [T]? {
         switch readSemantics {
         case .qualifiedRead where qualifier == nil: return nil
         default: break

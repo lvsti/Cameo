@@ -39,148 +39,76 @@ extension Property {
                      qualifiedBy qualifier: QualifierProtocol? = nil,
                      in objectID: CMIOObjectID) -> String? {
 
-        func getValue<T>() -> T? {
-            return value(scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
-        }
-
-        func getArrayValue<T>() -> [T]? {
-            return arrayValue(scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
-        }
-
-        switch type {
-        case .boolean:
-            if let value: DarwinBoolean = getValue() {
-                return "\(value)"
-            }
-        case .boolean32:
-            if let value: UInt32 = getValue() {
-                return value != 0 ? "true (\(value))" : "false (0)"
-            }
-        case .int32, .uint32:
-            if let value: UInt32 = getValue() {
-                return "\(value)"
-            }
-        case .uint64:
-            if let value: UInt64 = getValue() {
-                return "\(value)"
-            }
-        case .float32:
-            if let value: Float32 = getValue() {
-                return "\(value)"
-            }
-        case .float64:
-            if let value: Float64 = getValue() {
-                return "\(value)"
-            }
-        case .fourCC, .classID:
-            if let value: CMIOClassID = getValue() {
-                if let fcc = fourCCDescription(from: value) {
-                    return "\(fcc)"
-                }
-                return "\(value)"
-            }
-        case .objectID, .deviceID:
-            if let value: CMIOObjectID = getValue() {
-                return value != kCMIOObjectUnknown ? "@\(value)" : "<null>"
-            }
-        case .audioValueTranslation:
+        if case .audioValueTranslation = type {
             if case .translation(let srcType, let dstType) = readSemantics {
                 return "<function: (\(srcType)) -> \(dstType)>"
             }
             return "<function>"
-        case .audioValueRange:
-            if let value: AudioValueRange = getValue() {
-                return "AudioValueRange {\(value.mMinimum), \(value.mMaximum)}"
+        }
+        guard let propertyValue = value(scope: scope, element: element, qualifiedBy: qualifier, in: objectID) else {
+            return nil
+        }
+        
+        switch propertyValue {
+        case .boolean(let v): return "\(v)"
+        case .int32(let v): return "\(v)"
+        case .uint32(let v): return "\(v)"
+        case .uint64(let v): return "\(v)"
+        case .float32(let v): return "\(v)"
+        case .float64(let v): return "\(v)"
+        case .pid(let v): return "\(v)"
+        case .arrayOfUInt32s(let v): return "\(v)"
+        case .arrayOfFloat64s(let v): return "\(v)"
+        case .string(let v): return "\(v)"
+        case .formatDescription(let v): return "\(v)"
+        case .sampleBuffer(let v): return "\(v)"
+        case .clock(let v): return "\(v)"
+        case .boolean32(let v): return v != 0 ? "true (\(v))" : "false (0)"
+        case .classID(let v):
+            if let fcc = fourCCDescription(from: v) {
+                return fcc
             }
-        case .propertyAddress:
-            if let value: CMIOObjectPropertyAddress = getValue() {
-                return "CMIOObjectPropertyAddress {\(fourCCDescription(from: value.mSelector)!), " +
-                "\(fourCCDescription(from: value.mScope)!), \(fourCCDescription(from: value.mElement)!)"
+            return "\(v)"
+        case .objectID(let v): return v != .unknown ? "@\(v)" : "<null>"
+        case .audioValueRange(let v):
+            return "AudioValueRange {\(v.mMinimum), \(v.mMaximum)}"
+        case .propertyAddress(let v):
+            return "CMIOObjectPropertyAddress {\(fourCCDescription(from: v.mSelector)!), " +
+                "\(fourCCDescription(from: v.mScope)!), \(fourCCDescription(from: v.mElement)!)"
+        case .streamConfiguration(let v):
+            return "[" + v.map { "\($0)" }.joined(separator: ", ") + "]"
+        case .time(let v):
+            return "CMTime {\(v.value) / \(v.timescale)}"
+        case .rect(let v):
+            return "CGRect {{\(v.minX), \(v.minY)}, {\(v.width), \(v.height)}}"
+        case .streamDeck(let v):
+            return "CMIOStreamDeck {\(v.mStatus), \(v.mState), \(v.mState2)}"
+        case .smpteCallback(let v):
+            if v.mGetSMPTETimeProc != nil {
+                let ctx = v.mRefCon != nil ? "\(v.mRefCon!)" : "0x0"
+                return "CMIODeviceSMPTETimeCallback {proc=\(v.mGetSMPTETimeProc!), ctx=\(ctx)}"
             }
-        case .streamConfiguration:
-            if let value: [UInt32] = getArrayValue() {
-                return "[" + value.dropFirst().map { "\($0)" }.joined(separator: ", ") + "]"
+            else {
+                return "<null>"
             }
-        case .pid:
-            if let value: pid_t = getValue() {
-                return "\(value)"
+        case .scheduledOutputCallback(let v):
+            if v.scheduledOutputNotificationProc != nil {
+                let ctx = v.scheduledOutputNotificationRefCon != nil ? "\(v.scheduledOutputNotificationRefCon!)" : "0x0"
+                return "CMIOStreamScheduledOutputNotificationProcAndRefCon {proc=\(v.scheduledOutputNotificationProc!), ctx=\(ctx)"
             }
-//    case .componentDescription:
-//        if let value: ComponentDescription = PropertyType.podTypeValue(for: selector, qualifiedBy: qualifier, in: objectID) {
-//            return "\(value)"
-//        }
-        case .time:
-            if let value: CMTime = getValue() {
-                return "CMTime {\(value.value) / \(value.timescale)}"
+            else {
+                return "<null>"
             }
-        case .cgRect:
-            if let value: CGRect = getValue() {
-                return "CGRect {{\(value.origin.x), \(value.origin.y)}, {\(value.size.width), \(value.size.height)}}"
-            }
-        case .streamDeck:
-            if let value: CMIOStreamDeck = getValue() {
-                return "CMIOStreamDeck {\(value.mStatus), \(value.mState), \(value.mState2)}"
-            }
-        case .smpteCallback:
-            if let value: CMIODeviceSMPTETimeCallback = getValue() {
-                if value.mGetSMPTETimeProc != nil {
-                    let ctx = value.mRefCon != nil ? "\(value.mRefCon!)" : "0x0"
-                    return "CMIODeviceSMPTETimeCallback {proc=\(value.mGetSMPTETimeProc!), ctx=\(ctx)}"
-                }
-                else {
-                    return "<null>"
-                }
-            }
-        case .scheduledOutputCallback:
-            if let value: CMIOStreamScheduledOutputNotificationProcAndRefCon = getValue() {
-                if value.scheduledOutputNotificationProc != nil {
-                    let ctx = value.scheduledOutputNotificationRefCon != nil ? "\(value.scheduledOutputNotificationRefCon!)" : "0x0"
-                    return "CMIOStreamScheduledOutputNotificationProcAndRefCon {proc=\(value.scheduledOutputNotificationProc!), ctx=\(ctx)"
-                }
-                else {
-                    return "<null>"
-                }
-            }
-            
-        case .arrayOfUInt32s:
-            if let value: [UInt32] = getArrayValue() {
-                return "\(value)"
-            }
-        case .arrayOfFloat64s:
-            if let value: [Float64] = getArrayValue() {
-                return "\(value)"
-            }
-        case .arrayOfDeviceIDs, .arrayOfObjectIDs, .arrayOfStreamIDs:
-            if let value: [CMIOObjectID] = getArrayValue() {
-                return "[" + value.map { $0 != kCMIOObjectUnknown ? "@\($0)" : "<null>" }.joined(separator: ", ") + "]"
-            }
-        case .arrayOfAudioValueRanges:
-            if let value: [AudioValueRange] = getArrayValue() {
-                return "[" + value.map { "AudioValueRange {\($0.mMinimum), \($0.mMaximum)}" }.joined(separator: ", ") + "]"
-            }
-            
-        case .string:
-            if let value: CFString = getValue() {
-                return "\(value)"
-            }
-        case .formatDescription:
-            if let value: CMFormatDescription = getValue() {
-                return "\(value)"
-            }
-        case .sampleBuffer:
-            if let value: CMSampleBuffer = getValue() {
-                return "\(value)"
-            }
-        case .clock:
-            if let value: CFTypeRef = getValue() {
-                return "\(value)"
-            }
-            
-        case .arrayOfFormatDescriptions:
-            if let value: [CMFormatDescription] = getArrayValue() {
-                return "[" + value.map { "\($0)" }.joined(separator: ", ") + "]"
-            }
-            
+        case .arrayOfObjectIDs(let v):
+            return "[" + v.map { $0 != .unknown ? "@\($0)" : "<null>" }.joined(separator: ", ") + "]"
+        case .arrayOfAudioValueRanges(let v):
+            return "[" + v.map { "AudioValueRange {\($0.mMinimum), \($0.mMaximum)}" }.joined(separator: ", ") + "]"
+        case .arrayOfFormatDescriptions(let v):
+            return "[" + v.map { "\($0)" }.joined(separator: ", ") + "]"
+#if NEEDS_VIDEO_DIGITIZER_COMPONENTS
+        case .arrayOfComponentDescriptions:
+            return "\(value)"
+#endif
         default:
             break
         }
@@ -210,7 +138,7 @@ extension Property {
         }
 
         switch toType {
-        case .objectID, .deviceID:
+        case .objectID:
             if let value: CMIOObjectID = getTranslatedValue() {
                 return value != .unknown ? "@\(value)" : "<null>"
             }

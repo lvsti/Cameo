@@ -78,7 +78,11 @@ class PropertyListDataSource {
                                   element: .anyElement,
                                   in: objectID)
         for prop in props {
-            let isFourCC = prop.type == .fourCC || prop.type == .classID
+            let isFourCC: Bool
+            switch prop.type {
+            case .classID, .propertyScope, .propertyElement: isFourCC = true
+            default: isFourCC = false
+            }
             let item = PropertyListItem(property: prop,
                                         name: "\(prop)",
                                         isSettable: prop.isSettable(scope: scope, in: objectID),
