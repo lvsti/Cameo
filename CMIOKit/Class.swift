@@ -1,5 +1,5 @@
 //
-//  Object.swift
+//  Class.swift
 //  CMIOKit
 //
 //  Created by Tamás Lustyik on 2019. 01. 06..

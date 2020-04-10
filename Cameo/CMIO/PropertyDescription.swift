@@ -212,7 +212,7 @@ extension Property {
         switch toType {
         case .objectID, .deviceID:
             if let value: CMIOObjectID = getTranslatedValue() {
-                return value != kCMIOObjectUnknown ? "@\(value)" : "<null>"
+                return value != .unknown ? "@\(value)" : "<null>"
             }
         default:
             break

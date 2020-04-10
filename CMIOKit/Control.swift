@@ -10,13 +10,13 @@ import Foundation
 import CoreMediaIO
 
 public struct BooleanControlModel {
-    public var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
+    public var controlID: CMIOObjectID = .unknown
     public var name: String = ""
     public var value: Bool = false
 }
 
 public struct SelectorControlModel {
-    public var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
+    public var controlID: CMIOObjectID = .unknown
     public var name: String = ""
     public var items: [(UInt32, String)] = []
     public var currentItemID: UInt32 = 0
@@ -26,7 +26,7 @@ public struct SelectorControlModel {
 }
 
 public struct FeatureControlModel {
-    public var controlID: CMIOObjectID = CMIOObjectID(kCMIOObjectUnknown)
+    public var controlID: CMIOObjectID = .unknown
     public var name: String = ""
     public var isEnabled: Bool = false
     public var isAutomatic: Bool = false
