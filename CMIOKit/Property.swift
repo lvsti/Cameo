@@ -40,7 +40,7 @@ public enum PropertyReadSemantics {
 
 public enum PropertyType {
     case boolean, boolean32, int32, uint32, uint64, float32, float64,
-        classID, objectID,
+        classID, objectID, fourCC,
         audioValueRange, propertyAddress, streamConfiguration, streamDeck,
         pid,
         smpteCallback, scheduledOutputCallback,
@@ -54,7 +54,7 @@ public enum PropertyType {
 public enum PropertyValue {
     case boolean(Bool), boolean32(UInt32), int32(Int32), uint32(UInt32), uint64(UInt64),
         float32(Float32), float64(Float64),
-        classID(CMIOClassID), objectID(CMIOObjectID),
+        classID(CMIOClassID), objectID(CMIOObjectID), fourCC(UInt32),
         audioValueRange(AudioValueRange), propertyAddress(CMIOObjectPropertyAddress),
         streamConfiguration(channelCounts: [UInt32]), streamDeck(CMIOStreamDeck),
         pid(pid_t),
@@ -187,6 +187,10 @@ public extension Property {
         case .objectID:
             if let value: CMIOObjectID = getValue() {
                 return .objectID(value)
+            }
+        case .fourCC:
+            if let value: UInt32 = getValue() {
+                return .fourCC(value)
             }
         case .audioValueTranslation:
             // handled by translateValue()

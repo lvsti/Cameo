@@ -64,7 +64,7 @@ extension Property {
         case .sampleBuffer(let v): return "\(v)"
         case .clock(let v): return "\(v)"
         case .boolean32(let v): return v != 0 ? "true (\(v))" : "false (0)"
-        case .classID(let v):
+        case .classID(let v), .fourCC(let v):
             if let fcc = fourCCDescription(from: v) {
                 return fcc
             }

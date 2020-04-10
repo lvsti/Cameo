@@ -80,7 +80,7 @@ class PropertyListDataSource {
         for prop in props {
             let isFourCC: Bool
             switch prop.type {
-            case .classID, .propertyScope, .propertyElement: isFourCC = true
+            case .classID, .fourCC, .propertyScope, .propertyElement: isFourCC = true
             default: isFourCC = false
             }
             let item = PropertyListItem(property: prop,

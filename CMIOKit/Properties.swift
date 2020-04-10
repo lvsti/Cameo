@@ -61,7 +61,7 @@ public enum DeviceProperty: PropertySetInternal {
         .plugIn: PropertyDescriptor(kCMIODevicePropertyPlugIn, .objectID),
         .deviceUID: PropertyDescriptor(kCMIODevicePropertyDeviceUID, .string),
         .modelUID: PropertyDescriptor(kCMIODevicePropertyModelUID, .string),
-        .transportType: PropertyDescriptor(kCMIODevicePropertyTransportType, .uint32),
+        .transportType: PropertyDescriptor(kCMIODevicePropertyTransportType, .fourCC),
         .deviceIsAlive: PropertyDescriptor(kCMIODevicePropertyDeviceIsAlive, .boolean32),
         .deviceHasChanged: PropertyDescriptor(kCMIODevicePropertyDeviceHasChanged, .boolean32),
         .deviceIsRunning: PropertyDescriptor(kCMIODevicePropertyDeviceIsRunning, .boolean32),
