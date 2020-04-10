@@ -41,4 +41,5 @@ public struct CMIONode<P: CMIOPropertySource> {
 
 public extension CMIOObjectID {
     static let systemObject = CMIOObjectID(kCMIOObjectSystemObject)
+    static let unknown = CMIOObjectID(kCMIOObjectUnknown)
 }
