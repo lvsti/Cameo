@@ -22,7 +22,7 @@ public enum ObjectProperty: PropertySetInternal {
         .elementName: PropertyDescriptor(kCMIOObjectPropertyElementName, .string),
         .elementCategoryName: PropertyDescriptor(kCMIOObjectPropertyElementCategoryName, .string),
         .elementNumberName: PropertyDescriptor(kCMIOObjectPropertyElementNumberName, .string),
-        .ownedObjects: PropertyDescriptor(kCMIOObjectPropertyOwnedObjects, .arrayOfObjectIDs, .optionallyQualifiedRead(.arrayOfClassIDs))
+        .ownedObjects: PropertyDescriptor(kCMIOObjectPropertyOwnedObjects, .array(.objectID), .optionallyQualifiedRead(.array(.classID)))
     ]
 }
 
@@ -35,10 +35,10 @@ public enum SystemProperty: PropertySetInternal {
     static let descriptors: [SystemProperty: PropertyDescriptor] = [
         .processIsMaster: PropertyDescriptor(kCMIOHardwarePropertyProcessIsMaster, .boolean32),
         .isInitingOrExiting: PropertyDescriptor(kCMIOHardwarePropertyIsInitingOrExiting, .boolean32),
-        .devices: PropertyDescriptor(kCMIOHardwarePropertyDevices, .arrayOfDeviceIDs),
-        .defaultInputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultInputDevice, .deviceID),
-        .defaultOutputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultOutputDevice, .deviceID),
-        .deviceForUID: PropertyDescriptor(kCMIOHardwarePropertyDeviceForUID, .audioValueTranslation, .translation(.string, .deviceID)),
+        .devices: PropertyDescriptor(kCMIOHardwarePropertyDevices, .array(.objectID)),
+        .defaultInputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultInputDevice, .objectID),
+        .defaultOutputDevice: PropertyDescriptor(kCMIOHardwarePropertyDefaultOutputDevice, .objectID),
+        .deviceForUID: PropertyDescriptor(kCMIOHardwarePropertyDeviceForUID, .audioValueTranslation, .translation(.string, .objectID)),
         .sleepingIsAllowed: PropertyDescriptor(kCMIOHardwarePropertySleepingIsAllowed, .boolean32),
         .unloadingIsAllowed: PropertyDescriptor(kCMIOHardwarePropertyUnloadingIsAllowed, .boolean32),
         .plugInForBundleID: PropertyDescriptor(kCMIOHardwarePropertyPlugInForBundleID, .audioValueTranslation, .translation(.string, .objectID)),
@@ -61,7 +61,7 @@ public enum DeviceProperty: PropertySetInternal {
         .plugIn: PropertyDescriptor(kCMIODevicePropertyPlugIn, .objectID),
         .deviceUID: PropertyDescriptor(kCMIODevicePropertyDeviceUID, .string),
         .modelUID: PropertyDescriptor(kCMIODevicePropertyModelUID, .string),
-        .transportType: PropertyDescriptor(kCMIODevicePropertyTransportType, .fourCC),
+        .transportType: PropertyDescriptor(kCMIODevicePropertyTransportType, .uint32),
         .deviceIsAlive: PropertyDescriptor(kCMIODevicePropertyDeviceIsAlive, .boolean32),
         .deviceHasChanged: PropertyDescriptor(kCMIODevicePropertyDeviceHasChanged, .boolean32),
         .deviceIsRunning: PropertyDescriptor(kCMIODevicePropertyDeviceIsRunning, .boolean32),
@@ -69,7 +69,7 @@ public enum DeviceProperty: PropertySetInternal {
         .deviceCanBeDefaultDevice: PropertyDescriptor(kCMIODevicePropertyDeviceCanBeDefaultDevice, .boolean32),
         .hogMode: PropertyDescriptor(kCMIODevicePropertyHogMode, .pid),
         .latency: PropertyDescriptor(kCMIODevicePropertyLatency, .uint32),
-        .streams: PropertyDescriptor(kCMIODevicePropertyStreams, .arrayOfStreamIDs),
+        .streams: PropertyDescriptor(kCMIODevicePropertyStreams, .array(.objectID)),
         .streamConfiguration: PropertyDescriptor(kCMIODevicePropertyStreamConfiguration, .streamConfiguration),
         .deviceMaster: PropertyDescriptor(kCMIODevicePropertyDeviceMaster, .pid),
         .excludeNonDALAccess: PropertyDescriptor(kCMIODevicePropertyExcludeNonDALAccess, .boolean32),
@@ -80,7 +80,7 @@ public enum DeviceProperty: PropertySetInternal {
         .avcDeviceSignalMode: PropertyDescriptor(kCMIODevicePropertyAVCDeviceSignalMode, .uint32),
         .canProcessRS422Command: PropertyDescriptor(kCMIODevicePropertyCanProcessRS422Command, .boolean),
         .linkedCoreAudioDeviceUID: PropertyDescriptor(kCMIODevicePropertyLinkedCoreAudioDeviceUID, .string),
-        .videoDigitizerComponents: PropertyDescriptor(kCMIODevicePropertyVideoDigitizerComponents, .componentDescription),
+        .videoDigitizerComponents: PropertyDescriptor(kCMIODevicePropertyVideoDigitizerComponents, .array(.componentDescription)),
         .suspendedByUser: PropertyDescriptor(kCMIODevicePropertySuspendedByUser, .boolean32),
         .linkedAndSyncedCoreAudioDeviceUID: PropertyDescriptor(kCMIODevicePropertyLinkedAndSyncedCoreAudioDeviceUID, .string),
         .iidcInitialUnitSpace: PropertyDescriptor(kCMIODevicePropertyIIDCInitialUnitSpace, .uint32),
@@ -110,13 +110,13 @@ public enum StreamProperty: PropertySetInternal {
         .startingChannel: PropertyDescriptor(kCMIOStreamPropertyStartingChannel, .uint32),
         .latency: PropertyDescriptor(kCMIOStreamPropertyLatency, .uint32),
         .formatDescription: PropertyDescriptor(kCMIOStreamPropertyFormatDescription, .formatDescription),
-        .formatDescriptions: PropertyDescriptor(kCMIOStreamPropertyFormatDescriptions, .arrayOfFormatDescriptions),
+        .formatDescriptions: PropertyDescriptor(kCMIOStreamPropertyFormatDescriptions, .array(.formatDescription)),
         .stillImage: PropertyDescriptor(kCMIOStreamPropertyStillImage, .sampleBuffer, .qualifiedRead(.formatDescription)),
-        .stillImageFormatDescriptions: PropertyDescriptor(kCMIOStreamPropertyStillImageFormatDescriptions, .arrayOfFormatDescriptions),
+        .stillImageFormatDescriptions: PropertyDescriptor(kCMIOStreamPropertyStillImageFormatDescriptions, .array(.formatDescription)),
         .frameRate: PropertyDescriptor(kCMIOStreamPropertyFrameRate, .float64),
         .minimumFrameRate: PropertyDescriptor(kCMIOStreamPropertyMinimumFrameRate, .float64),
-        .frameRates: PropertyDescriptor(kCMIOStreamPropertyFrameRates, .arrayOfFloat64s, .optionallyQualifiedRead(.formatDescription)),
-        .frameRateRanges: PropertyDescriptor(kCMIOStreamPropertyFrameRateRanges, .arrayOfAudioValueRanges, .optionallyQualifiedRead(.formatDescription)),
+        .frameRates: PropertyDescriptor(kCMIOStreamPropertyFrameRates, .array(.float64), .optionallyQualifiedRead(.formatDescription)),
+        .frameRateRanges: PropertyDescriptor(kCMIOStreamPropertyFrameRateRanges, .array(.audioValueRange), .optionallyQualifiedRead(.formatDescription)),
         .noDataTimeoutInMSec: PropertyDescriptor(kCMIOStreamPropertyNoDataTimeoutInMSec, .uint32),
         .deviceSyncTimeoutInMSec: PropertyDescriptor(kCMIOStreamPropertyDeviceSyncTimeoutInMSec, .uint32),
         .noDataEventCount: PropertyDescriptor(kCMIOStreamPropertyNoDataEventCount, .uint32),
@@ -146,9 +146,9 @@ public enum ControlProperty: PropertySetInternal {
     case scope, element, variant
     
     static let descriptors: [ControlProperty: PropertyDescriptor] = [
-        .scope: PropertyDescriptor(kCMIOControlPropertyScope, .fourCC),
-        .element: PropertyDescriptor(kCMIOControlPropertyScope, .fourCC),
-        .variant: PropertyDescriptor(kCMIOControlPropertyScope, .fourCC)
+        .scope: PropertyDescriptor(kCMIOControlPropertyScope, .propertyScope),
+        .element: PropertyDescriptor(kCMIOControlPropertyElement, .propertyElement),
+        .variant: PropertyDescriptor(kCMIOControlPropertyVariant, .uint32)
     ]
 }
 
@@ -165,7 +165,7 @@ public enum SelectorControlProperty: PropertySetInternal {
     
     static let descriptors: [SelectorControlProperty: PropertyDescriptor] = [
         .currentItem: PropertyDescriptor(kCMIOSelectorControlPropertyCurrentItem, .uint32),
-        .availableItems: PropertyDescriptor(kCMIOSelectorControlPropertyAvailableItems, .arrayOfUInt32s),
+        .availableItems: PropertyDescriptor(kCMIOSelectorControlPropertyAvailableItems, .array(.uint32)),
         .itemName: PropertyDescriptor(kCMIOSelectorControlPropertyItemName, .string, .qualifiedRead(.uint32)),
     ]
 }
@@ -195,7 +195,7 @@ public enum ExposureControlProperty: PropertySetInternal {
         stability, stable, integrationTime, maximumGain
     
     static let descriptors: [ExposureControlProperty: PropertyDescriptor] = [
-        .regionOfInterest: PropertyDescriptor(kCMIOExposureControlPropertyRegionOfInterest, .cgRect),
+        .regionOfInterest: PropertyDescriptor(kCMIOExposureControlPropertyRegionOfInterest, .rect),
         .lockThreshold: PropertyDescriptor(kCMIOExposureControlPropertyLockThreshold, .float32),
         .unlockThreshold: PropertyDescriptor(kCMIOExposureControlPropertyUnlockThreshold, .float32),
         .target: PropertyDescriptor(kCMIOExposureControlPropertyTarget, .float32),

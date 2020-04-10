@@ -36,17 +36,16 @@ public enum PropertyReadSemantics {
 }
 
 public enum PropertyType {
-    case boolean, boolean32, int32, uint32, uint64, float32, float64, fourCC,
-        classID, objectID, deviceID,
+    case boolean, boolean32, int32, uint32, uint64, float32, float64,
+        classID, objectID,
         audioValueRange, propertyAddress, streamConfiguration, streamDeck,
         pid,
         smpteCallback, scheduledOutputCallback,
-        componentDescription, time, cgRect
-    case arrayOfDeviceIDs, arrayOfObjectIDs, arrayOfClassIDs, arrayOfStreamIDs,
-        arrayOfUInt32s, arrayOfFloat64s, arrayOfAudioValueRanges
+        componentDescription, time, rect,
+        propertyScope, propertyElement
     case string, formatDescription, sampleBuffer, clock
-    case arrayOfFormatDescriptions
     case audioValueTranslation
+    indirect case array(PropertyType)
 }
 
 public extension CMIOObjectPropertyScope {
