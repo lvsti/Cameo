@@ -10,51 +10,32 @@ import Foundation
 import CoreMediaIO
 import CMIOKit
 
-struct CMIONode {
-    var objectID: CMIOObjectID
-    var classID: CMIOClassID
-    var name: String
-    var children: [CMIONode]
+struct Properties: CMIOPropertySource {
+    let classID: CMIOClassID
+    let name: String
+
+    static func properties(for objectID: CMIOObjectID) -> Properties {
+        let classID: CMIOClassID = ObjectProperty.class.value(in: objectID) ?? .object
+        let name = ObjectProperty.name.description(in: objectID) ?? "<untitled @\(objectID)>"
+        return Properties(classID: classID, name: name)
+    }
 }
 
 final class ObjectTreeDataSource {
     
-    private(set) var tree = CMIONode(objectID: .systemObject,
-                                     classID: .system,
-                                     name: "System",
-                                     children: [])
-    
-    func reload() {
-        tree = CMIONode(objectID: .systemObject,
-                        classID: .system,
-                        name: "System",
-                        children: cmioChildren(of: .systemObject))
-    }
-    
-    private func cmioChildren(of objectID: CMIOObjectID) -> [CMIONode] {
-        var nodes: [CMIONode] = []
-        
-        if let children: [CMIOObjectID] = ObjectProperty.ownedObjects.arrayValue(in: objectID) {
-            for child in children {
-                let subtree = cmioChildren(of: child)
-                let name = ObjectProperty.name.description(in: child) ?? "<untitled @\(child)>"
-                let classID: CMIOClassID = ObjectProperty.class.value(in: child) ?? .object
-                nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
-            }
+    private static func cmioChildren(for objectID: CMIOObjectID) -> [CMIOObjectID] {
+        if let ownedObjects: [CMIOObjectID] = ObjectProperty.ownedObjects.arrayValue(in: objectID) {
+            return ownedObjects
         }
         else if let classID: CMIOClassID = ObjectProperty.class.value(in: objectID),
             classID.isSubclass(of: .device),
             let streams: [CMIOStreamID] = DeviceProperty.streams.arrayValue(in: objectID) {
-            
-            for child in streams {
-                let subtree = cmioChildren(of: child)
-                let name = ObjectProperty.name.description(in: child) ?? "<untitled @\(child)>"
-                let classID: CMIOClassID = ObjectProperty.class.value(in: child) ?? .object
-                nodes.append(CMIONode(objectID: child, classID: classID, name: name, children: subtree))
-            }
+            return streams as [CMIOObjectID]
         }
-        
-        return nodes
+        return []
     }
-
+    
+    let tree = CMIONode(objectID: .systemObject,
+                        properties: Properties(classID: .system, name: "System"),
+                        hierarchy: .custom(ObjectTreeDataSource.cmioChildren))
 }

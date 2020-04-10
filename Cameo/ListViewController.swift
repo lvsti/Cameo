@@ -8,6 +8,7 @@
 
 import Cocoa
 import CoreMediaIO
+import CMIOKit
 import Carbon.HIToolbox
 
 
@@ -33,8 +34,6 @@ final class ListViewController: NSViewController {
         super.viewDidLoad()
         
         (NSApp.delegate as? AppDelegate)?.window.toolbar = toolbar
-        
-        objectTreeDataSource.reload()
         
         outlineView.reloadData()
         outlineView.expandItem(nil, expandChildren: true)
@@ -65,7 +64,7 @@ final class ListViewController: NSViewController {
             return
         }
         
-        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode<Properties>
         
         propertyListDataSource.reload(forNode: node, scope: currentScope)
         tableView.reloadData()
@@ -76,8 +75,8 @@ final class ListViewController: NSViewController {
             return
         }
         
-        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
-        guard node.classID.isSubclass(of: .control) else {
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode<Properties>
+        guard node.properties.classID.isSubclass(of: .control) else {
             return
         }
         
@@ -89,7 +88,7 @@ final class ListViewController: NSViewController {
             return
         }
         
-        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode<Properties>
 
         let scopes: [CMIOObjectPropertyScope] = [
             .global,
@@ -108,7 +107,7 @@ final class ListViewController: NSViewController {
             return
         }
         
-        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode<Properties>
         let item = propertyListDataSource.items[tableView.selectedRow]
         
         switch item.property.readSemantics {
@@ -127,9 +126,9 @@ extension ListViewController: NSOutlineViewDelegate {
             return
         }
         
-        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode
+        let node = outlineView.item(atRow: outlineView.selectedRow) as! CMIONode<Properties>
         
-        adjustControlToolbarItem.isEnabled = node.classID.isSubclass(of: .control)
+        adjustControlToolbarItem.isEnabled = node.properties.classID.isSubclass(of: .control)
         
         let index = toolbar.items.firstIndex(where: { $0.itemIdentifier == scopeToolbarItemID })!
         toolbar.removeItem(at: index)
@@ -153,8 +152,8 @@ extension ListViewController: NSToolbarDelegate {
         let previousScopeIndex = scopeSelector.selectedSegment
         
         if outlineView.selectedRow >= 0,
-           let node = outlineView.item(atRow: outlineView.selectedRow) as? CMIONode,
-           node.classID.isSubclass(of: .device) {
+           let node = outlineView.item(atRow: outlineView.selectedRow) as? CMIONode<Properties>,
+           node.properties.classID.isSubclass(of: .device) {
             scopeSelector.segmentCount = 4
             
             ["Global", "Input", "Output", "Play-thru"].enumerated().forEach { tuple in
@@ -187,7 +186,7 @@ extension ListViewController: NSOutlineViewDataSource {
             return 1
         }
         
-        return (item as! CMIONode).children.count
+        return (item as! CMIONode<Properties>).children.count
     }
 
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
@@ -195,11 +194,11 @@ extension ListViewController: NSOutlineViewDataSource {
             return objectTreeDataSource.tree
         }
         
-        return (item as! CMIONode).children[index]
+        return (item as! CMIONode<Properties>).children[index]
     }
 
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        return !(item as! CMIONode).children.isEmpty
+        return !(item as! CMIONode<Properties>).children.isEmpty
     }
     
     func outlineView(_ outlineView: NSOutlineView, objectValueFor tableColumn: NSTableColumn?, byItem item: Any?) -> Any? {
@@ -209,16 +208,16 @@ extension ListViewController: NSOutlineViewDataSource {
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"),
                                         owner: nil) as! NSTableCellView
-        let node = item as! CMIONode
-        view.textField?.stringValue = node.name
+        let node = item as! CMIONode<Properties>
+        view.textField?.stringValue = node.properties.name
         
         var image: NSImage?
-        switch node.classID {
+        switch node.properties.classID {
         case .system: image = NSImage(named: NSImage.networkName)
         case .plugIn: image = NSImage(named: NSImage.shareTemplateName)
         case .device: image = NSImage(named: NSImage.computerName)
         case .stream: image = NSImage(named: NSImage.slideshowTemplateName)
-        case _ where node.classID.isSubclass(of: .control):
+        case _ where node.properties.classID.isSubclass(of: .control):
             image = NSImage(named: NSImage.preferencesGeneralName)
         default: image = NSImage(named: NSImage.touchBarIconViewTemplateName)
         }

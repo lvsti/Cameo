@@ -21,7 +21,7 @@ struct PropertyListItem {
 class PropertyListDataSource {
     private(set) var items: [PropertyListItem] = []
     
-    func reload(forNode node: CMIONode?, scope: CMIOObjectPropertyScope) {
+    func reload(forNode node: CMIONode<Properties>?, scope: CMIOObjectPropertyScope) {
         items.removeAll()
         
         guard let node = node else {
@@ -42,30 +42,30 @@ class PropertyListDataSource {
 
         items.append(contentsOf: properties(from: ObjectProperty.self, scope: scope, in: node.objectID))
 
-        if node.classID.isSubclass(of: .device) {
+        if node.properties.classID.isSubclass(of: .device) {
             items.append(contentsOf: properties(from: DeviceProperty.self, scope: scope, in: node.objectID))
         }
-        else if node.classID.isSubclass(of: .stream) {
+        else if node.properties.classID.isSubclass(of: .stream) {
             items.append(contentsOf: properties(from: StreamProperty.self, scope: scope, in: node.objectID))
         }
-        else if node.classID.isSubclass(of: .control) {
+        else if node.properties.classID.isSubclass(of: .control) {
             items.append(contentsOf: properties(from: ControlProperty.self, scope: scope, in: node.objectID))
             
-            if node.classID.isSubclass(of: .booleanControl) {
+            if node.properties.classID.isSubclass(of: .booleanControl) {
                 items.append(contentsOf: properties(from: BooleanControlProperty.self, scope: scope, in: node.objectID))
             }
-            else if node.classID.isSubclass(of: .selectorControl) {
+            else if node.properties.classID.isSubclass(of: .selectorControl) {
                 items.append(contentsOf: properties(from: SelectorControlProperty.self, scope: scope, in: node.objectID))
             }
-            else if node.classID.isSubclass(of: .featureControl) {
+            else if node.properties.classID.isSubclass(of: .featureControl) {
                 items.append(contentsOf: properties(from: FeatureControlProperty.self, scope: scope, in: node.objectID))
                 
-                if node.classID.isSubclass(of: .exposureControl) {
+                if node.properties.classID.isSubclass(of: .exposureControl) {
                     items.append(contentsOf: properties(from: ExposureControlProperty.self, scope: scope, in: node.objectID))
                 }
             }
         }
-        else if node.classID == .system {
+        else if node.properties.classID == .system {
             items.append(contentsOf: properties(from: SystemProperty.self, scope: scope, in: node.objectID))
         }
     }
