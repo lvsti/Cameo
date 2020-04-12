@@ -335,11 +335,82 @@ public extension Property {
     }
     
     @discardableResult
-    func setValue<T>(_ value: T,
-                     scope: CMIOObjectPropertyScope = .anyScope,
-                     element: CMIOObjectPropertyElement = .anyElement,
-                     qualifiedBy qualifier: QualifierProtocol? = nil,
-                     in objectID: CMIOObjectID) -> Bool {
+    func setValue(_ value: PropertyValue,
+                  scope: CMIOObjectPropertyScope = .anyScope,
+                  element: CMIOObjectPropertyElement = .anyElement,
+                  qualifiedBy qualifier: QualifierProtocol? = nil,
+                  in objectID: CMIOObjectID) -> Bool {
+        func setRawValue<T>(_ rawValue: T) -> Bool {
+            return setValue(rawValue, scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
+        }
+        
+        switch type {
+        case .boolean:
+            if case .boolean(let v) = value { return setRawValue(DarwinBoolean(booleanLiteral: v)) }
+        case .boolean32:
+            if case .boolean(let v) = value { return setRawValue(UInt32(v ? 1 : 0)) }
+            if case .uint32(let v) = value { return setRawValue(v) }
+        case .uint32:
+            if case .uint32(let v) = value { return setRawValue(v) }
+        case .int32:
+            if case .int32(let v) = value { return setRawValue(v) }
+        case .uint64:
+            if case .uint64(let v) = value { return setRawValue(v) }
+        case .float32:
+            if case .float32(let v) = value { return setRawValue(v) }
+        case .float64:
+            if case .float64(let v) = value { return setRawValue(v) }
+        case .classID:
+            if case .classID(let v) = value { return setRawValue(v) }
+        case .objectID:
+            if case .objectID(let v) = value { return setRawValue(v) }
+        case .fourCC:
+            if case .fourCC(let v) = value { return setRawValue(v) }
+        case .audioValueTranslation:
+            // handled by translateValue()
+            return false
+        case .audioValueRange:
+            if case .audioValueRange(let v) = value { return setRawValue(v) }
+        case .propertyAddress:
+            if case .propertyAddress(let v) = value { return setRawValue(v) }
+        case .streamConfiguration:
+            assertionFailure("not implemented")
+            return false
+        case .pid:
+            if case .pid(let v) = value { return setRawValue(v) }
+        case .time:
+            if case .time(let v) = value { return setRawValue(v) }
+        case .rect:
+            if case .rect(let v) = value { return setRawValue(v) }
+        case .streamDeck:
+            if case .streamDeck(let v) = value { return setRawValue(v) }
+        case .smpteCallback:
+            if case .smpteCallback(let v) = value { return setRawValue(v) }
+        case .scheduledOutputCallback:
+            if case .scheduledOutputCallback(let v) = value { return setRawValue(v) }
+        case .array:
+            assertionFailure("not implemented")
+            return false
+        case .string:
+            if case .string(let v) = value { return setRawValue(v as CFString) }
+        case .formatDescription:
+            if case .formatDescription(let v) = value { return setRawValue(v) }
+        case .sampleBuffer:
+            if case .sampleBuffer(let v) = value { return setRawValue(v) }
+        case .clock:
+            if case .clock(let v) = value { return setRawValue(v) }
+        default:
+            assertionFailure("unhandled property type: \(type)")
+        }
+        
+        return false
+    }
+    
+    private func setValue<T>(_ value: T,
+                             scope: CMIOObjectPropertyScope = .anyScope,
+                             element: CMIOObjectPropertyElement = .anyElement,
+                             qualifiedBy qualifier: QualifierProtocol? = nil,
+                             in objectID: CMIOObjectID) -> Bool {
         var address = CMIOObjectPropertyAddress(selector, scope, element)
         let dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
         var value = value
@@ -350,10 +421,41 @@ public extension Property {
         return status == kCMIOHardwareNoError
     }
     
-    func translateValue<T, U>(_ value: T,
-                              scope: CMIOObjectPropertyScope = .anyScope,
-                              element: CMIOObjectPropertyElement = .anyElement,
-                              in objectID: CMIOObjectID) -> U? {
+    func translateValue(_ value: PropertyValue,
+                        scope: CMIOObjectPropertyScope = .anyScope,
+                        element: CMIOObjectPropertyElement = .anyElement,
+                        in objectID: CMIOObjectID) -> PropertyValue? {
+        guard case .translation(let fromType, let toType) = readSemantics else {
+            return nil
+        }
+        
+        func getTranslatedValue<U>() -> U? {
+            switch fromType {
+            case .string:
+                if case .string(let v) = value {
+                    return translateValue(v as CFString, scope: scope, element: element, in: objectID)
+                }
+            default: break
+            }
+            return nil
+        }
+        
+        switch toType {
+        case .objectID:
+            if let value: CMIOObjectID = getTranslatedValue() {
+                return .objectID(value)
+            }
+        default:
+            break
+        }
+        
+        return nil
+    }
+    
+    private func translateValue<T, U>(_ value: T,
+                                      scope: CMIOObjectPropertyScope = .anyScope,
+                                      element: CMIOObjectPropertyElement = .anyElement,
+                                      in objectID: CMIOObjectID) -> U? {
         guard case .translation = readSemantics else {
             return nil
         }
