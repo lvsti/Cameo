@@ -116,17 +116,17 @@ public extension PropertySet {
 }
 
 public extension Property {
-    public func exists(scope: CMIOObjectPropertyScope = .anyScope,
-                       element: CMIOObjectPropertyElement = .anyElement,
-                       in objectID: CMIOObjectID) -> Bool {
+    func exists(scope: CMIOObjectPropertyScope = .anyScope,
+                element: CMIOObjectPropertyElement = .anyElement,
+                in objectID: CMIOObjectID) -> Bool {
         var address = CMIOObjectPropertyAddress(selector, scope, element)
         
         return CMIOObjectHasProperty(objectID, &address)
     }
     
-    public func isSettable(scope: CMIOObjectPropertyScope = .anyScope,
-                           element: CMIOObjectPropertyElement = .anyElement,
-                           in objectID: CMIOObjectID) -> Bool {
+    func isSettable(scope: CMIOObjectPropertyScope = .anyScope,
+                    element: CMIOObjectPropertyElement = .anyElement,
+                    in objectID: CMIOObjectID) -> Bool {
         var address = CMIOObjectPropertyAddress(selector, scope, element)
         
         var isSettable: DarwinBoolean = false
@@ -139,10 +139,10 @@ public extension Property {
         return isSettable.boolValue
     }
     
-    public func value(scope: CMIOObjectPropertyScope = .anyScope,
-                      element: CMIOObjectPropertyElement = .anyElement,
-                      qualifiedBy qualifier: QualifierProtocol? = nil,
-                      in objectID: CMIOObjectID) -> PropertyValue? {
+    func value(scope: CMIOObjectPropertyScope = .anyScope,
+               element: CMIOObjectPropertyElement = .anyElement,
+               qualifiedBy qualifier: QualifierProtocol? = nil,
+               in objectID: CMIOObjectID) -> PropertyValue? {
         func getValue<T>() -> T? {
             return value(scope: scope, element: element, qualifiedBy: qualifier, in: objectID)
         }
@@ -347,11 +347,11 @@ public extension Property {
     }
     
     @discardableResult
-    public func setValue<T>(_ value: T,
-                            scope: CMIOObjectPropertyScope = .anyScope,
-                            element: CMIOObjectPropertyElement = .anyElement,
-                            qualifiedBy qualifier: QualifierProtocol? = nil,
-                            in objectID: CMIOObjectID) -> Bool {
+    func setValue<T>(_ value: T,
+                     scope: CMIOObjectPropertyScope = .anyScope,
+                     element: CMIOObjectPropertyElement = .anyElement,
+                     qualifiedBy qualifier: QualifierProtocol? = nil,
+                     in objectID: CMIOObjectID) -> Bool {
         var address = CMIOObjectPropertyAddress(selector, scope, element)
         let dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
         var value = value
@@ -362,10 +362,10 @@ public extension Property {
         return status == kCMIOHardwareNoError
     }
     
-    public func translateValue<T, U>(_ value: T,
-                                     scope: CMIOObjectPropertyScope = .anyScope,
-                                     element: CMIOObjectPropertyElement = .anyElement,
-                                     in objectID: CMIOObjectID) -> U? {
+    func translateValue<T, U>(_ value: T,
+                              scope: CMIOObjectPropertyScope = .anyScope,
+                              element: CMIOObjectPropertyElement = .anyElement,
+                              in objectID: CMIOObjectID) -> U? {
         guard case .translation = readSemantics else {
             return nil
         }
@@ -393,11 +393,11 @@ public extension Property {
         return translatedValue.pointee
     }
 
-    public func addListener(scope: CMIOObjectPropertyScope = .anyScope,
-                            element: CMIOObjectPropertyElement = .anyElement,
-                            in objectID: CMIOObjectID,
-                            queue: DispatchQueue? = nil,
-                            block: @escaping ([CMIOObjectPropertyAddress]) -> Void) -> PropertyListener? {
+    func addListener(scope: CMIOObjectPropertyScope = .anyScope,
+                     element: CMIOObjectPropertyElement = .anyElement,
+                     in objectID: CMIOObjectID,
+                     queue: DispatchQueue? = nil,
+                     block: @escaping ([CMIOObjectPropertyAddress]) -> Void) -> PropertyListener? {
         let address = CMIOObjectPropertyAddress(selector, scope, element)
         
         return PropertyListenerImpl(objectID: objectID, address: address, queue: queue) { addressCount, addressPtr in
@@ -406,7 +406,7 @@ public extension Property {
         }
     }
     
-    public func removeListener(_ listener: PropertyListener) -> Bool {
+    func removeListener(_ listener: PropertyListener) -> Bool {
         guard let listener = listener as? PropertyListenerImpl else {
             return false
         }

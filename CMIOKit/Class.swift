@@ -98,7 +98,7 @@ public extension CMIOClassID {
         rollAbsoluteControl
     ]
 
-    public func isSubclass(of baseClassID: CMIOClassID) -> Bool {
+    func isSubclass(of baseClassID: CMIOClassID) -> Bool {
         switch baseClassID {
         case .object: return true
         case .control:
