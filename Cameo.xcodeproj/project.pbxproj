@@ -37,6 +37,7 @@
 		BEC91F5121D246CD00453456 /* ListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F5021D246CD00453456 /* ListView.xib */; };
 		BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC91F5321D2484400453456 /* CoreMediaIO.framework */; };
 		BEF5DDFD24437F0B00D1568B /* Qualifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF5DDFC24437F0B00D1568B /* Qualifier.swift */; };
+		BEF5DDFF244381CF00D1568B /* PropertyListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF5DDFE244381CF00D1568B /* PropertyListener.swift */; };
 		E807618C24353A38006B35A2 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9121E25C6A000CC1CA /* Control.swift */; };
 		E807618E24353CD7006B35A2 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = E807618D24353CD7006B35A2 /* Object.swift */; };
 /* End PBXBuildFile section */
@@ -99,6 +100,7 @@
 		BEC91F5321D2484400453456 /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
 		BEC91F5521D2581500453456 /* Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Properties.swift; sourceTree = "<group>"; };
 		BEF5DDFC24437F0B00D1568B /* Qualifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Qualifier.swift; sourceTree = "<group>"; };
+		BEF5DDFE244381CF00D1568B /* PropertyListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListener.swift; sourceTree = "<group>"; };
 		E807618D24353CD7006B35A2 /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,6 +142,7 @@
 				E807618D24353CD7006B35A2 /* Object.swift */,
 				BEC91F5521D2581500453456 /* Properties.swift */,
 				BE9EFC8521E15B7A000CC1CA /* Property.swift */,
+				BEF5DDFE244381CF00D1568B /* PropertyListener.swift */,
 				BEF5DDFC24437F0B00D1568B /* Qualifier.swift */,
 			);
 			path = CMIOKit;
@@ -324,6 +327,7 @@
 				E807618E24353CD7006B35A2 /* Object.swift in Sources */,
 				BEC255B321F384D00053F137 /* Property.swift in Sources */,
 				E807618C24353A38006B35A2 /* Control.swift in Sources */,
+				BEF5DDFF244381CF00D1568B /* PropertyListener.swift in Sources */,
 				BEC255B221F384BF0053F137 /* Properties.swift in Sources */,
 				BEF5DDFD24437F0B00D1568B /* Qualifier.swift in Sources */,
 				BEC255B121F384660053F137 /* Class.swift in Sources */,
