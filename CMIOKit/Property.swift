@@ -52,7 +52,7 @@ public enum PropertyType {
 }
 
 public enum PropertyValue {
-    case boolean(Bool), boolean32(UInt32), int32(Int32), uint32(UInt32), uint64(UInt64),
+    case boolean(Bool), int32(Int32), uint32(UInt32), uint64(UInt64),
         float32(Float32), float64(Float64),
         classID(CMIOClassID), objectID(CMIOObjectID), fourCC(UInt32),
         audioValueRange(AudioValueRange), propertyAddress(CMIOObjectPropertyAddress),
