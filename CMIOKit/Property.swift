@@ -13,27 +13,6 @@ import CoreServices.CarbonCore.Components
 #endif
 
 
-public protocol QualifierProtocol {
-    var data: UnsafeMutableRawPointer { get }
-    var size: Int { get }
-}
-
-public class Qualifier<T>: QualifierProtocol {
-    public let data: UnsafeMutableRawPointer
-    public let size: Int
-    
-    public init(from scalar: T) {
-        size = MemoryLayout<T>.size
-        data = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: MemoryLayout<T>.alignment)
-        let typedData = data.bindMemory(to: T.self, capacity: 1)
-        typedData.pointee = scalar
-    }
-    
-    deinit {
-        data.deallocate()
-    }
-}
-
 public enum PropertyReadSemantics {
     case read, translation(PropertyType, PropertyType), optionallyQualifiedRead(PropertyType), qualifiedRead(PropertyType)
 }
