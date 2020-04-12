@@ -60,7 +60,8 @@ public enum PropertyValue {
         pid(pid_t),
         smpteCallback(CMIODeviceSMPTETimeCallback),
         scheduledOutputCallback(CMIOStreamScheduledOutputNotificationProcAndRefCon),
-        time(CMTime), rect(CGRect)
+        time(CMTime), rect(CGRect),
+        propertyScope(CMIOObjectPropertyScope), propertyElement(CMIOObjectPropertyElement)
     case string(String), formatDescription(CMFormatDescription), sampleBuffer(CMSampleBuffer), clock(CFTypeRef)
     case arrayOfUInt32s([UInt32])
     case arrayOfFloat64s([Float64])
@@ -191,6 +192,14 @@ public extension Property {
         case .fourCC:
             if let value: UInt32 = getValue() {
                 return .fourCC(value)
+            }
+        case .propertyScope:
+            if let value: CMIOObjectPropertyScope = getValue() {
+                return .propertyScope(value)
+            }
+        case .propertyElement:
+            if let value: CMIOObjectPropertyElement = getValue() {
+                return .propertyElement(value)
             }
         case .audioValueTranslation:
             // handled by translateValue()

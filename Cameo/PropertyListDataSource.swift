@@ -78,16 +78,21 @@ class PropertyListDataSource {
                                   element: .anyElement,
                                   in: objectID)
         for prop in props {
-            let isFourCC: Bool
+            var fourCC: UInt32?
             switch prop.type {
-            case .classID, .fourCC, .propertyScope, .propertyElement: isFourCC = true
-            default: isFourCC = false
+            case .classID, .fourCC, .propertyScope, .propertyElement:
+                let value = prop.value(scope: scope, in: objectID)
+                switch value {
+                case .classID(let v), .fourCC(let v), .propertyScope(let v), .propertyElement(let v): fourCC = v
+                default: break
+                }
+            default: break
             }
             let item = PropertyListItem(property: prop,
                                         name: "\(prop)",
                                         isSettable: prop.isSettable(scope: scope, in: objectID),
                                         value: prop.description(scope: scope, in: objectID) ?? "#ERROR",
-                                        fourCC: isFourCC ? prop.value(scope: scope, in: objectID) : nil)
+                                        fourCC: fourCC)
             propertyList.append(item)
         }
         return propertyList
