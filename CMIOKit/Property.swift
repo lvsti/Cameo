@@ -285,10 +285,10 @@ public extension Property {
         return nil
     }
 
-    func value<T>(scope: CMIOObjectPropertyScope = .anyScope,
-                  element: CMIOObjectPropertyElement = .anyElement,
-                  qualifiedBy qualifier: QualifierProtocol? = nil,
-                  in objectID: CMIOObjectID) -> T? {
+    private func value<T>(scope: CMIOObjectPropertyScope = .anyScope,
+                          element: CMIOObjectPropertyElement = .anyElement,
+                          qualifiedBy qualifier: QualifierProtocol? = nil,
+                          in objectID: CMIOObjectID) -> T? {
         switch readSemantics {
         case .qualifiedRead where qualifier == nil: return nil
         default: break
@@ -311,10 +311,10 @@ public extension Property {
         return typedData.pointee
     }
     
-    func arrayValue<T>(scope: CMIOObjectPropertyScope = .anyScope,
-                       element: CMIOObjectPropertyElement = .anyElement,
-                       qualifiedBy qualifier: QualifierProtocol? = nil,
-                       in objectID: CMIOObjectID) -> [T]? {
+    private func arrayValue<T>(scope: CMIOObjectPropertyScope = .anyScope,
+                               element: CMIOObjectPropertyElement = .anyElement,
+                               qualifiedBy qualifier: QualifierProtocol? = nil,
+                               in objectID: CMIOObjectID) -> [T]? {
         switch readSemantics {
         case .qualifiedRead where qualifier == nil: return nil
         default: break

@@ -51,35 +51,31 @@ enum CMIOError: Error {
 public enum Control {
     public static func model(for controlID: CMIOObjectID) -> ControlModel? {
         guard
-            let classID: CMIOClassID = ObjectProperty.class.value(in: controlID),
-            let cfName: CFString = ObjectProperty.name.value(in: controlID)
+            case .classID(let classID) = ObjectProperty.class.value(in: controlID),
+            case .string(let name) = ObjectProperty.name.value(in: controlID)
         else {
             return nil
         }
         
-        let name = cfName as String
-        
         if classID.isSubclass(of: .booleanControl) {
-            guard
-                let value: UInt32 = BooleanControlProperty.value.value(in: controlID)
-            else {
+            guard case .boolean(let value) = BooleanControlProperty.value.value(in: controlID) else {
                 return nil
             }
             
-            return .boolean(BooleanControlModel(controlID: controlID, name: name, value: value != 0))
+            return .boolean(BooleanControlModel(controlID: controlID, name: name, value: value))
         }
         else if classID.isSubclass(of: .selectorControl) {
             guard
-                let itemIDs: [UInt32] = SelectorControlProperty.availableItems.arrayValue(in: controlID),
+                case .arrayOfUInt32s(let itemIDs) = SelectorControlProperty.availableItems.value(in: controlID),
                 let items: [(UInt32, String)] = try? itemIDs.map({
-                    guard let cfItemName: CFString = SelectorControlProperty.itemName.value(qualifiedBy: Qualifier(from: $0),
-                                                                                            in: controlID)
+                    guard case .string(let itemName) = SelectorControlProperty.itemName.value(qualifiedBy: Qualifier(from: $0),
+                                                                                              in: controlID)
                     else {
                         throw CMIOError.unknown
                     }
-                    return ($0, cfItemName as String)
+                    return ($0, itemName)
                 }),
-                let currentItemID: UInt32 = SelectorControlProperty.currentItem.value(in: controlID)
+                case .uint32(let currentItemID) = SelectorControlProperty.currentItem.value(in: controlID)
             else {
                 return nil
             }
@@ -91,10 +87,10 @@ public enum Control {
         }
         else if classID.isSubclass(of: .featureControl) {
             guard
-                let isEnabled: UInt32 = FeatureControlProperty.onOff.value(in: controlID),
-                let isAutomatic: UInt32 = FeatureControlProperty.automaticManual.value(in: controlID),
-                let isInAbsoluteUnits: UInt32 = FeatureControlProperty.absoluteNative.value(in: controlID),
-                let isTuning: UInt32 = FeatureControlProperty.tune.value(in: controlID)
+                case .boolean(let isEnabled) = FeatureControlProperty.onOff.value(in: controlID),
+                case .boolean(let isAutomatic) = FeatureControlProperty.automaticManual.value(in: controlID),
+                case .boolean(let isInAbsoluteUnits) = FeatureControlProperty.absoluteNative.value(in: controlID),
+                case .boolean(let isTuning) = FeatureControlProperty.tune.value(in: controlID)
             else {
                 return nil
             }
@@ -102,34 +98,34 @@ public enum Control {
             var model = FeatureControlModel()
             model.controlID = controlID
             model.name = name
-            model.isEnabled = isEnabled != 0
-            model.isAutomatic = isAutomatic != 0
-            model.isInAbsoluteUnits = isInAbsoluteUnits != 0
-            model.isTuning = isTuning != 0
+            model.isEnabled = isEnabled
+            model.isAutomatic = isAutomatic
+            model.isInAbsoluteUnits = isInAbsoluteUnits
+            model.isTuning = isTuning
             
-            if isInAbsoluteUnits != 0 {
+            if isInAbsoluteUnits {
                 guard
-                    let cfUnitName: CFString = FeatureControlProperty.absoluteUnitName.value(in: controlID),
-                    let range: AudioValueRange = FeatureControlProperty.absoluteRange.value(in: controlID),
-                    let currentValue: Float = FeatureControlProperty.absoluteValue.value(in: controlID)
+                    case .string(let unitName) = FeatureControlProperty.absoluteUnitName.value(in: controlID),
+                    case .audioValueRange(let range) = FeatureControlProperty.absoluteRange.value(in: controlID),
+                    case .float32(let currentValue) = FeatureControlProperty.absoluteValue.value(in: controlID)
                 else {
                     return nil
                 }
-                model.unitName = cfUnitName as String
+                model.unitName = unitName
                 model.minValue = Float(range.mMinimum)
                 model.maxValue = Float(range.mMaximum)
-                model.currentValue = currentValue
+                model.currentValue = Float(currentValue)
             }
             else {
                 guard
-                    let range: AudioValueRange = FeatureControlProperty.nativeRange.value(in: controlID),
-                    let currentValue: Float = FeatureControlProperty.nativeValue.value(in: controlID)
+                    case .audioValueRange(let range) = FeatureControlProperty.nativeRange.value(in: controlID),
+                    case .float32(let currentValue) = FeatureControlProperty.nativeValue.value(in: controlID)
                 else {
                     return nil
                 }
                 model.minValue = Float(range.mMinimum)
                 model.maxValue = Float(range.mMaximum)
-                model.currentValue = currentValue
+                model.currentValue = Float(currentValue)
             }
 
             return .feature(model)

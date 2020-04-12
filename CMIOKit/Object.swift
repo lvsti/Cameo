@@ -32,8 +32,14 @@ public struct CMIONode<P: CMIOPropertySource> {
     public var children: [CMIONode] {
         let children: [CMIOObjectID]
         switch hierarchy {
-        case .ownedObjects: children = ObjectProperty.ownedObjects.arrayValue(in: objectID) ?? []
-        case .custom(let provider): children = provider(objectID)
+        case .ownedObjects:
+            guard case .arrayOfObjectIDs(let objectIDs) = ObjectProperty.ownedObjects.value(in: objectID) else {
+                children = []
+                break
+            }
+            children = objectIDs
+        case .custom(let provider):
+            children = provider(objectID)
         }
         return children.map { CMIONode(objectID: $0, properties: P.properties(for: $0), hierarchy: hierarchy) }
     }
