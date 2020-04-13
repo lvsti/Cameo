@@ -137,7 +137,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.value = booleanValueCheckbox.state == .on
         
         guard
-            BooleanControlProperty.value.setValue(UInt32(model.value ? 1 : 0), in: model.controlID)
+            BooleanControlProperty.value.setValue(.boolean(model.value), in: model.controlID)
         else {
             updateUI()
             return
@@ -154,7 +154,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.currentItemID = model.items[sender.tag].0
         
         guard
-            SelectorControlProperty.currentItem.setValue(model.currentItemID, in: model.controlID)
+            SelectorControlProperty.currentItem.setValue(.uint32(model.currentItemID), in: model.controlID)
         else {
             updateUI()
             return
@@ -171,7 +171,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.isEnabled = featureEnabledCheckbox.state == .on
         
         guard
-            FeatureControlProperty.onOff.setValue(UInt32(model.isEnabled ? 1 : 0), in: model.controlID)
+            FeatureControlProperty.onOff.setValue(.boolean(model.isEnabled), in: model.controlID)
         else {
             updateUI()
             return
@@ -188,7 +188,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.isAutomatic = sender == featureAutomaticRadio
         
         guard
-            FeatureControlProperty.automaticManual.setValue(UInt32(model.isAutomatic ? 1 : 0), in: model.controlID)
+            FeatureControlProperty.automaticManual.setValue(.boolean(model.isAutomatic), in: model.controlID)
         else {
             updateUI()
             return
@@ -206,7 +206,7 @@ final class AdjustControlPanelController: NSWindowController {
         
         let property: FeatureControlProperty = model.isInAbsoluteUnits ? .absoluteValue : .nativeValue
         guard
-            property.setValue(model.currentValue, in: model.controlID)
+            property.setValue(.float32(model.currentValue), in: model.controlID)
         else {
             updateUI()
             return
@@ -224,7 +224,7 @@ final class AdjustControlPanelController: NSWindowController {
         
         let property: FeatureControlProperty = model.isInAbsoluteUnits ? .absoluteValue : .nativeValue
         guard
-            property.setValue(model.currentValue, in: model.controlID)
+            property.setValue(.float32(model.currentValue), in: model.controlID)
         else {
             updateUI()
             return
@@ -241,7 +241,7 @@ final class AdjustControlPanelController: NSWindowController {
         model.isTuning = true
         
         guard
-            FeatureControlProperty.tune.setValue(model.currentValue, in: model.controlID)
+            FeatureControlProperty.tune.setValue(.float32(model.currentValue), in: model.controlID)
         else {
             updateUI()
             return

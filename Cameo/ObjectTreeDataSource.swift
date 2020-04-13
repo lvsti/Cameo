@@ -15,7 +15,11 @@ struct Properties: CMIOPropertySource {
     let name: String
 
     static func properties(for objectID: CMIOObjectID) -> Properties {
-        let classID: CMIOClassID = ObjectProperty.class.value(in: objectID) ?? .object
+        var classID = CMIOClassID.object
+        if case .classID(let v) = ObjectProperty.class.value(in: objectID) {
+            classID = v
+        }
+
         let name = ObjectProperty.name.description(in: objectID) ?? "<untitled @\(objectID)>"
         return Properties(classID: classID, name: name)
     }
@@ -24,13 +28,13 @@ struct Properties: CMIOPropertySource {
 final class ObjectTreeDataSource {
     
     private static func cmioChildren(for objectID: CMIOObjectID) -> [CMIOObjectID] {
-        if let ownedObjects: [CMIOObjectID] = ObjectProperty.ownedObjects.arrayValue(in: objectID) {
+        if case .arrayOfObjectIDs(let ownedObjects) = ObjectProperty.ownedObjects.value(in: objectID) {
             return ownedObjects
         }
-        else if let classID: CMIOClassID = ObjectProperty.class.value(in: objectID),
+        else if case .classID(let classID) = ObjectProperty.class.value(in: objectID),
             classID.isSubclass(of: .device),
-            let streams: [CMIOStreamID] = DeviceProperty.streams.arrayValue(in: objectID) {
-            return streams as [CMIOObjectID]
+            case .arrayOfObjectIDs(let streams) = DeviceProperty.streams.value(in: objectID) {
+            return streams
         }
         return []
     }

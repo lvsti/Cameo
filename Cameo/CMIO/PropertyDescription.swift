@@ -63,7 +63,6 @@ extension Property {
         case .formatDescription(let v): return "\(v)"
         case .sampleBuffer(let v): return "\(v)"
         case .clock(let v): return "\(v)"
-        case .boolean32(let v): return v != 0 ? "true (\(v))" : "false (0)"
         case .classID(let v), .fourCC(let v), .propertyScope(let v), .propertyElement(let v):
             if let fcc = fourCCDescription(from: v) {
                 return fcc
@@ -86,7 +85,7 @@ extension Property {
         case .smpteCallback(let v):
             if v.mGetSMPTETimeProc != nil {
                 let ctx = v.mRefCon != nil ? "\(v.mRefCon!)" : "0x0"
-                return "CMIODeviceSMPTETimeCallback {proc=\(v.mGetSMPTETimeProc!), ctx=\(ctx)}"
+                return "CMIODeviceSMPTETimeCallback {proc=\(String(describing: v.mGetSMPTETimeProc!)), ctx=\(ctx)}"
             }
             else {
                 return "<null>"
@@ -94,7 +93,7 @@ extension Property {
         case .scheduledOutputCallback(let v):
             if v.scheduledOutputNotificationProc != nil {
                 let ctx = v.scheduledOutputNotificationRefCon != nil ? "\(v.scheduledOutputNotificationRefCon!)" : "0x0"
-                return "CMIOStreamScheduledOutputNotificationProcAndRefCon {proc=\(v.scheduledOutputNotificationProc!), ctx=\(ctx)"
+                return "CMIOStreamScheduledOutputNotificationProcAndRefCon {proc=\(String(describing: v.scheduledOutputNotificationProc!)), ctx=\(ctx)"
             }
             else {
                 return "<null>"
@@ -109,42 +108,43 @@ extension Property {
         case .arrayOfComponentDescriptions:
             return "\(value)"
 #endif
-        default:
-            break
         }
-        
-        return nil
     }
     
-    func descriptionForTranslating<T>(_ value: T,
-                                      scope: CMIOObjectPropertyScope = .anyScope,
-                                      element: CMIOObjectPropertyElement = .anyElement,
-                                      in objectID: CMIOObjectID) -> String? {
-        guard case .translation(let fromType, let toType) = readSemantics else {
-            return nil
-        }
-        
-        func getTranslatedValue<U>() -> U? {
+    func descriptionForTranslating(_ stringValue: String,
+                                   scope: CMIOObjectPropertyScope = .anyScope,
+                                   element: CMIOObjectPropertyElement = .anyElement,
+                                   in objectID: CMIOObjectID) -> String? {
+        switch readSemantics {
+        case .mutatingRead:
+            switch type {
+            case .float32:
+                if let value = Float32(stringValue),
+                   case .float32(let v) = translateValue(.float32(value), scope: scope, element: element, in: objectID) {
+                    return "\(v)"
+                }
+            default:
+                return nil
+            }
+        case .translation(let fromType, let toType):
+            let value: PropertyValue
             switch fromType {
-            case .string:
-                return translateValue(value as! CFString,
-                                      scope: scope,
-                                      element: element,
-                                      in: objectID)
+            case .string: value = .string(stringValue)
+            default: return nil
+            }
+            
+            switch toType {
+            case .objectID:
+                if case .objectID(let v) = translateValue(value, scope: scope, element: element, in: objectID) {
+                    return v != .unknown ? "@\(value)" : "<null>"
+                }
             default:
                 break
             }
+        default:
             return nil
         }
 
-        switch toType {
-        case .objectID:
-            if let value: CMIOObjectID = getTranslatedValue() {
-                return value != .unknown ? "@\(value)" : "<null>"
-            }
-        default:
-            break
-        }
 
         return nil
     }

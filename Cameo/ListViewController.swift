@@ -111,7 +111,7 @@ final class ListViewController: NSViewController {
         let item = propertyListDataSource.items[tableView.selectedRow]
         
         switch item.property.readSemantics {
-        case .translation:
+        case .mutatingRead, .translation:
             (NSApp.delegate as? AppDelegate)?.showTranslationPanel(for: item.property, in: node.objectID)
             break
         default:
@@ -248,7 +248,7 @@ extension ListViewController: NSTableViewDelegate {
             view.textField?.stringValue = item.name
             switch item.property.readSemantics {
             case .read: view.imageView?.image = #imageLiteral(resourceName: "read")
-            case .translation: view.imageView?.image = #imageLiteral(resourceName: "translation")
+            case .mutatingRead, .translation: view.imageView?.image = #imageLiteral(resourceName: "translation")
             case .qualifiedRead: view.imageView?.image = #imageLiteral(resourceName: "qualified")
             case .optionallyQualifiedRead: view.imageView?.image = #imageLiteral(resourceName: "qualified_opt")
             }
