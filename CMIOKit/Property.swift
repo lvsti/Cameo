@@ -68,15 +68,28 @@ public enum PropertyValue {
 }
 
 public extension CMIOObjectPropertyScope {
+    /// The CMIOObjectPropertyScope for properties that apply to the object as a whole.
+    /// All CMIOObjects have a global scope and for some it is their only scope.
     static let global = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal)
+    
+    /// The wildcard value for CMIOObjectPropertyScopes.
     static let anyScope = CMIOObjectPropertyScope(kCMIOObjectPropertyScopeWildcard)
+    
+    /// The CMIOObjectPropertyScope for properties that apply to the input signal paths of the CMIODevice.
     static let deviceInput = CMIOObjectPropertyScope(kCMIODevicePropertyScopeInput)
+    
+    /// The CMIOObjectPropertyScope for properties that apply to the output signal paths of the CMIODevice.
     static let deviceOutput = CMIOObjectPropertyScope(kCMIODevicePropertyScopeOutput)
+    
+    /// The CMIOObjectPropertyScope for properties that apply to the play through signal paths of the CMIODevice.
     static let devicePlayThrough = CMIOObjectPropertyScope(kCMIODevicePropertyScopePlayThrough)
 }
 
 public extension CMIOObjectPropertyElement {
+    /// The CMIOObjectPropertyElement value for properties that apply to the master element or to the entire scope.
     static let master = CMIOObjectPropertyElement(kCMIOObjectPropertyElementMaster)
+    
+    /// The wildcard value for CMIOObjectPropertyElements.
     static let anyElement = CMIOObjectPropertyElement(kCMIOObjectPropertyElementWildcard)
 }
 
@@ -96,6 +109,7 @@ public protocol Property {
 }
 
 public protocol PropertySet: Property, CaseIterable {
+    /// Returns all properties from the current set that are defined in the given object
     static func allExisting(scope: CMIOObjectPropertyScope,
                             element: CMIOObjectPropertyElement,
                             in objectID: CMIOObjectID) -> [Self]
@@ -110,6 +124,7 @@ public extension PropertySet {
 }
 
 public extension Property {
+    /// Checks whether the property is defined in the given object
     func exists(scope: CMIOObjectPropertyScope = .anyScope,
                 element: CMIOObjectPropertyElement = .anyElement,
                 in objectID: CMIOObjectID) -> Bool {
@@ -118,6 +133,7 @@ public extension Property {
         return CMIOObjectHasProperty(objectID, &address)
     }
     
+    /// Checks whether the property can be written in the given object
     func isSettable(scope: CMIOObjectPropertyScope = .anyScope,
                     element: CMIOObjectPropertyElement = .anyElement,
                     in objectID: CMIOObjectID) -> Bool {
@@ -133,6 +149,7 @@ public extension Property {
         return isSettable.boolValue
     }
     
+    /// Gets the value of the property in the given object
     func value(scope: CMIOObjectPropertyScope = .anyScope,
                element: CMIOObjectPropertyElement = .anyElement,
                qualifiedBy qualifier: QualifierProtocol? = nil,
@@ -348,6 +365,7 @@ public extension Property {
         return UnsafeBufferPointer<T>(start: typedData, count: count).map { $0 }
     }
     
+    /// Sets the value of the property in the given object
     @discardableResult
     func setValue(_ value: PropertyValue,
                   scope: CMIOObjectPropertyScope = .anyScope,
@@ -435,6 +453,7 @@ public extension Property {
         return status == kCMIOHardwareNoError
     }
     
+    /// Performs a value translation using the property in the given object
     func translateValue(_ value: PropertyValue,
                         scope: CMIOObjectPropertyScope = .anyScope,
                         element: CMIOObjectPropertyElement = .anyElement,
