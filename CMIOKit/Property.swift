@@ -14,7 +14,21 @@ import CoreServices.CarbonCore.Components
 
 
 public enum PropertyReadSemantics {
-    case read, translation(PropertyType, PropertyType), optionallyQualifiedRead(PropertyType), qualifiedRead(PropertyType)
+    /// value is written into provided buffer
+    case read
+    
+    /// value in provided buffer is used, result is written back to buffer (in/out types are the same)
+    case mutatingRead
+    
+    /// special case of `mutatingRead`: an AudioValueTranslation object is provided with the input
+    /// and returned in place with the output
+    case translation(PropertyType, PropertyType)
+    
+    /// data in the qualifier is used, result is written into provided buffer
+    case qualifiedRead(PropertyType)
+    
+    /// data in the qualifier is used if any, result is written into provided buffer
+    case optionallyQualifiedRead(PropertyType)
 }
 
 public enum PropertyType {
@@ -424,12 +438,9 @@ public extension Property {
     func translateValue(_ value: PropertyValue,
                         scope: CMIOObjectPropertyScope = .anyScope,
                         element: CMIOObjectPropertyElement = .anyElement,
+                        qualifiedBy qualifier: QualifierProtocol? = nil,
                         in objectID: CMIOObjectID) -> PropertyValue? {
-        guard case .translation(let fromType, let toType) = readSemantics else {
-            return nil
-        }
-        
-        func getTranslatedValue<U>() -> U? {
+        func getTranslatedValue<U>(fromType: PropertyType) -> U? {
             switch fromType {
             case .string:
                 if case .string(let v) = value {
@@ -439,11 +450,37 @@ public extension Property {
             }
             return nil
         }
-        
-        switch toType {
-        case .objectID:
-            if let value: CMIOObjectID = getTranslatedValue() {
-                return .objectID(value)
+
+        func getMutatedValue<U>() -> U? {
+            switch type {
+            case .string:
+                if case .string(let v) = value {
+                    return translateValue(v as CFString, scope: scope, element: element, in: objectID)
+                }
+            default: break
+            }
+            return nil
+        }
+
+        switch readSemantics {
+        case .translation(let fromType, let toType):
+            switch toType {
+            case .objectID:
+                if let newValue: CMIOObjectID = getTranslatedValue(fromType: fromType) {
+                    return .objectID(newValue)
+                }
+            default:
+                break
+            }
+        case .mutatingRead:
+            switch type {
+            case .float32:
+                if case .float32(let v) = value,
+                   let newValue: Float32 = mutateValue(v, scope: scope, element: element, qualifiedBy: qualifier, in: objectID) {
+                    return .float32(newValue)
+                }
+            default:
+                break
             }
         default:
             break
@@ -455,6 +492,7 @@ public extension Property {
     private func translateValue<T, U>(_ value: T,
                                       scope: CMIOObjectPropertyScope = .anyScope,
                                       element: CMIOObjectPropertyElement = .anyElement,
+                                      qualifiedBy qualifier: QualifierProtocol? = nil,
                                       in objectID: CMIOObjectID) -> U? {
         guard case .translation = readSemantics else {
             return nil
@@ -473,7 +511,7 @@ public extension Property {
         var dataUsed: UInt32 = 0
         
         let status = CMIOObjectGetPropertyData(objectID, &address,
-                                               0, nil,
+                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
                                                UInt32(MemoryLayout<AudioValueTranslation>.size), &dataUsed,
                                                &translation)
         guard status == kCMIOHardwareNoError else {
@@ -481,6 +519,33 @@ public extension Property {
         }
         
         return translatedValue.pointee
+    }
+    
+    private func mutateValue<T>(_ value: T,
+                                scope: CMIOObjectPropertyScope = .anyScope,
+                                element: CMIOObjectPropertyElement = .anyElement,
+                                qualifiedBy qualifier: QualifierProtocol? = nil,
+                                in objectID: CMIOObjectID) -> T? {
+        guard case .mutatingRead = readSemantics else {
+            return nil
+        }
+        
+        var address = CMIOObjectPropertyAddress(selector, scope, element)
+        var dataSize: UInt32 = UInt32(MemoryLayout<T>.size)
+        var dataUsed: UInt32 = 0
+        var data = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<T>.alignment)
+        defer { data.deallocate() }
+        let typedData = data.bindMemory(to: T.self, capacity: 1)
+        typedData.pointee = value
+
+        let status = CMIOObjectGetPropertyData(objectID, &address,
+                                               UInt32(qualifier?.size ?? 0), qualifier?.data,
+                                               dataSize, &dataUsed, data)
+        guard status == kCMIOHardwareNoError else {
+            return nil
+        }
+        
+        return typedData.pointee
     }
 }
 

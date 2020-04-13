@@ -184,8 +184,8 @@ public enum FeatureControlProperty: PropertySetInternal {
         .absoluteValue: PropertyDescriptor(kCMIOFeatureControlPropertyAbsoluteValue, .float32),
         .nativeRange: PropertyDescriptor(kCMIOFeatureControlPropertyNativeRange, .audioValueRange),
         .absoluteRange: PropertyDescriptor(kCMIOFeatureControlPropertyAbsoluteRange, .audioValueRange),
-        .convertNativeToAbsolute: PropertyDescriptor(kCMIOFeatureControlPropertyConvertNativeToAbsolute, .float32),
-        .convertAbsoluteToNative: PropertyDescriptor(kCMIOFeatureControlPropertyConvertAbsoluteToNative, .float32),
+        .convertNativeToAbsolute: PropertyDescriptor(kCMIOFeatureControlPropertyConvertNativeToAbsolute, .float32, .mutatingRead),
+        .convertAbsoluteToNative: PropertyDescriptor(kCMIOFeatureControlPropertyConvertAbsoluteToNative, .float32, .mutatingRead),
         .absoluteUnitName: PropertyDescriptor(kCMIOFeatureControlPropertyAbsoluteUnitName, .string)
     ]
 }
