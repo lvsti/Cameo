@@ -252,8 +252,8 @@ public extension Property {
                     return .arrayOfAudioValueRanges(value)
                 }
             case .formatDescription:
-                if let value: [CMFormatDescription] = getArrayValue() {
-                    return .arrayOfFormatDescriptions(value)
+                if let value: CFArray = getValue(), let array = value as? [CMFormatDescription] {
+                    return .arrayOfFormatDescriptions(array)
                 }
 #if NEEDS_VIDEO_DIGITIZER_COMPONENTS
             case .componentDescription:
