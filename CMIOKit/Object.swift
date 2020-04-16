@@ -20,12 +20,12 @@ public struct CMIONode<P: CMIOPropertySource> {
     }
 
     public let objectID: CMIOObjectID
-    public let properties: P
+    public let properties: P!
     private let hierarchy: Hierarchy
 
-    public init(objectID: CMIOObjectID, properties: P, hierarchy: Hierarchy = .ownedObjects) {
+    public init(objectID: CMIOObjectID, propertySource: P.Type? = nil, hierarchy: Hierarchy = .ownedObjects) {
         self.objectID = objectID
-        self.properties = properties
+        self.properties = propertySource != nil ? Optional<P>.some(P.properties(for: objectID)) : Optional<P>.none
         self.hierarchy = hierarchy
     }
 
@@ -41,7 +41,12 @@ public struct CMIONode<P: CMIOPropertySource> {
         case .custom(let provider):
             children = provider(objectID)
         }
-        return children.map { CMIONode(objectID: $0, properties: P.properties(for: $0), hierarchy: hierarchy) }
+        
+        return children.map {
+            CMIONode(objectID: $0,
+                     propertySource: properties != nil ? type(of: properties) : nil,
+                     hierarchy: hierarchy)
+        }
     }
 }
 
