@@ -14,13 +14,13 @@ struct Properties: CMIOPropertySource {
     let classID: CMIOClassID
     let name: String
 
-    static func properties(for objectID: CMIOObjectID) -> Properties {
+    static func properties(for objectID: CMIOObjectID) -> Self {
         var classID = CMIOClassID.object
         if case .classID(let v) = ObjectProperty.class.value(in: objectID) {
             classID = v
         }
 
-        let name = ObjectProperty.name.description(in: objectID) ?? "<untitled @\(objectID)>"
+        let name = objectID == .systemObject ? "System" : ObjectProperty.name.description(in: objectID) ?? "<untitled @\(objectID)>"
         return Properties(classID: classID, name: name)
     }
 }
@@ -40,6 +40,6 @@ final class ObjectTreeDataSource {
     }
     
     let tree = CMIONode(objectID: .systemObject,
-                        properties: Properties(classID: .system, name: "System"),
+                        propertySource: Properties.self,
                         hierarchy: .custom(ObjectTreeDataSource.cmioChildren))
 }
