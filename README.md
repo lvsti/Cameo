@@ -1,6 +1,6 @@
 # Cameo
 
-A small utility to explore installed CMIO DAL plugins and their properties.
+A small utility based on [CMIOKit](https://github.com/lvsti/CMIOKit) to explore installed CMIO DAL plugins and their properties.
 
 ![screenshot](screenshot.png)
 

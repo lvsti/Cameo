@@ -1,0 +1,3 @@
+[submodule "CMIOKit"]
+	path = CMIOKit
+	url = git@github.com:lvsti/CMIOKit.git

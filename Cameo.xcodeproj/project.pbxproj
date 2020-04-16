@@ -20,12 +20,7 @@
 		BEA6FBDE21D9737900FFFB8C /* fourcc.json in Resources */ = {isa = PBXBuildFile; fileRef = BEA6FBDD21D9737900FFFB8C /* fourcc.json */; };
 		BEACA42E21D4DEB800D8DC45 /* QuickLookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */; };
 		BEACA43021D4DF8800D8DC45 /* QuickLookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */; };
-		BEC255A821F384050053F137 /* CMIOKit.h in Headers */ = {isa = PBXBuildFile; fileRef = BEC255A621F384050053F137 /* CMIOKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BEC255AB21F384050053F137 /* CMIOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC255A421F384050053F137 /* CMIOKit.framework */; };
-		BEC255AC21F384050053F137 /* CMIOKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BEC255A421F384050053F137 /* CMIOKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		BEC255B121F384660053F137 /* Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9321E25E9C000CC1CA /* Class.swift */; };
-		BEC255B221F384BF0053F137 /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F5521D2581500453456 /* Properties.swift */; };
-		BEC255B321F384D00053F137 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC8521E15B7A000CC1CA /* Property.swift */; };
+		BEB51D292448D27000F8C7A4 /* CMIOKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BEB51D262448D14200F8C7A4 /* CMIOKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BEC255B521F385510053F137 /* PropertyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B421F385510053F137 /* PropertyDescription.swift */; };
 		BEC255B721F39B7D0053F137 /* PropertyListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B621F39B7D0053F137 /* PropertyListDataSource.swift */; };
 		BEC255B921F39E950053F137 /* ObjectTreeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC255B821F39E950053F137 /* ObjectTreeDataSource.swift */; };
@@ -36,19 +31,22 @@
 		BEC91F4F21D246C200453456 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC91F4E21D246C200453456 /* ListViewController.swift */; };
 		BEC91F5121D246CD00453456 /* ListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC91F5021D246CD00453456 /* ListView.xib */; };
 		BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC91F5321D2484400453456 /* CoreMediaIO.framework */; };
-		BEF5DDFD24437F0B00D1568B /* Qualifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF5DDFC24437F0B00D1568B /* Qualifier.swift */; };
-		BEF5DDFF244381CF00D1568B /* PropertyListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF5DDFE244381CF00D1568B /* PropertyListener.swift */; };
-		E807618C24353A38006B35A2 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EFC9121E25C6A000CC1CA /* Control.swift */; };
-		E807618E24353CD7006B35A2 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = E807618D24353CD7006B35A2 /* Object.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		BEC255A921F384050053F137 /* PBXContainerItemProxy */ = {
+		BEB51D252448D14200F8C7A4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = BEC91F3521D2453B00453456 /* Project object */;
+			containerPortal = BEB51D212448D14200F8C7A4 /* CMIOKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BEB51CFF2448CCB700F8C7A4;
+			remoteInfo = CMIOKit;
+		};
+		BEB51D272448D18800F8C7A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BEB51D212448D14200F8C7A4 /* CMIOKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = BEC255A321F384050053F137;
-			remoteInfo = CameoSDK;
+			remoteGlobalIDString = BEB51CFE2448CCB700F8C7A4;
+			remoteInfo = CMIOKit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -59,7 +57,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				BEC255AC21F384050053F137 /* CMIOKit.framework in Embed Frameworks */,
+				BEB51D292448D27000F8C7A4 /* CMIOKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,11 +69,8 @@
 		BE253FFB21DBBF1400C90876 /* ValueCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueCellView.swift; sourceTree = "<group>"; };
 		BE9EFC8121E118B4000CC1CA /* PreviewWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreviewWindow.xib; sourceTree = "<group>"; };
 		BE9EFC8321E118C3000CC1CA /* PreviewWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWindowController.swift; sourceTree = "<group>"; };
-		BE9EFC8521E15B7A000CC1CA /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
 		BE9EFC8821E15F42000CC1CA /* AdjustControlPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AdjustControlPanel.xib; sourceTree = "<group>"; };
 		BE9EFC8A21E15F50000CC1CA /* AdjustControlPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustControlPanelController.swift; sourceTree = "<group>"; };
-		BE9EFC9121E25C6A000CC1CA /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
-		BE9EFC9321E25E9C000CC1CA /* Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Class.swift; sourceTree = "<group>"; };
 		BEA6FBD521D964FC00FFFB8C /* LookupWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LookupWindow.xib; sourceTree = "<group>"; };
 		BEA6FBD721D968C000FFFB8C /* LookupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindowController.swift; sourceTree = "<group>"; };
 		BEA6FBD921D96C4100FFFB8C /* LookupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupWindow.swift; sourceTree = "<group>"; };
@@ -83,9 +78,7 @@
 		BEA6FBDD21D9737900FFFB8C /* fourcc.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fourcc.json; sourceTree = "<group>"; };
 		BEACA42D21D4DEB800D8DC45 /* QuickLookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookViewController.swift; sourceTree = "<group>"; };
 		BEACA42F21D4DF8800D8DC45 /* QuickLookView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QuickLookView.xib; sourceTree = "<group>"; };
-		BEC255A421F384050053F137 /* CMIOKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CMIOKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BEC255A621F384050053F137 /* CMIOKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMIOKit.h; sourceTree = "<group>"; };
-		BEC255A721F384050053F137 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BEB51D212448D14200F8C7A4 /* CMIOKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CMIOKit.xcodeproj; path = CMIOKit/CMIOKit.xcodeproj; sourceTree = "<group>"; };
 		BEC255B421F385510053F137 /* PropertyDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyDescription.swift; sourceTree = "<group>"; };
 		BEC255B621F39B7D0053F137 /* PropertyListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListDataSource.swift; sourceTree = "<group>"; };
 		BEC255B821F39E950053F137 /* ObjectTreeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectTreeDataSource.swift; sourceTree = "<group>"; };
@@ -98,26 +91,14 @@
 		BEC91F4E21D246C200453456 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		BEC91F5021D246CD00453456 /* ListView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListView.xib; sourceTree = "<group>"; };
 		BEC91F5321D2484400453456 /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
-		BEC91F5521D2581500453456 /* Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Properties.swift; sourceTree = "<group>"; };
-		BEF5DDFC24437F0B00D1568B /* Qualifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Qualifier.swift; sourceTree = "<group>"; };
-		BEF5DDFE244381CF00D1568B /* PropertyListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListener.swift; sourceTree = "<group>"; };
-		E807618D24353CD7006B35A2 /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		BEC255A121F384050053F137 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		BEC91F3A21D2453B00453456 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				BEC91F5421D2484400453456 /* CoreMediaIO.framework in Frameworks */,
-				BEC255AB21F384050053F137 /* CMIOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,27 +113,19 @@
 			path = CMIO;
 			sourceTree = "<group>";
 		};
-		BEC255A521F384050053F137 /* CMIOKit */ = {
+		BEB51D222448D14200F8C7A4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BEC255A621F384050053F137 /* CMIOKit.h */,
-				BEC255A721F384050053F137 /* Info.plist */,
-				BE9EFC9321E25E9C000CC1CA /* Class.swift */,
-				BE9EFC9121E25C6A000CC1CA /* Control.swift */,
-				E807618D24353CD7006B35A2 /* Object.swift */,
-				BEC91F5521D2581500453456 /* Properties.swift */,
-				BE9EFC8521E15B7A000CC1CA /* Property.swift */,
-				BEF5DDFE244381CF00D1568B /* PropertyListener.swift */,
-				BEF5DDFC24437F0B00D1568B /* Qualifier.swift */,
+				BEB51D262448D14200F8C7A4 /* CMIOKit.framework */,
 			);
-			path = CMIOKit;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		BEC91F3421D2453B00453456 = {
 			isa = PBXGroup;
 			children = (
+				BEB51D212448D14200F8C7A4 /* CMIOKit.xcodeproj */,
 				BEC91F3F21D2453B00453456 /* Cameo */,
-				BEC255A521F384050053F137 /* CMIOKit */,
 				BEC91F3E21D2453B00453456 /* Products */,
 				BEC91F5221D2484400453456 /* Frameworks */,
 			);
@@ -162,7 +135,6 @@
 			isa = PBXGroup;
 			children = (
 				BEC91F3D21D2453B00453456 /* Cameo.app */,
-				BEC255A421F384050053F137 /* CMIOKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -207,36 +179,7 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		BEC2559F21F384050053F137 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BEC255A821F384050053F137 /* CMIOKit.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
-		BEC255A321F384050053F137 /* CMIOKit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BEC255AF21F384050053F137 /* Build configuration list for PBXNativeTarget "CMIOKit" */;
-			buildPhases = (
-				BEC2559F21F384050053F137 /* Headers */,
-				BEC255A021F384050053F137 /* Sources */,
-				BEC255A121F384050053F137 /* Frameworks */,
-				BEC255A221F384050053F137 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CMIOKit;
-			productName = CameoSDK;
-			productReference = BEC255A421F384050053F137 /* CMIOKit.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		BEC91F3C21D2453B00453456 /* Cameo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BEC91F4B21D2453B00453456 /* Build configuration list for PBXNativeTarget "Cameo" */;
@@ -249,7 +192,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				BEC255AA21F384050053F137 /* PBXTargetDependency */,
+				BEB51D282448D18800F8C7A4 /* PBXTargetDependency */,
 			);
 			name = Cameo;
 			productName = Cameo;
@@ -266,9 +209,6 @@
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Tamas Lustyik";
 				TargetAttributes = {
-					BEC255A321F384050053F137 = {
-						CreatedOnToolsVersion = 10.1;
-					};
 					BEC91F3C21D2453B00453456 = {
 						CreatedOnToolsVersion = 10.1;
 					};
@@ -285,22 +225,30 @@
 			mainGroup = BEC91F3421D2453B00453456;
 			productRefGroup = BEC91F3E21D2453B00453456 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = BEB51D222448D14200F8C7A4 /* Products */;
+					ProjectRef = BEB51D212448D14200F8C7A4 /* CMIOKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				BEC91F3C21D2453B00453456 /* Cameo */,
-				BEC255A321F384050053F137 /* CMIOKit */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		BEC255A221F384050053F137 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
+/* Begin PBXReferenceProxy section */
+		BEB51D262448D14200F8C7A4 /* CMIOKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CMIOKit.framework;
+			remoteRef = BEB51D252448D14200F8C7A4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
 		BEC91F3B21D2453B00453456 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -320,20 +268,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		BEC255A021F384050053F137 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E807618E24353CD7006B35A2 /* Object.swift in Sources */,
-				BEC255B321F384D00053F137 /* Property.swift in Sources */,
-				E807618C24353A38006B35A2 /* Control.swift in Sources */,
-				BEF5DDFF244381CF00D1568B /* PropertyListener.swift in Sources */,
-				BEC255B221F384BF0053F137 /* Properties.swift in Sources */,
-				BEF5DDFD24437F0B00D1568B /* Qualifier.swift in Sources */,
-				BEC255B121F384660053F137 /* Class.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		BEC91F3921D2453B00453456 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -357,10 +291,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		BEC255AA21F384050053F137 /* PBXTargetDependency */ = {
+		BEB51D282448D18800F8C7A4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = BEC255A321F384050053F137 /* CMIOKit */;
-			targetProxy = BEC255A921F384050053F137 /* PBXContainerItemProxy */;
+			name = CMIOKit;
+			targetProxy = BEB51D272448D18800F8C7A4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -376,62 +310,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		BEC255AD21F384050053F137 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = CMIOKit/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.CMIOKit;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		BEC255AE21F384050053F137 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = CMIOKit/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.CMIOKit;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		BEC91F4921D2453B00453456 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -550,7 +428,6 @@
 		BEC91F4C21D2453B00453456 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -568,7 +445,6 @@
 		BEC91F4D21D2453B00453456 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -586,15 +462,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BEC255AF21F384050053F137 /* Build configuration list for PBXNativeTarget "CMIOKit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BEC255AD21F384050053F137 /* Debug */,
-				BEC255AE21F384050053F137 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		BEC91F3821D2453B00453456 /* Build configuration list for PBXProject "Cameo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
